@@ -9,12 +9,16 @@ model Dayuma_INIT_GENSTAR
 
 global {
 	
+	//Chargement des fichiers CSV
 	file f_AS <- file("../includes/age_et_sexe.csv");
 	file f_SECTORES <- file("../includes/dayuma_sectores.csv");
 	
+	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
-
 	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
+	
+	//Chargement du Land Cover
+	file MAE_2008 <- file ("../includes/MAE2008_b1.asc");
 	
 	//name of the property that contains the id of the census spatial areas in the shapefile
 	string stringOfCensusIdInShapefile <- "DPA_SECDIS";
@@ -29,8 +33,6 @@ global {
 									"De 45 a 49 años", "De 50 a 54 años", "De 55 a 59 años", "De 60 a 64 años", "De 65 a 69 años",
 									"De 70 a 74 años", "De 75 a 79 años", "De 80 a 84 años", "De 85 a 89 años", "De 90 a 94 años",
 									"De 95 a 99 años", "De 100 años y mas"];
-	
-
 	
 	init {		
 		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];			
@@ -74,6 +76,7 @@ global {
 		
 		pop_gen <- pop_gen localize_on_census(sectores_shp.path);
 		pop_gen <- pop_gen add_spatial_mapper(stringOfCensusIdInCSVfile,stringOfCensusIdInShapefile);
+		//Spatialisation sur les fincas
 		pop_gen <- pop_gen localize_on_geometries(buildings_shp.path);
 		
 
@@ -107,10 +110,17 @@ species sectores {
 	}
 }
 
+grid classif08 file: MAE_2008{
+	init {
+		color<- grid_value = 0.0 ? #black  : (grid_value = 1.0  ? #green :   #yellow);
+	}
+}
+
 
 experiment DayumaTemplate type: gui {
 	output {
 		display map  type: opengl {
+			grid classif08 lines: #black;
 			species fincas;
 			species sectores;
 			species people;
