@@ -16,6 +16,7 @@ global {
 	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
 	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
+	file predios_shp <- file ("../includes/predios_dayuma_SIGTIERRAS.shp");
 	
 	//Chargement du Land Cover
 	file MAE_2008 <- file ("../includes/MAE2008_90m.tif");
@@ -35,17 +36,24 @@ global {
 									"De 95 a 99 años", "De 100 años y mas"];
 									
 	//Variables globales pour monitors
-	
 	int nb_personnes -> length(people);
 	int nb_hommes -> people count (each.Sexe = "Hombre");
 	int nb_femmes -> people count (each.Sexe = "Mujer");
+	//float ratio_deforest_min -> fincas min_of (each.ratio_deforest);
+	//float ratio_deforest_max -> fincas max_of (each.ratio_deforest);
 	
 	int nb_personnes150153999016 -> length (people where (each.sec_id = "150153999016"));
+	
+	//Palettes
+	list<string> palette <- brewer_palettes(5);
+	string sequentialPalette <- "YlOrRd";
+	list<rgb> SequentialColors <- brewer_colors(sequentialPalette);
 	
 	//-----------------------------------------------------------------------------------------------
 	
 	init {		
-		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];			
+		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];
+		create fincas from: predios_shp with: [tipo::string(read('tipo')), finca_id::string(read('finca_id'))];			
 		
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "IS";
@@ -96,15 +104,39 @@ global {
 		create people from: pop_gen number: 10263;
 		
 		ask sectores {
-			do attributions;
+			do attribution_secteur;
+		}
+		
+		ask fincas {
+			//do calcul_deforest;
+			//do carto;
 		}
 	}
 }
 
 species fincas {
 	
+	string tipo;
+	string finca_id;
+	int area_total;
+	int area_deforest;
+	float ratio_deforest;
+	rgb color;
+	
+	action calcul_deforest {
+		area_total <- cell count (each overlaps(self));
+		area_deforest <- cell count (each overlaps(self) and each.is_deforest = true);
+		ratio_deforest <- (area_deforest/area_total);
+	}
+	
+	action carto {
+		if ratio_deforest > 2 {
+			color <- #red;
+		}
+	}
+	
 	aspect default {
-		draw shape color:#lightgrey  border: #black;
+		draw shape color:#transparent  border: #black;
 	}
 }
 
@@ -122,7 +154,7 @@ species sectores {
 	string dpa_secdis;
 	rgb color <- rnd_color(255);
 	
-	action attributions {
+	action attribution_secteur {
 		
 		ask people inside (self) {
 			sec_id <- dpa_secdis of myself;
@@ -135,17 +167,28 @@ species sectores {
 	}
 }
 
-grid classif08 file: MAE_2008{
+grid cell file: MAE_2008{
+	
+	bool is_deforest;
+	
 	init {
 		color <- grid_value = 0.0 ? #white : (grid_value = 1.0 ? #blue  : (grid_value = 2.0  ? #darkgreen :   (grid_value = 3.0 ? #yellow : #red )));
+		
+		if grid_value = 1.0 or 2.0 {
+			is_deforest <- false;
+		}
+		else {
+			is_deforest <- true;
+		}
+		
 	}
 }
 
 
-experiment DayumaTemplate type: gui {
+experiment Simulation type: gui {
 	output {
 		display map  type: opengl {
-			grid classif08;
+			grid cell;
 			species fincas;
 			species sectores;
 			species people;
@@ -156,7 +199,11 @@ experiment DayumaTemplate type: gui {
 		monitor "Total hommes" value: nb_hommes;
 		monitor "Total femmes" value: nb_femmes;
 		
-		monitor "Pop secteur 150153999016" value: nb_personnes150153999016;
+		monitor "Pop secteur 150153999016" value: nb_personnes150153999016; //pour contrôle données
+		
+		
+		//monitor "Ratio deforest min" value: ratio_deforest_min;
+		//monitor "Ratio deforest max" value: ratio_deforest_max;
 		
 //		display Ages {
 //			chart "Ages" type: histogram {
@@ -189,7 +236,4 @@ experiment DayumaTemplate type: gui {
 //				}
 //			}
 //		}
-	}
-	
-	}
-	
+} }
