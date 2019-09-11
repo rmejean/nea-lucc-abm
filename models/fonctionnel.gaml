@@ -2,7 +2,7 @@
 * Name: Model_INIT_DAYUMA
 * Author: Romain Mejean
 * Description: Modèle thèse Romain
-* Tags: Tag1, Tag2, TagN
+* Tags: deforestation, lucc, ecuador
 */
 
 model Dayuma_INIT_GENSTAR
@@ -18,7 +18,7 @@ global {
 	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
 	
 	//Chargement du Land Cover
-	file MAE_2008 <- file ("../includes/MAE2008_90m.asc");
+	file MAE_2008 <- file ("../includes/MAE2008_90m.tif");
 	
 	//name of the property that contains the id of the census spatial areas in the shapefile
 	string stringOfCensusIdInShapefile <- "DPA_SECDIS";
@@ -26,13 +26,23 @@ global {
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
 	string stringOfCensusIdInCSVfile <- "sec_id";
 
-	geometry shape <- envelope(buildings_shp);
+	geometry shape <- envelope(MAE_2008);
 
 	list<string> tranches_age <- ["Menor de 1 año", "De 1 a 4 años", "De 5 a 9 años", "De 10 a 14 años", "De 15 a 19 años", 
 									"De 20 a 24 años", "De 25 a 29 años", "De 30 a 34 años", "De 35 a 39 años", "De 40 a 44 años",
 									"De 45 a 49 años", "De 50 a 54 años", "De 55 a 59 años", "De 60 a 64 años", "De 65 a 69 años",
 									"De 70 a 74 años", "De 75 a 79 años", "De 80 a 84 años", "De 85 a 89 años", "De 90 a 94 años",
 									"De 95 a 99 años", "De 100 años y mas"];
+									
+	//Variables globales pour monitors
+	
+	int nb_personnes -> length(people);
+	int nb_hommes -> people count (each.Sexe = "Hombre");
+	int nb_femmes -> people count (each.Sexe = "Mujer");
+	
+	int nb_personnes150153999016 -> length (people where (each.sec_id = "150153999016"));
+	
+	//-----------------------------------------------------------------------------------------------
 	
 	init {		
 		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];			
@@ -76,12 +86,18 @@ global {
 		
 		pop_gen <- pop_gen localize_on_census(sectores_shp.path);
 		pop_gen <- pop_gen add_spatial_mapper(stringOfCensusIdInCSVfile,stringOfCensusIdInShapefile);
+		
 		//Spatialisation sur les fincas
-		pop_gen <- pop_gen localize_on_geometries(buildings_shp.path);
+		
+		pop_gen <- pop_gen localize_on_geometries(buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
 		
 
 		// -------------------------			
 		create people from: pop_gen number: 10263;
+		
+		ask sectores {
+			do attributions;
+		}
 	}
 }
 
@@ -105,14 +121,23 @@ species people {
 species sectores {
 	string dpa_secdis;
 	rgb color <- rnd_color(255);
+	
+	action attributions {
+		
+		ask people inside (self) {
+			sec_id <- dpa_secdis of myself;
+		}
+	}
+	
+	
 	aspect default {
-		draw shape color:color  border: #black;
+		draw shape color:#transparent border: #black;
 	}
 }
 
 grid classif08 file: MAE_2008{
 	init {
-		color <- grid_value = 1.0 ? #blue  : (grid_value = 2.0  ? #darkgreen :   (grid_value = 3.0 ? #brown : #red ));
+		color <- grid_value = 0.0 ? #white : (grid_value = 1.0 ? #blue  : (grid_value = 2.0  ? #darkgreen :   (grid_value = 3.0 ? #yellow : #red )));
 	}
 }
 
@@ -122,9 +147,16 @@ experiment DayumaTemplate type: gui {
 		display map  type: opengl {
 			grid classif08;
 			species fincas;
-			//species sectores;
+			species sectores;
 			species people;
+			
 		}
+		
+		monitor "Total personnes" value: nb_personnes;
+		monitor "Total hommes" value: nb_hommes;
+		monitor "Total femmes" value: nb_femmes;
+		
+		monitor "Pop secteur 150153999016" value: nb_personnes150153999016;
 		
 //		display Ages {
 //			chart "Ages" type: histogram {
