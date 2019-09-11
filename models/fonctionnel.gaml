@@ -18,7 +18,7 @@ global {
 	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
 	
 	//Chargement du Land Cover
-	file MAE_2008 <- file ("../includes/MAE2008_b1.asc");
+	file MAE_2008 <- file ("../includes/MAE2008_90m.asc");
 	
 	//name of the property that contains the id of the census spatial areas in the shapefile
 	string stringOfCensusIdInShapefile <- "DPA_SECDIS";
@@ -112,7 +112,7 @@ species sectores {
 
 grid classif08 file: MAE_2008{
 	init {
-		color<- grid_value = 0.0 ? #black  : (grid_value = 1.0  ? #green :   #yellow);
+		color <- grid_value = 1.0 ? #blue  : (grid_value = 2.0  ? #darkgreen :   (grid_value = 3.0 ? #brown : #red ));
 	}
 }
 
@@ -120,35 +120,35 @@ grid classif08 file: MAE_2008{
 experiment DayumaTemplate type: gui {
 	output {
 		display map  type: opengl {
-			grid classif08 lines: #black;
+			grid classif08;
 			species fincas;
-			species sectores;
+			//species sectores;
 			species people;
 		}
 		
-		display Ages {
-			chart "Ages" type: histogram {
-				loop i from: 0 to: 110 {
-					data ""+i value: people count(each.Age = i);
-				}
-			}
-		}
-		
-		display Sex {
-			chart "sex" type: pie {
-				loop se over: ["Hombre", "Mujer"] {
-					data se value: people count(each.Sexe = se);
-				}
-			}
-		}
-		
-			display Ages2 {
-			chart "Ages2" type: histogram {
-				loop i from: 0 to: 110 {
-					data ""+i value: people where (each.sec_id = "220158999006") count(each.Age = i);
-				}
-			}
-		}
+//		display Ages {
+//			chart "Ages" type: histogram {
+//				loop i from: 0 to: 110 {
+//					data ""+i value: people count(each.Age = i);
+//				}
+//			}
+//		}
+//		
+//		display Sex {
+//			chart "sex" type: pie {
+//				loop se over: ["Hombre", "Mujer"] {
+//					data se value: people count(each.Sexe = se);
+//				}
+//			}
+//		}
+//		
+//			display Ages2 {
+//			chart "Ages2" type: histogram {
+//				loop i from: 0 to: 110 {
+//					data ""+i value: people where (each.sec_id = "220158999006") count(each.Age = i);
+//				}
+//			}
+//		}
 		
 //				display Sex2 {
 //			chart "sexe par secteur" type: pie {
