@@ -119,7 +119,7 @@ global {
 		create fincas from: predios_shp with: [tipo::string(read('tipo')), finca_id::string(read('finca_id'))];
 		ask fincas {
 			do calcul_deforest;
-			do carto;
+			do carto_tx_deforest;
 		}
 
 	}
@@ -149,9 +149,14 @@ species fincas {
 
 	}
 
-	action carto {
-		color <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
-		rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
+	action carto_tx_deforest {
+		if tipo = "parcelle" { //exclure les comunas pour l'instant
+			color <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
+			rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
+		} else {
+			color <- #black;
+		}
+
 	}
 
 	aspect default {
