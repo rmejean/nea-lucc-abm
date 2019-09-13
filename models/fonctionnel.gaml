@@ -62,8 +62,8 @@ global {
 				do die;
 			}
 
-			color <- grid_value = 1.0 ? #blue : (grid_value = 2.0 ? #darkgreen : (grid_value = 3.0 ? #yellow : #red));
-			if grid_value = 3 or 4 {
+			color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #yellow : #red));
+			if grid_value >= 3 {
 				is_deforest <- true;
 			} else {
 				is_deforest <- false;
@@ -119,7 +119,7 @@ global {
 		create fincas from: predios_shp with: [tipo::string(read('tipo')), finca_id::string(read('finca_id'))];
 		ask fincas {
 			do calcul_deforest;
-			//do carto;
+			do carto;
 		}
 
 	}
@@ -137,11 +137,10 @@ species fincas {
 	int area_deforest;
 	float ratio_deforest;
 	rgb color;
-	list<cell> cells_inside -> {cell inside self};
-
+	list<cell> cells_inside -> {cell overlapping self}; //mieux que inside ? il faut vérifier si pas de double comptes
 	action calcul_deforest {
 		area_total <- length(cells_inside);
-		area_deforest <- length(cells_inside where (each.is_deforest = true));
+		area_deforest <- cells_inside count each.is_deforest;
 		if area_total > 0 {
 			ratio_deforest <- (area_deforest / area_total);
 		} else {
@@ -151,14 +150,12 @@ species fincas {
 	}
 
 	action carto {
-		if ratio_deforest > 2 {
-			color <- #red;
-		}
-
+		color <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
+		rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
 
 	aspect default {
-		draw shape color: #white border: #black;
+		draw shape color: color border: #black;
 	}
 
 }
@@ -196,7 +193,7 @@ experiment Simulation type: gui {
 		display map type: opengl {
 			grid cell;
 			species fincas;
-			species sectores;
+			//species sectores;
 			species people;
 		}
 
@@ -213,6 +210,7 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. min" value: area_deforest_min;
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
+		browse "suivi1" value: fincas attributes: ["area_total", "area_deforest", "ratio_deforest"];
 
 		//		display Ages {
 		//			chart "Ages" type: histogram {
