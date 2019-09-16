@@ -25,15 +25,14 @@ global {
 	string stringOfCensusIdInShapefile <- "DPA_SECDIS";
 
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
-	string stringOfCensusIdInCSVfile <- "id_sector";
+	string stringOfCensusIdInCSVfile <- "sec_id";
 	geometry shape <- envelope(MAE_2008);
-	list<int> anos_cumplidos <- range (0,105);
-	list<string>tranches_age <- ["Menor de 1 año", "De 1 a 4 años", "De 5 a 9 años", "De 10 a 14 años", "De 15 a 19 años", "De 20 a 24 años", "De 25 a 29 años", "De 30 a 34 años", "De 35 a 39 años", "De 40 a 44 años", "De 45 a 49 años", "De 50 a 54 años", "De 55 a 59 años", "De 60 a 64 años", "De 65 a 69 años", "De 70 a 74 años", "De 75 a 79 años", "De 80 a 84 años", "De 85 a 89 años", "De 90 a 94 años", "De 95 a 99 años", "De 100 años y mas"];
+	list<string> echelle_ages <- (list<string>(range (105)));
 
 	//Variables globales pour monitors
 	int nb_personnes -> length(people);
-	int nb_hommes -> people count (each.Sexe = "Hombre");
-	int nb_femmes -> people count (each.Sexe = "Mujer");
+	int nb_hommes -> people count (each.Sexo = "Hombre");
+	int nb_femmes -> people count (each.Sexo = "Mujer");
 	float ratio_deforest_min -> fincas min_of (each.ratio_deforest);
 	float ratio_deforest_max -> fincas max_of (each.ratio_deforest);
 	float ratio_deforest_mean -> fincas mean_of (each.ratio_deforest);
@@ -78,14 +77,14 @@ global {
 		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "simple_draw";
-		pop_gen <- add_census_file(pop_gen, f_detail.path, "ContingencyTable", ";", 1, 1);
+		pop_gen <- add_census_file(pop_gen, f_detail.path, "Sample", ",", 1, 1);
 		//pop_gen <- add_census_file(pop_gen, f_AS.path, "ContingencyTable", ";", 1, 1);
 		//pop_gen <- add_census_file(pop_gen, f_SECTORES.path, "ContingencyTable", ",", 1, 1);
 
 		// --------------------------
 		// Setup "AGE" attribute: INDIVIDUAL
 		// --------------------------	
-		pop_gen <- pop_gen add_attribute ("Anos cumplidos", gen_range, anos_cumplidos);
+		pop_gen <- pop_gen add_attribute ("Age", int, echelle_ages);
 
 		// -------------------------
 		// Setup "SEXE" attribute: INDIVIDUAL
@@ -95,18 +94,17 @@ global {
 		// -------------------------
 		// Setup "SECTORES" attribute: INDIVIDUAL
 		// -------------------------
-		list<string>
-		liste_sec <- ["220151999001", "220151999004", "220151999002", "220151999005", "220151999014", "220151999015", "220151999013", "220151999016", "220151999012", "220151999011", "220151999009", "220151999018", "220151999006", "220151999007", "220151999008", "220151999017", "220151999010", "220151999003", "220153999002", "220153999003", "220153999001", "220156999002", "220152999001", "220152999004", "220152999005", "220152999003", "220154999004", "220154999005", "220157999001", "220157999004", "220157999007", "220157999005", "220157999003", "220157999002", "220158999004", "220158999002", "220158999003", "220158999006", "220158999007", "220158999008", "220158999009", "220158999010", "220158999011", "220158999013", "220158999014", "220158999015", "220158999005", "220158999012", "220252999001", "150153999017", "150153999016", "220152999002"];
-		pop_gen <- pop_gen add_attribute ("id_sector", string, liste_sec);//, "pop10", int);
+		list<string> liste_sec <- (["220151999001", "220151999004", "220151999002", "220151999005", "220151999014", "220151999015", "220151999013", "220151999016", "220151999012", "220151999011", "220151999009", "220151999018", "220151999006", "220151999007", "220151999008", "220151999017", "220151999010", "220151999003", "220153999002", "220153999003", "220153999001", "220156999002", "220152999001", "220152999004", "220152999005", "220152999003", "220154999004", "220154999005", "220157999001", "220157999004", "220157999007", "220157999005", "220157999003", "220157999002", "220158999004", "220158999002", "220158999003", "220158999006", "220158999007", "220158999008", "220158999009", "220158999010", "220158999011", "220158999013", "220158999014", "220158999015", "220158999005", "220158999012", "220252999001", "150153999017", "150153999016", "220152999002"]);
+		pop_gen <- pop_gen add_attribute ("sec_id", string, liste_sec);//, "id_sector", int);
 
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		pop_gen <- pop_gen localize_on_census (sectores_shp.path);
-		pop_gen <- pop_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		//pop_gen <- pop_gen localize_on_census (sectores_shp.path);
+		//pop_gen <- pop_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 
 		//Spatialisation sur les fincas
-		pop_gen <- pop_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
+		//pop_gen <- pop_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
 
 
 		// -------------------------			
@@ -169,7 +167,7 @@ species fincas {
 
 species people {
 	int Age;
-	string Sexe;
+	string Sexo;
 	string sec_id;
 
 	aspect default {
@@ -217,15 +215,16 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. min" value: area_deforest_min;
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
-		browse "suivi1" value: fincas attributes: ["area_total", "area_deforest", "ratio_deforest"];
+		//browse "suivi1" value: fincas attributes: ["area_total", "area_deforest", "ratio_deforest"];
+		browse "suivi pop" value: people attributes: ["Age", "Sexo", "sec_id"];
 
-		//		display Ages {
-		//			chart "Ages" type: histogram {
-		//				loop i from: 0 to: 110 {
-		//					data ""+i value: people count(each.Age = i);
-		//				}
-		//			}
-		//		}
+//				display Ages {
+//					chart "Ages" type: histogram {
+//						loop i from: 0 to: 110 {
+//							data ""+i value: people count(each.Age = i);
+//						}
+//					}
+//				}
 		//		
 		//		display Sex {
 		//			chart "sex" type: pie {
