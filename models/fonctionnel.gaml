@@ -9,8 +9,6 @@ model Dayuma_INIT_GENSTAR
 global {
 
 //Chargement des fichiers CSV
-	file f_AS <- file("../includes/age_et_sexe.csv");
-	file f_SECTORES <- file("../includes/dayuma_sectores.csv");
 	file f_detail <- file("../includes/fichier_detail_dayuma_ELAG.csv");
 
 	//Chargement des fichiers SHP
@@ -26,8 +24,10 @@ global {
 
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
 	string stringOfCensusIdInCSVfile <- "sec_id";
+	
 	geometry shape <- envelope(MAE_2008);
 	list<string> echelle_ages <- (list<string>(range (105)));
+	list<string> list_sectores <- (["220151999001", "220151999004", "220151999002", "220151999005", "220151999014", "220151999015", "220151999013", "220151999016", "220151999012", "220151999011", "220151999009", "220151999018", "220151999006", "220151999007", "220151999008", "220151999017", "220151999010", "220151999003", "220153999002", "220153999003", "220153999001", "220156999002", "220152999001", "220152999004", "220152999005", "220152999003", "220154999004", "220154999005", "220157999001", "220157999004", "220157999007", "220157999005", "220157999003", "220157999002", "220158999004", "220158999002", "220158999003", "220158999006", "220158999007", "220158999008", "220158999009", "220158999010", "220158999011", "220158999013", "220158999014", "220158999015", "220158999005", "220158999012", "220252999001", "150153999017", "150153999016", "220152999002"]);
 
 	//Variables globales pour monitors
 	int nb_personnes -> length(people);
@@ -94,24 +94,21 @@ global {
 		// -------------------------
 		// Setup "SECTORES" attribute: INDIVIDUAL
 		// -------------------------
-		list<string> liste_sec <- (["220151999001", "220151999004", "220151999002", "220151999005", "220151999014", "220151999015", "220151999013", "220151999016", "220151999012", "220151999011", "220151999009", "220151999018", "220151999006", "220151999007", "220151999008", "220151999017", "220151999010", "220151999003", "220153999002", "220153999003", "220153999001", "220156999002", "220152999001", "220152999004", "220152999005", "220152999003", "220154999004", "220154999005", "220157999001", "220157999004", "220157999007", "220157999005", "220157999003", "220157999002", "220158999004", "220158999002", "220158999003", "220158999006", "220158999007", "220158999008", "220158999009", "220158999010", "220158999011", "220158999013", "220158999014", "220158999015", "220158999005", "220158999012", "220252999001", "150153999017", "150153999016", "220152999002"]);
-		pop_gen <- pop_gen add_attribute ("sec_id", string, liste_sec);//, "id_sector", int);
+		pop_gen <- pop_gen add_attribute ("sec_id", string, list_sectores);
 
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		//pop_gen <- pop_gen localize_on_census (sectores_shp.path);
-		//pop_gen <- pop_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		pop_gen <- pop_gen localize_on_census (sectores_shp.path);
+		pop_gen <- pop_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 
 		//Spatialisation sur les fincas
-		//pop_gen <- pop_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
+		pop_gen <- pop_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
 
 
 		// -------------------------			
 		create people from: pop_gen number: 10263;
-		ask sectores {
-			do attribution_secteur;
-		}
+		
 
 	}
 
@@ -137,7 +134,7 @@ species fincas {
 	int area_deforest;
 	float ratio_deforest;
 	rgb color;
-	list<cell> cells_inside -> {cell overlapping self}; //mieux que inside ? il faut vérifier si pas de double comptes
+	list<cell> cells_inside -> {cell overlapping self}; //mieux que inside ? il faut vérifier si pas de doubles comptes
 	action calcul_deforest {
 		area_total <- length(cells_inside);
 		area_deforest <- cells_inside count each.is_deforest;
@@ -169,6 +166,7 @@ species people {
 	int Age;
 	string Sexo;
 	string sec_id;
+	string lugar_nac;
 
 	aspect default {
 		draw circle(4) color: #red border: #black;
@@ -180,13 +178,6 @@ species sectores {
 	string dpa_secdis;
 	rgb color <- rnd_color(255);
 
-	action attribution_secteur {
-		ask people inside (self) {
-			sec_id <- dpa_secdis of myself;
-		}
-
-	}
-
 	aspect default {
 		draw shape color: #transparent border: #black;
 	}
@@ -197,7 +188,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			species fincas;
+			//species fincas;
 			//species sectores;
 			species people;
 		}
@@ -216,7 +207,7 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//browse "suivi1" value: fincas attributes: ["area_total", "area_deforest", "ratio_deforest"];
-		browse "suivi pop" value: people attributes: ["Age", "Sexo", "sec_id"];
+		//browse "suivi pop" value: people attributes: ["Age", "Sexo", "sec_id"];
 
 //				display Ages {
 //					chart "Ages" type: histogram {
