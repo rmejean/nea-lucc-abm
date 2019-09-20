@@ -105,7 +105,7 @@ global {
 
 
 		// -------------------------			
-		create hogares from: hog_gen number: 2111 ;
+		create hogares from: hog_gen;
 			
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "simple_draw";
@@ -118,10 +118,11 @@ global {
 		pop_gen <- pop_gen add_attribute ("Age", int, echelle_ages);
 		pop_gen <- pop_gen add_attribute ("hog_id", string, list_hogares);
 			
-		create people from: pop_gen number: 10263;
+		create people from: pop_gen number: 10173;
 		
 		ask people {
-			location <- location of (one_of hogares where (each.hog_id = self.hog_id)) ;
+			my_hogar <- one_of (hogares where (each.hog_id = self.hog_id));
+			location <- my_hogar.location ;
 		}
 			
 		
@@ -196,6 +197,7 @@ species people parent: hogares {
 	int Age;
 	string Sexo;
 	string hog_id;
+	agent my_hogar;
 
 	aspect default {
 		draw circle(4) color: #red border: #black;
@@ -236,15 +238,16 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. min" value: area_deforest_min;
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
-		browse "suivi pop" value: hogares attributes: ["Total_Personas", "Total_Hombres", "Total_Mujeres", "sec_id", "hog_id"];
+		browse "suivi ménages" value: hogares attributes: ["Total_Personas", "Total_Hombres", "Total_Mujeres", "sec_id", "hog_id"];
+		browse "suivi pop" value: people attributes: ["Age", "Sexo", "my_hogar", "hog_id"];
 
-//				display Ages {
-//					chart "Ages" type: histogram {
-//						loop i from: 0 to: 110 {
-//							data ""+i value: people count(each.Age = i);
-//						}
-//					}
-//				}
+				display Ages {
+					chart "Ages" type: histogram {
+						loop i from: 0 to: 110 {
+							data ""+i value: people count(each.Age = i);
+						}
+					}
+				}
 		//		
 		//		display Sex {
 		//			chart "sex" type: pie {
