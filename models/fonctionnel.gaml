@@ -124,6 +124,13 @@ global {
 			my_hogar <- one_of (hogares where (each.hog_id = self.hog_id));
 			location <- my_hogar.location ;
 		}
+		
+		ask sectores {
+			hogares_inside <- hogares inside self;
+			personas_inside <- people inside self;
+			nb_hogares <- length (hogares_inside);
+			nb_personas <- length (personas_inside);
+		}
 			
 		
 		
@@ -207,6 +214,10 @@ species people parent: hogares {
 
 species sectores {
 	string dpa_secdis;
+	int nb_hogares;
+	int nb_personas;
+	list<hogares> hogares_inside;
+	list<people> personas_inside;
 	rgb color <- rnd_color(255);
 
 	aspect default {
@@ -240,6 +251,7 @@ experiment Simulation type: gui {
 		monitor "Moy. déforest." value: area_deforest_mean;
 		browse "suivi ménages" value: hogares attributes: ["Total_Personas", "Total_Hombres", "Total_Mujeres", "sec_id", "hog_id"];
 		browse "suivi pop" value: people attributes: ["Age", "Sexo", "my_hogar", "hog_id"];
+		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 
 				display Ages {
 					chart "Ages" type: histogram {
