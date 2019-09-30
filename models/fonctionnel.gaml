@@ -8,7 +8,7 @@ model Dayuma_INIT_GENSTAR
 
 global {
 
-    //Chargement des fichiers CSV
+//Chargement des fichiers CSV
 	file f_detail_HOGARES <- file("../includes/censo/fichier_detail_hogares_dayuma_ELAG.csv");
 	file f_detail_PERSONAS <- file("../includes/censo/fichier_detail_dayuma_ELAG.csv");
 	//file f_detail_PERSONAS_m <- file("../includes/censo/fichier_detail_personasM_dayuma_ELAG.csv");
@@ -26,12 +26,11 @@ global {
 
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
 	string stringOfCensusIdInCSVfile <- "sec_id";
-	
 	geometry shape <- envelope(MAE_2008);
-	list<string> echelle_pop <- (list<string>(range (95)));
-	list<string> echelle_ages <- (list<string>(range (105)));
-	list<string> list_sectores <- (["220151999001", "220151999004", "220151999002", "220151999005", "220151999014", "220151999015", "220151999013", "220151999016", "220151999012", "220151999011", "220151999009", "220151999018", "220151999006", "220151999007", "220151999008", "220151999017", "220151999010", "220151999003", "220153999002", "220153999003", "220153999001", "220156999002", "220152999001", "220152999004", "220152999005", "220152999003", "220154999004", "220154999005", "220157999001", "220157999004", "220157999007", "220157999005", "220157999003", "220157999002", "220158999004", "220158999002", "220158999003", "220158999006", "220158999007", "220158999008", "220158999009", "220158999010", "220158999011", "220158999013", "220158999014", "220158999015", "220158999005", "220158999012", "220252999001", "150153999017", "150153999016", "220152999002"]);
-    list<string> list_hogares <- ([]);
+	list<string> echelle_pop <- (list<string>(range(95)));
+	list<string> echelle_ages <- (list<string>(range(105)));
+	list<string> list_sectores <- ([]); //(["220151999001", "220151999004", "220151999002", "220151999005", "220151999014", "220151999015", "220151999013", "220151999016", "220151999012", "220151999011", "220151999009", "220151999018", "220151999006", "220151999007", "220151999008", "220151999017", "220151999010", "220151999003", "220153999002", "220153999003", "220153999001", "220156999002", "220152999001", "220152999004", "220152999005", "220152999003", "220154999004", "220154999005", "220157999001", "220157999004", "220157999007", "220157999005", "220157999003", "220157999002", "220158999004", "220158999002", "220158999003", "220158999006", "220158999007", "220158999008", "220158999009", "220158999010", "220158999011", "220158999013", "220158999014", "220158999015", "220158999005", "220158999012", "220252999001", "150153999017", "150153999016", "220152999002"]);
+	list<string> list_hogares <- ([]);
 
 	//Variables globales pour monitors
 	int nb_menages -> length(hogares);
@@ -80,7 +79,6 @@ global {
 
 	action init_pop {
 		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];
-		
 		gen_population_generator hog_gen;
 		hog_gen <- hog_gen with_generation_algo "simple_draw";
 		hog_gen <- add_census_file(hog_gen, f_detail_HOGARES.path, "Sample", ",", 1, 1);
@@ -88,15 +86,17 @@ global {
 		// --------------------------
 		// Setup Attributs
 		// --------------------------	
+		
 		hog_gen <- hog_gen add_attribute ("Total_Personas", int, echelle_pop);
 		hog_gen <- hog_gen add_attribute ("Total_Hombres", int, echelle_pop);
 		hog_gen <- hog_gen add_attribute ("Total_Mujeres", int, echelle_pop);
-		hog_gen <- hog_gen add_attribute ("sec_id", string, list_sectores);
+		hog_gen <- hog_gen add_attribute ("sec_id", string, list_sectores); //, "popTotal", int);
 		hog_gen <- hog_gen add_attribute ("hog_id", string, list_hogares);
 
 		// -------------------------
 		// Spatialization 
 		// -------------------------
+		
 		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
 		hog_gen <- hog_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 
@@ -106,7 +106,6 @@ global {
 
 		// -------------------------			
 		create hogares from: hog_gen;
-			
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "simple_draw";
 		pop_gen <- add_census_file(pop_gen, f_detail_PERSONAS.path, "Sample", ",", 1, 1);
@@ -117,23 +116,51 @@ global {
 		pop_gen <- pop_gen add_attribute ("Sexo", string, ["Hombre", "Mujer"]);
 		pop_gen <- pop_gen add_attribute ("Age", int, echelle_ages);
 		pop_gen <- pop_gen add_attribute ("hog_id", string, list_hogares);
-			
-		create people from: pop_gen number: 10173;
-		
+		create people from: pop_gen;
 		ask people {
-			my_hogar <- one_of (hogares where (each.hog_id = self.hog_id));
-			location <- my_hogar.location ;
+			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
+			location <- my_hogar.location;
+			if Age < 11 {
+				vMOF <- 0.0;
+			}
+
+			if Age = 11 {
+				vMOF <- 0.16;
+			}
+
+			if Age = 12 {
+				vMOF <- 0.33;
+			}
+
+			if Age = 13 {
+				vMOF <- 0.5;
+			}
+
+			if Age = 14 {
+				vMOF <- 0.66;
+			}
+
+			if Age = 15 {
+				vMOF <- 0.83;
+			}
+
+			if Age >= 16 {
+				vMOF <- 1.0;
+			}
+
 		}
 		
+		ask hogares {
+			membres_hogar <- people where (each.hog_id = self.hog_id);
+			MOF <- sum(membres_hogar collect each.vMOF);
+		}
+
 		ask sectores {
 			hogares_inside <- hogares inside self;
 			personas_inside <- people inside self;
-			nb_hogares <- length (hogares_inside);
-			nb_personas <- length (personas_inside);
+			nb_hogares <- length(hogares_inside);
+			nb_personas <- length(personas_inside);
 		}
-			
-		
-		
 
 	}
 
@@ -193,9 +220,11 @@ species hogares {
 	int Total_Mujeres;
 	string sec_id;
 	string hog_id;
+	list<people> membres_hogar;
+	float MOF;
 
 	aspect default {
-		draw circle(4) color: #red border: #black;
+		draw circle(15) color: #red border: #black;
 	}
 
 }
@@ -205,9 +234,10 @@ species people parent: hogares {
 	string Sexo;
 	string hog_id;
 	agent my_hogar;
+	float vMOF;
 
 	aspect default {
-		draw circle(4) color: #red border: #black;
+		draw circle(6) color: #blue border: #black;
 	}
 
 }
@@ -233,13 +263,11 @@ experiment Simulation type: gui {
 			//species fincas;
 			//species sectores;
 			species hogares;
+			species people;
 		}
 
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
-		//monitor "Total hommes" value: nb_hommes;
-		//monitor "Total femmes" value: nb_femmes;
-		//monitor "Pop secteur 150153999016" value: nb_personnes150153999016; //pour contrôle données
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;
 		monitor "Moy. ratio deforest" value: ratio_deforest_mean;
@@ -249,17 +277,18 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. min" value: area_deforest_min;
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
-		browse "suivi ménages" value: hogares attributes: ["Total_Personas", "Total_Hombres", "Total_Mujeres", "sec_id", "hog_id"];
-		browse "suivi pop" value: people attributes: ["Age", "Sexo", "my_hogar", "hog_id"];
+		browse "suivi ménages" value: hogares attributes: ["Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "sec_id", "hog_id"];
+		browse "suivi pop" value: people attributes: ["Age", "Sexo", "vMOF", "my_hogar", "hog_id"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
-
-				display Ages {
-					chart "Ages" type: histogram {
-						loop i from: 0 to: 110 {
-							data ""+i value: people count(each.Age = i);
-						}
-					}
+		display Ages {
+			chart "Ages" type: histogram {
+				loop i from: 0 to: 110 {
+					data "" + i value: people count (each.Age = i);
 				}
+
+			}
+
+		}
 		//		
 		//		display Sex {
 		//			chart "sex" type: pie {
