@@ -80,7 +80,7 @@ global {
 	action init_pop {
 		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];
 		gen_population_generator hog_gen;
-		hog_gen <- hog_gen with_generation_algo "simple_draw";
+		hog_gen <- hog_gen with_generation_algo "US";
 		hog_gen <- add_census_file(hog_gen, f_detail_HOGARES.path, "Sample", ",", 1, 1);
 
 		// --------------------------
@@ -107,7 +107,7 @@ global {
 		// -------------------------			
 		create hogares from: hog_gen;
 		gen_population_generator pop_gen;
-		pop_gen <- pop_gen with_generation_algo "simple_draw";
+		pop_gen <- pop_gen with_generation_algo "US";
 		pop_gen <- add_census_file(pop_gen, f_detail_PERSONAS.path, "Sample", ",", 1, 1);
 
 		// --------------------------
@@ -117,6 +117,8 @@ global {
 		pop_gen <- pop_gen add_attribute ("Age", int, echelle_ages);
 		pop_gen <- pop_gen add_attribute ("hog_id", string, list_hogares);
 		create people from: pop_gen;
+		
+		// --------------------------
 		ask people {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
 			location <- my_hogar.location;
