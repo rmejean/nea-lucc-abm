@@ -16,7 +16,8 @@ global {
 	file zone_etude_shp <- file("../includes/zone_etude.shp");
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS_group.shp");
 	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
-	file predios_shp <- file("../includes/predios_dayuma_SIGTIERRAS.shp");
+	file predios_shp <- file("../includes/predios_sin_comunas.shp");
+	file comunas_shp <- file("../includes/comunas.shp");
 
 	//Chargement du Land Cover
 	file MAE_2008 <- file("../includes/MAE2008_90m.asc");
