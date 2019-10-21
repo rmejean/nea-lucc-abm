@@ -16,7 +16,8 @@ global {
 	file zone_etude_shp <- file("../includes/zone_etude.shp");
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS_group.shp");
 	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
-	file predios_shp <- file("../includes/predios_dayuma_SIGTIERRAS.shp");
+	file predios_shp <- file("../includes/predios_sin_comunas.shp");
+	file comunas_shp <- file("../includes/comunas.shp");
 
 	//Chargement du Land Cover
 	file MAE_2008 <- file("../includes/MAE2008_90m.asc");
@@ -60,6 +61,7 @@ global {
 		do init_cells;
 		do init_viviendas;
 		do init_fincas;
+		do init_comunas;
 		do init_pop;
 	}
 
@@ -81,18 +83,19 @@ global {
 
 	action init_viviendas {
 		create viviendas from: buildings_shp with: [finca_id::string(read('finca_id')), sec_id::string(read('DPA_SECDIS'))];
-		ask viviendas {
-		}
-
 	}
 
 	action init_fincas {
-		create fincas from: predios_shp with: [tipo::string(read('tipo')), finca_id::string(read('finca_id'))];
+		create fincas from: predios_shp with: [finca_id::string(read('finca_id'))];
 		ask fincas {
-			do calcul_deforest;
+			do calcul_tx_deforest;
 			do carto_tx_deforest;
 		}
 
+	}
+	
+	action init_comunas {
+		create comunas from: comunas_shp;
 	}
 
 	action init_pop {
@@ -117,8 +120,9 @@ global {
 				hog_gen <- hog_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		
 				//Spatialisation sur les fincas
-				hog_gen <- hog_gen localize_on_geometries (buildings_shp.path);
-                hog_gen <- hog_gen add_capacity_distribution(1); //à utiliser pour mieux gérer les comunas
+				hog_gen <- hog_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
+				hog_gen <- hog_gen add_capacity_distribution(1);//à remplacer par "capacity" après correction
+
 		// -------------------------			
 		create hogares from: hog_gen;
 		// -------------------------	
@@ -216,14 +220,13 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 }
 
 species fincas {
-	string tipo;
 	string finca_id;
 	int area_total;
 	int area_deforest;
 	float ratio_deforest;
 	rgb color;
-	list<cell> cells_inside -> {cell overlapping self}; //mieux que inside ? il faut vérifier si pas de doubles comptes
-	action calcul_deforest {
+	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
+	action calcul_tx_deforest {
 		area_total <- length(cells_inside);
 		area_deforest <- cells_inside count each.is_deforest;
 		if area_total > 0 {
@@ -235,19 +238,24 @@ species fincas {
 	}
 
 	action carto_tx_deforest {
-		if tipo = "parcelle" { //exclure les comunas pour l'instant
-			color <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
-			rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
-		} else {
-			color <- #black;
-		}
-
+		color <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
+		rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
 
 	aspect default {
 		draw shape color: color border: #black;
 	}
 
+}
+
+species comunas {
+	int area_total;
+	int area_deforest;
+	float ratio_deforest;
+	
+	aspect default {
+		draw shape color: #black border: #black;
+	}
 }
 
 species viviendas {

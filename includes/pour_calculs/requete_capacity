@@ -1,0 +1,17 @@
+CASE
+WHEN area < 200 THEN '1'
+WHEN area > 1500 THEN '15'
+WHEN area > 1400 THEN '14'
+WHEN area > 1300 THEN '13'
+WHEN area > 1200 THEN '12'
+WHEN area > 1100 THEN '11'
+WHEN area > 1000 THEN '10'
+WHEN area > 900 THEN '9'
+WHEN area > 800 THEN '8'
+WHEN area > 700 THEN '7'
+WHEN area > 600 THEN '6'
+WHEN area > 500 THEN '5'
+WHEN area > 400 THEN '4'
+WHEN area > 300 THEN '3'
+WHEN area > 200 THEN '2'
+END
