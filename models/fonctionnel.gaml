@@ -116,35 +116,36 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		//		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
-		//		hog_gen <- hog_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
-		//
-		//		//Spatialisation sur les fincas
-		//		hog_gen <- hog_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
+				hog_gen <- hog_gen localize_on_census (sectores_shp.path);
+				hog_gen <- hog_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		
+				//Spatialisation sur les fincas
+				hog_gen <- hog_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
+				hog_gen <- hog_gen add_capacity_distribution(1);//à remplacer par "capacity" après correction
 
 		// -------------------------			
 		create hogares from: hog_gen;
 		// -------------------------	
 		// -------------------------	
-		ask hogares {
-			my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
-			if one_matches(viviendas, each.sec_id = self.sec_id and each.is_free = true) {
-				my_vivienda <- (shuffle(viviendas) first_with ((each.sec_id = self.sec_id) and each.is_free = true));
-				location <- my_vivienda.location;
-				ask my_vivienda {
-					is_free <- false;
-				}
-
-			} else {
-				my_vivienda <- (shuffle(viviendas) first_with (each.is_free = true)); //rajouter un closest_to my_sector ?
-				location <- my_vivienda.location;
-				ask my_vivienda {
-					is_free <- false;
-				}
-
-			}
-
-		}
+//		ask hogares {
+//			my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
+//			if one_matches(viviendas, each.sec_id = self.sec_id and each.is_free = true) {
+//				my_vivienda <- (shuffle(viviendas) first_with ((each.sec_id = self.sec_id) and each.is_free = true));
+//				location <- my_vivienda.location;
+//				ask my_vivienda {
+//					is_free <- false;
+//				}
+//
+//			} else {
+//				my_vivienda <- (shuffle(viviendas) first_with (each.is_free = true)); //rajouter un closest_to my_sector ?
+//				location <- my_vivienda.location;
+//				ask my_vivienda {
+//					is_free <- false;
+//				}
+//
+//			}
+//
+//		}
 
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "US";
