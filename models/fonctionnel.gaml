@@ -9,8 +9,9 @@ model Dayuma_INIT_GENSTAR
 global {
 
 //Chargement des fichiers CSV
-	file f_detail_HOGARES <- file("../includes/censo/fichier_detail_hogares_dayuma_ELAG.csv");
 	file f_detail_PERSONAS <- file("../includes/censo/fichier_detail_dayuma_ELAG.csv");
+	file f_detail_HOGARES <- file("../includes/censo/fichier_detail_hogares_dayuma_ELAG.csv");
+	file f_detail_VIVIENDAS <- file("../includes/censo/fichier_detail_viviendas_dayuma_ELAG.csv");
 
 	//Chargement des fichiers SHP
 	file zone_etude_shp <- file("../includes/zone_etude.shp");
@@ -82,7 +83,18 @@ global {
 	}
 
 	action init_viviendas {
-		create viviendas from: buildings_shp with: [finca_id::string(read('finca_id')), sec_id::string(read('DPA_SECDIS'))];
+		gen_population_generator viv_gen;
+		viv_gen <- viv_gen with_generation_algo "US";
+		viv_gen <- add_census_file(viv_gen, f_detail_VIVIENDAS.path, "Sample", ",", 1, 1);
+
+		// --------------------------
+		// Setup Attributs
+		// --------------------------	
+		viv_gen <- viv_gen add_attribute ("Total_Personas", int, echelle_pop);
+		viv_gen <- viv_gen add_attribute ("sec_id", string, list_sectores);
+		viv_gen <- viv_gen add_attribute ("hog_id", string, list_hogares);
+		// -------------------------			
+		create viviendas from: viv_gen;
 	}
 
 	action init_fincas {
@@ -93,7 +105,7 @@ global {
 		}
 
 	}
-	
+
 	action init_comunas {
 		create comunas from: comunas_shp;
 	}
@@ -116,12 +128,12 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-//				hog_gen <- hog_gen localize_on_census (sectores_shp.path);
-//				hog_gen <- hog_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
-//		
-//				//Spatialisation sur les fincas
-//				hog_gen <- hog_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
-//				hog_gen <- hog_gen add_capacity_distribution(1);//à remplacer par "capacity" après correction
+		//				hog_gen <- hog_gen localize_on_census (sectores_shp.path);
+		//				hog_gen <- hog_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		//		
+		//				//Spatialisation sur les fincas
+		//				hog_gen <- hog_gen localize_on_geometries (buildings_shp.path); //à désactiver pour avoir un nombre plus proche de la réalité : parfois, il n'y a pas de constructions dans un secteur "peuplé", donc pas d'agents dedans...
+		//				hog_gen <- hog_gen add_capacity_distribution("capacity");
 
 		// -------------------------			
 		create hogares from: hog_gen;
@@ -252,16 +264,19 @@ species comunas {
 	int area_total;
 	int area_deforest;
 	float ratio_deforest;
-	
+
 	aspect default {
 		draw shape color: #black border: #black;
 	}
+
 }
 
 species viviendas {
 	bool is_free <- true;
 	string finca_id;
 	string sec_id;
+	string hog_id;
+	int Total_Personas;
 }
 
 species hogares {
