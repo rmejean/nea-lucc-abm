@@ -28,9 +28,10 @@ global {
 
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
 	string stringOfCensusIdInCSVfile <- "sec_id";
-	geometry shape <- envelope(zone_etude_shp);
+	geometry shape <- envelope(MAE_2008);
 	list<string> echelle_pop <- (list<string>(range(95)));
 	list<string> echelle_ages <- (list<string>(range(105)));
+	list<string> echelle_GLOBALE <- (list<string>(range(150)));
 	list<string> list_id <- ([]); //(["220151999001", "220151999004", "220151999002", "220151999005", "220151999014", "220151999015", "220151999013", "220151999016", "220151999012", "220151999011", "220151999009", "220151999018", "220151999006", "220151999007", "220151999008", "220151999017", "220151999010", "220151999003", "220153999002", "220153999003", "220153999001", "220156999002", "220152999001", "220152999004", "220152999005", "220152999003", "220154999004", "220154999005", "220157999001", "220157999004", "220157999007", "220157999005", "220157999003", "220157999002", "220158999004", "220158999002", "220158999003", "220158999006", "220158999007", "220158999008", "220158999009", "220158999010", "220158999011", "220158999013", "220158999014", "220158999015", "220158999005", "220158999012", "220252999001", "150153999017", "150153999016", "220152999002"]);
 
 	//Variables globales pour monitors
@@ -62,7 +63,7 @@ global {
 		do init_predios;
 		do init_viviendas;
 		//do init_comunas;
-		do init_pop;
+		//do init_pop;
 	}
 
 	action init_cells {
@@ -81,7 +82,7 @@ global {
 
 	}
 		action init_predios {
-		create predios from: predios_shp with: [finca_id::string(read('finca_id'))];
+		create predios from: predios_shp with: [finca_id::string(read('finca_id')), capacity::int(get('capacity'))];
 		ask predios {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
@@ -99,17 +100,17 @@ global {
 		viv_gen <- viv_gen add_attribute ("sec_id", string, list_id);
 		viv_gen <- viv_gen add_attribute ("hog_id", string, list_id);
 		viv_gen <- viv_gen add_attribute ("viv_id", string, list_id);
-		viv_gen <- viv_gen add_attribute ("Total_Personas", int, echelle_pop);
+		viv_gen <- viv_gen add_attribute ("Total_Personas", int, echelle_GLOBALE);
 		viv_gen <- viv_gen add_attribute ("nro_hogares", int, ["0","1","2"]);
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);	
+//		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+//		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile,stringOfCensusIdInShapefile);
         //Spatialisation sur les parcelles
-		viv_gen <- viv_gen localize_on_geometries (predios_shp.path);
-		viv_gen <- viv_gen add_capacity_distribution(1);
-		//		
+		//viv_gen <- viv_gen localize_on_geometries (predios_shp.path);
+		//viv_gen <- viv_gen add_capacity_distribution(1);
+		//
 		create viviendas from: viv_gen;
 	}
 
@@ -231,11 +232,13 @@ species viviendas {
 
 species predios {
 	string finca_id;
+	int capacity;
 	int area_total;
 	int area_deforest;
 	float ratio_deforest;
 	rgb color;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
+	
 	action calcul_tx_deforest {
 		area_total <- length(cells_inside);
 		area_deforest <- cells_inside count each.is_deforest;
@@ -339,8 +342,9 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
-		browse "suivi ménages" value: hogares attributes: ["Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "sec_id", "hog_id"];
-		browse "suivi pop" value: personas attributes: ["Age", "Sexo", "vMOF", "my_hogar", "hog_id"];
+		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares"];
+		browse "suivi hogares" value: hogares attributes: ["Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "sec_id", "hog_id"];
+		browse "suivi personas" value: personas attributes: ["Age", "Sexo", "vMOF", "my_hogar", "hog_id"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 		//-------------------------------------
 		display Ages {
