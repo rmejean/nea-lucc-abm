@@ -11,24 +11,26 @@ global {
 //Chargement des fichiers CSV
 	file f_detail_PERSONAS <- file("../includes/censo/fichier_detail_dayuma_ELAG.csv");
 	file f_detail_HOGARES <- file("../includes/censo/fichier_detail_hogares_dayuma_ELAG.csv");
-	file f_detail_VIVIENDAS <- file("../includes/censo/fichier_detail_viviendas_dayuma_ELAG.csv");
+	file f_detail_VIVIENDAS_oc <- file("../includes/censo/fichier_detail_viviendas_ocupadas_dayuma_ELAG.csv");
 
 	//Chargement des fichiers SHP
-	file zone_etude_shp <- file("../includes/zone_etude.shp");
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS_group.shp");
 	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
-	file predios_shp <- file("../includes/predios_sin_comunas.shp");
+	file predios_con_def_shp <- file("../includes/predios_con_def.shp");
+	//file predios_sin_def_shp <- file("../includes/predios_sin_def.shp");
 	file comunas_shp <- file("../includes/comunas.shp");
 
 	//Chargement du Land Cover
 	file MAE_2008 <- file("../includes/MAE2008_90m.asc");
-
+    
 	//name of the property that contains the id of the census spatial areas in the shapefile
 	string stringOfCensusIdInShapefile <- "DPA_SECDIS";
-
+    
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
 	string stringOfCensusIdInCSVfile <- "sec_id";
-	geometry shape <- envelope(MAE_2008);
+	
+	geometry shape <- envelope(predios_con_def_shp);
+	
 	list<string> echelle_pop <- (list<string>(range(95)));
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
@@ -82,7 +84,7 @@ global {
 
 	}
 		action init_predios {
-		create predios from: predios_shp with: [finca_id::string(read('finca_id')), capacity::int(get('capacity'))];
+		create predios from: predios_con_def_shp with: [ocupada_init::string(read('ocupada'))];
 		ask predios {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
@@ -93,23 +95,22 @@ global {
         create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];
 		gen_population_generator viv_gen;
 		viv_gen <- viv_gen with_generation_algo "US";
-		viv_gen <- add_census_file(viv_gen, f_detail_VIVIENDAS.path, "Sample", ",", 1, 1);
+		viv_gen <- add_census_file(viv_gen, f_detail_VIVIENDAS_oc.path, "Sample", ",", 1, 1);
 		// --------------------------
 		// Setup Attributs
 		// --------------------------	
 		viv_gen <- viv_gen add_attribute ("sec_id", string, list_id);
-		viv_gen <- viv_gen add_attribute ("hog_id", string, list_id);
-		viv_gen <- viv_gen add_attribute ("viv_id", string, list_id);
-		viv_gen <- viv_gen add_attribute ("Total_Personas", int, echelle_GLOBALE);
-		viv_gen <- viv_gen add_attribute ("nro_hogares", int, ["0","1","2"]);
+//		viv_gen <- viv_gen add_attribute ("hog_id", string, list_id);
+//		viv_gen <- viv_gen add_attribute ("viv_id", string, list_id);
+//		viv_gen <- viv_gen add_attribute ("Total_Personas", int, echelle_GLOBALE);
+//		viv_gen <- viv_gen add_attribute ("nro_hogares", int, ["0","1","2"]);
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-//		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-//		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile,stringOfCensusIdInShapefile);
-        //Spatialisation sur les parcelles
-		//viv_gen <- viv_gen localize_on_geometries (predios_shp.path);
-		//viv_gen <- viv_gen add_capacity_distribution(1);
+		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
+		viv_gen <- viv_gen add_capacity_distribution("capacity");
+		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile,stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen;
 	}
@@ -231,8 +232,7 @@ species viviendas {
 }
 
 species predios {
-	string finca_id;
-	int capacity;
+	string ocupada_init;
 	int area_total;
 	int area_deforest;
 	float ratio_deforest;
