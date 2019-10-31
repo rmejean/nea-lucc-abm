@@ -29,20 +29,18 @@ global {
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
 	string stringOfCensusIdInCSVfile <- "sec_id";
 	
-	geometry shape <- envelope(predios_con_def_shp);
+	geometry shape <- envelope(MAE_2008);
 	
 	list<string> echelle_pop <- (list<string>(range(95)));
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
-	list<string> list_id <- ([]); //(["220151999001", "220151999004", "220151999002", "220151999005", "220151999014", "220151999015", "220151999013", "220151999016", "220151999012", "220151999011", "220151999009", "220151999018", "220151999006", "220151999007", "220151999008", "220151999017", "220151999010", "220151999003", "220153999002", "220153999003", "220153999001", "220156999002", "220152999001", "220152999004", "220152999005", "220152999003", "220154999004", "220154999005", "220157999001", "220157999004", "220157999007", "220157999005", "220157999003", "220157999002", "220158999004", "220158999002", "220158999003", "220158999006", "220158999007", "220158999008", "220158999009", "220158999010", "220158999011", "220158999013", "220158999014", "220158999015", "220158999005", "220158999012", "220252999001", "150153999017", "150153999016", "220152999002"]);
-
+	list<string> list_id <- ([]);
+	
 	//Variables globales pour monitors
 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
 	int nb_viviendas -> length(viviendas);
-	int nb_viviendas_free -> length(viviendas where each.is_free);
-	//int nb_hommes -> people count (each.Sexo = "Hombre");
-	//int nb_femmes -> people count (each.Sexo = "Mujer");
+	//int nb_viviendas_free -> length(viviendas where each.is_free);
 	float ratio_deforest_min -> predios min_of (each.ratio_deforest);
 	float ratio_deforest_max -> predios max_of (each.ratio_deforest);
 	float ratio_deforest_mean -> predios mean_of (each.ratio_deforest);
@@ -84,7 +82,7 @@ global {
 
 	}
 		action init_predios {
-		create predios from: predios_con_def_shp with: [ocupada_init::string(read('ocupada'))];
+		create predios from: predios_con_def_shp;
 		ask predios {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
@@ -100,17 +98,17 @@ global {
 		// Setup Attributs
 		// --------------------------	
 		viv_gen <- viv_gen add_attribute ("sec_id", string, list_id);
-//		viv_gen <- viv_gen add_attribute ("hog_id", string, list_id);
-//		viv_gen <- viv_gen add_attribute ("viv_id", string, list_id);
-//		viv_gen <- viv_gen add_attribute ("Total_Personas", int, echelle_GLOBALE);
-//		viv_gen <- viv_gen add_attribute ("nro_hogares", int, ["0","1","2"]);
+		viv_gen <- viv_gen add_attribute ("hog_id", string, list_id);
+		viv_gen <- viv_gen add_attribute ("viv_id", string, list_id);
+		viv_gen <- viv_gen add_attribute ("Total_Personas", int, echelle_GLOBALE);
+		viv_gen <- viv_gen add_attribute ("nro_hogares", int, ["0","1","2"]);
 		// -------------------------
 		// Spatialization 
 		// -------------------------
 		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
 		viv_gen <- viv_gen add_capacity_distribution("capacity");
-		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile,stringOfCensusIdInShapefile);
+		//viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+		//viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile,stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen;
 	}
@@ -165,6 +163,7 @@ global {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
 			if my_hogar != nil {
 				location <- my_hogar.location;
+				
 				if Age < 11 {
 					vMOF <- 0.0;
 				}
@@ -220,19 +219,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #yellow : #red));
 }
 
-
-species viviendas {
-	string sec_id;
-	string hog_id;
-	string viv_id;
-	bool is_free <- true;
-	hogares my_hogar;
-	int Total_Personas;
-	int nro_hogares;
-}
-
 species predios {
-	string ocupada_init;
 	int area_total;
 	int area_deforest;
 	float ratio_deforest;
@@ -259,6 +246,20 @@ species predios {
 		draw shape color: color border: #black;
 	}
 
+}
+
+species viviendas {
+	string sec_id;
+	string hog_id;
+	string viv_id;
+	bool is_free;
+	hogares my_hogar;
+	int Total_Personas;
+	int nro_hogares;
+	
+	aspect default {
+		draw circle(20) color: #black border: #black;
+	}
 }
 
 species comunas {
@@ -322,7 +323,6 @@ experiment Simulation type: gui {
 		display map type: opengl {
 			grid cell;
 			species viviendas;
-			//species fincas;
 			//species sectores;
 			species hogares;
 			species personas;
@@ -331,7 +331,7 @@ experiment Simulation type: gui {
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
 		monitor "Total viviendas" value: nb_viviendas;
-		monitor "Total viviendas libres" value: nb_viviendas_free;
+		//monitor "Total viviendas libres" value: nb_viviendas_free;
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;
 		monitor "Moy. ratio deforest" value: ratio_deforest_mean;
@@ -343,8 +343,8 @@ experiment Simulation type: gui {
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
 		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares"];
-		browse "suivi hogares" value: hogares attributes: ["Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "sec_id", "hog_id"];
-		browse "suivi personas" value: personas attributes: ["Age", "Sexo", "vMOF", "my_hogar", "hog_id"];
+		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF"];
+		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 		//-------------------------------------
 		display Ages {
