@@ -136,17 +136,17 @@ global {
 		hog_gen <- hog_gen add_attribute ("Total_Hombres", int, echelle_pop);
 		hog_gen <- hog_gen add_attribute ("Total_Mujeres", int, echelle_pop);
 		// -------------------------			
-		create hogares from: hog_gen;
-		// -------------------------	
-		ask hogares {
+		create hogares from: hog_gen {
 			my_vivienda <- first(viviendas where (each.viv_id = self.viv_id));
 			if my_vivienda != nil {
 				location <- my_vivienda.location;
+				my_predio <- first(predios overlapping self);
 			} else {
 				do die;
 			}
 
 		}
+
 		//
 		// --------------------------
 		// Setup PERSONAS
@@ -158,50 +158,25 @@ global {
 		// --------------------------
 		// Setup Attributs
 		// --------------------------	
+		pop_gen <- pop_gen add_attribute ("sec_id", string, list_id);
 		pop_gen <- pop_gen add_attribute ("hog_id", string, list_id);
+		pop_gen <- pop_gen add_attribute ("viv_id", string, list_id);
 		pop_gen <- pop_gen add_attribute ("Sexo", string, ["Hombre", "Mujer"]);
 		pop_gen <- pop_gen add_attribute ("Age", int, echelle_ages);
+		pop_gen <- pop_gen add_attribute ("orden_en_hogar", int, echelle_GLOBALE);
 		// --------------------------
-		create personas from: pop_gen;
-		// --------------------------
-		ask personas {
+		create personas from: pop_gen {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
 			if my_hogar != nil {
 				location <- my_hogar.location;
-				if Age < 11 {
-					vMOF <- 0.0;
-				}
-
-				if Age = 11 {
-					vMOF <- 0.16;
-				}
-
-				if Age = 12 {
-					vMOF <- 0.33;
-				}
-
-				if Age = 13 {
-					vMOF <- 0.5;
-				}
-
-				if Age = 14 {
-					vMOF <- 0.66;
-				}
-
-				if Age = 15 {
-					vMOF <- 0.83;
-				}
-
-				if Age >= 16 {
-					vMOF <- 1.0;
-				}
-
+				my_predio <- my_hogar.my_predio;
+				do vMOF_calc;
 			} else {
 				do die;
 			}
 
 		}
-
+		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
 			MOF <- sum(membres_hogar collect each.vMOF);
@@ -282,8 +257,10 @@ species hogares {
 	int Total_Hombres;
 	int Total_Mujeres;
 	viviendas my_vivienda;
+	predios my_predio;
 	list<personas> membres_hogar;
 	float MOF;
+	float common_pot_inc;
 
 	aspect default {
 		draw circle(15) color: #red border: #black;
@@ -292,11 +269,43 @@ species hogares {
 }
 
 species personas parent: hogares {
-	string hog_id; //déjà défini dans la classe parente... mais j'en ai besoin pour les localiser !
 	hogares my_hogar;
 	int Age;
 	string Sexo;
+	int orden_en_hogar;
 	float vMOF;
+	float inc;
+
+	action vMOF_calc {
+		if Age < 11 {
+			vMOF <- 0.0;
+		}
+
+		if Age = 11 {
+			vMOF <- 0.16;
+		}
+
+		if Age = 12 {
+			vMOF <- 0.33;
+		}
+
+		if Age = 13 {
+			vMOF <- 0.5;
+		}
+
+		if Age = 14 {
+			vMOF <- 0.66;
+		}
+
+		if Age = 15 {
+			vMOF <- 0.83;
+		}
+
+		if Age >= 16 {
+			vMOF <- 1.0;
+		}
+
+	}
 
 	aspect default {
 		draw circle(6) color: #blue border: #black;
@@ -350,8 +359,8 @@ experiment Simulation type: gui {
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
 		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares"];
-		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF"];
-		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar"];
+		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio"];
+		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 		//-------------------------------------
 		display Ages {
