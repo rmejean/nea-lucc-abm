@@ -9,9 +9,9 @@ model Dayuma_INIT_GENSTAR
 global {
 
 //Chargement des fichiers CSV
-	file f_detail_PERSONAS <- file("../includes/censo/fichier_detail_dayuma_ELAG.csv");
-	file f_detail_HOGARES <- file("../includes/censo/fichier_detail_hogares_dayuma_ELAG.csv");
-	file f_detail_VIVIENDAS_oc <- file("../includes/censo/fichier_detail_viviendas_ocupadas_dayuma_ELAG.csv");
+	file f_detail_PERSONAS <- file("../includes/censo/agri/fichier_detail_personas_agri.csv");
+	file f_detail_HOGARES <- file("../includes/censo/agri/fichier_detail_hogares_agri.csv");
+	file f_detail_VIVIENDAS_oc <- file("../includes/censo/agri/fichier_detail_viviendas_agri.csv");
 
 	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
@@ -58,8 +58,9 @@ global {
 	//-----------------------------------------------------------------------------------------------
 	init {
 		do init_cells;
-		do init_predios;
+		
 		do init_viviendas;
+		do init_predios;
 		//do init_comunas;
 		do init_pop;
 	}
@@ -85,6 +86,10 @@ global {
 		ask predios {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
+			
+			ask viviendas inside self {
+				predio <- myself;
+			}
 		}
 
 	}
@@ -105,12 +110,15 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
-		viv_gen <- viv_gen add_capacity_distribution ("capacity");
-		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		//viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
+		//viv_gen <- viv_gen add_capacity_distribution (1);
+		//viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+		//viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		//
-		create viviendas from: viv_gen;
+		create viviendas from: viv_gen {
+			my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
+			
+		}
 	}
 
 	//	action init_comunas {
@@ -140,7 +148,7 @@ global {
 			my_vivienda <- first(viviendas where (each.viv_id = self.viv_id));
 			if my_vivienda != nil {
 				location <- my_vivienda.location;
-				my_predio <- first(predios overlapping self);
+				my_predio <- my_vivienda.predio;
 			} else {
 				do die;
 			}
@@ -196,6 +204,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 }
 
 species predios {
+	float is_free;
 	int area_total;
 	int area_deforest;
 	float ratio_deforest;
@@ -228,7 +237,9 @@ species viviendas {
 	string hog_id;
 	string viv_id;
 	bool is_free;
+	sectores my_sector;
 	hogares my_hogar;
+	predios predio;
 	int Total_Personas;
 	int nro_hogares;
 
@@ -338,6 +349,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
+			species predios;
 			species viviendas;
 			//species sectores;
 			species hogares;
@@ -358,7 +370,7 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
-		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares"];
+		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares", "predio"];
 		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
