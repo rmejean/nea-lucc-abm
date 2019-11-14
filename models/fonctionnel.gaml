@@ -9,9 +9,13 @@ model Dayuma_INIT_GENSTAR
 global {
 
 //Chargement des fichiers CSV
-	file f_detail_PERSONAS <- file("../includes/censo/agri/fichier_detail_personas_agri.csv");
-	file f_detail_HOGARES <- file("../includes/censo/agri/fichier_detail_hogares_agri.csv");
-	file f_detail_VIVIENDAS_oc <- file("../includes/censo/agri/fichier_detail_viviendas_agri.csv");
+	file f_PERSONAS_predios <- file("../includes/censo/personas_sin_com-urb.csv");
+	file f_HOGARES_predios <- file("../includes/censo/hogares_sin_com-urb.csv");
+	file f_VIVIENDAS_predios <- file("../includes/censo/viviendas_sin_com-urb.csv");
+	
+	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
+	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
+	file f_VIVIENDAS_comunas <- file("../includes/censo/com_viviendas.csv");
 
 	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
@@ -98,7 +102,7 @@ global {
 		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];
 		gen_population_generator viv_gen;
 		viv_gen <- viv_gen with_generation_algo "US";
-		viv_gen <- add_census_file(viv_gen, f_detail_VIVIENDAS_oc.path, "Sample", ",", 1, 1);
+		viv_gen <- add_census_file(viv_gen, f_VIVIENDAS_predios.path, "Sample", ",", 1, 1);
 		// --------------------------
 		// Setup Attributs
 		// --------------------------	
@@ -110,10 +114,10 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		//viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
-		//viv_gen <- viv_gen add_capacity_distribution (1);
-		//viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-		//viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
+		viv_gen <- viv_gen add_capacity_distribution (1,1);
+		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen {
 			my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
@@ -133,7 +137,7 @@ global {
 	//
 		gen_population_generator hog_gen;
 		hog_gen <- hog_gen with_generation_algo "US";
-		hog_gen <- add_census_file(hog_gen, f_detail_HOGARES.path, "Sample", ",", 1, 1);
+		hog_gen <- add_census_file(hog_gen, f_HOGARES_predios.path, "Sample", ",", 1, 1);
 		// --------------------------
 		// Setup Attributs
 		// --------------------------	
@@ -162,7 +166,7 @@ global {
 		//
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "US";
-		pop_gen <- add_census_file(pop_gen, f_detail_PERSONAS.path, "Sample", ",", 1, 1);
+		pop_gen <- add_census_file(pop_gen, f_PERSONAS_predios.path, "Sample", ",", 1, 1);
 		// --------------------------
 		// Setup Attributs
 		// --------------------------	
