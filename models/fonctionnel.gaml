@@ -63,8 +63,9 @@ global {
 	init {
 		do init_cells;
 		
-		do init_viviendas;
 		do init_predios;
+		do init_viviendas;
+		
 		//do init_comunas;
 		do init_pop;
 	}
