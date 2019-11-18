@@ -12,7 +12,6 @@ global {
 	file f_PERSONAS_predios <- file("../includes/censo/personas_sin_com-urb.csv");
 	file f_HOGARES_predios <- file("../includes/censo/hogares_sin_com-urb.csv");
 	file f_VIVIENDAS_predios <- file("../includes/censo/viviendas_sin_com-urb_oc.csv");
-	
 	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
 	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
 	file f_VIVIENDAS_comunas <- file("../includes/censo/com_viviendas.csv");
@@ -62,9 +61,9 @@ global {
 	//-----------------------------------------------------------------------------------------------
 	init {
 		do init_cells;
-		
-		do init_viviendas;
 		do init_predios;
+		do init_viviendas;
+
 		//do init_comunas;
 		do init_pop;
 	}
@@ -86,14 +85,13 @@ global {
 	}
 
 	action init_predios {
-		create predios from: predios_con_def_shp;
+		create predios from: predios_con_def_shp {
+			is_free <- true;
+		}
+
 		ask predios {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
-			
-			ask viviendas inside self {
-				predio <- myself;
-			}
 		}
 
 	}
@@ -114,15 +112,24 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
-		viv_gen <- viv_gen add_capacity_distribution (1,1);
+		//viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
+		//viv_gen <- viv_gen add_capacity_distribution (1,1);
 		//viv_gen <- viv_gen localize_on_census (sectores_shp.path);
 		//viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen {
-			my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
-			
+		//my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
+			if one_matches(predios, each.is_free = true) {
+				my_predio <- (shuffle(predios) first_with (each.is_free = true));
+				location <- my_predio.location;
+				ask my_predio {
+					is_free <- false;
+				}
+
+			}
+
 		}
+
 	}
 
 	//	action init_comunas {
@@ -152,7 +159,7 @@ global {
 			my_vivienda <- first(viviendas where (each.viv_id = self.viv_id));
 			if my_vivienda != nil {
 				location <- my_vivienda.location;
-				my_predio <- my_vivienda.predio;
+				my_predio <- my_vivienda.my_predio;
 			} else {
 				do die;
 			}
@@ -208,7 +215,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 }
 
 species predios {
-	float is_free;
+	bool is_free;
 	int area_total;
 	int area_deforest;
 	float ratio_deforest;
@@ -240,10 +247,9 @@ species viviendas {
 	string sec_id;
 	string hog_id;
 	string viv_id;
-	bool is_free;
 	sectores my_sector;
 	hogares my_hogar;
-	predios predio;
+	predios my_predio;
 	int Total_Personas;
 	int nro_hogares;
 
