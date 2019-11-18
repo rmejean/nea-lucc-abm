@@ -11,7 +11,7 @@ global {
 //Chargement des fichiers CSV
 	file f_PERSONAS_predios <- file("../includes/censo/personas_sin_com-urb.csv");
 	file f_HOGARES_predios <- file("../includes/censo/hogares_sin_com-urb.csv");
-	file f_VIVIENDAS_predios <- file("../includes/censo/viviendas_sin_com-urb.csv");
+	file f_VIVIENDAS_predios <- file("../includes/censo/viviendas_sin_com-urb_oc.csv");
 	
 	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
 	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
@@ -116,8 +116,8 @@ global {
 		// -------------------------
 		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
 		viv_gen <- viv_gen add_capacity_distribution (1,1);
-		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		//viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+		//viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen {
 			my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
