@@ -18,7 +18,7 @@ global {
 
 	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
-	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
+	file sectores_shp <- file("../includes/sectores_entiers.shp");
 	file predios_con_def_shp <- file("../includes/predios_con_def.shp");
 	//file predios_sin_def_shp <- file("../includes/predios_sin_def.shp");
 	file comunas_shp <- file("../includes/comunas.shp");
@@ -63,7 +63,6 @@ global {
 		do init_cells;
 		do init_predios;
 		do init_viviendas;
-
 		//do init_comunas;
 		do init_pop;
 	}
@@ -112,10 +111,10 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		//viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
-		//viv_gen <- viv_gen add_capacity_distribution (1,1);
-		//viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-		//viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+//		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
+//		viv_gen <- viv_gen add_capacity_distribution (1,1);
+//		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+//		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen {
 		//my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
@@ -380,7 +379,7 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
-		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares", "predio"];
+		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares", "my_predio"];
 		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
