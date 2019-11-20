@@ -65,6 +65,7 @@ global {
 		do init_viviendas;
 		//do init_comunas;
 		do init_pop;
+		do init_cult;
 	}
 
 	action init_cells {
@@ -111,10 +112,10 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-//		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
-//		viv_gen <- viv_gen add_capacity_distribution (1,1);
-//		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-//		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		//		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
+		//		viv_gen <- viv_gen add_capacity_distribution (1,1);
+		//		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+		//		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen {
 		//my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
@@ -131,10 +132,6 @@ global {
 
 	}
 
-	//	action init_comunas {
-	//		create comunas from: comunas_shp;
-	//		//A DEVELOPPER (pas encore prises en compte)
-	//	}
 	action init_pop {
 	//
 	// --------------------------
@@ -206,23 +203,55 @@ global {
 
 	}
 
+	action init_cult {
+		ask predios where (each.is_free = false) {
+			ask cells_inside where (each.grid_value = 3) {
+				do cult_attribution;
+				do color_cult;
+			}
+
+		}
+
+	}
+
 }
 
 grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
 	bool is_deforest;
+	string cult;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #yellow : #red));
+
+	action cult_attribution {
+		if flip(0.6666) = true {
+			cult <- 'v_maniocmais';
+		}
+		else {
+			if flip (0.3333) = true {
+				cult <- 'v_maraichage';
+			}
+		}
+
+	}
+	
+	action color_cult {
+		if cult = 'v_maniocmais' {
+			color <- #orange;
+		}
+		if cult = 'v_maraichage' {
+			color <- #purple;
+		}
+	}
+
 }
 
 species predios {
 	bool is_free;
-	int area_total;
-	int area_deforest;
+	int area_total <- length(cells_inside);
+	int area_deforest <- cells_inside count each.is_deforest;
 	float ratio_deforest;
 	rgb color;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
 	action calcul_tx_deforest {
-		area_total <- length(cells_inside);
-		area_deforest <- cells_inside count each.is_deforest;
 		if area_total > 0 {
 			ratio_deforest <- (area_deforest / area_total);
 		} else {
@@ -358,7 +387,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			species predios;
+			//species predios;
 			species viviendas;
 			//species sectores;
 			species hogares;
