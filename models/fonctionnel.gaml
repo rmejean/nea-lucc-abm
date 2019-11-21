@@ -66,6 +66,7 @@ global {
 		//do init_comunas;
 		do init_pop;
 		do init_cult;
+		do init_revenu;
 	}
 
 	action init_cells {
@@ -118,7 +119,6 @@ global {
 		//		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen {
-		//my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
 			if one_matches(predios, each.is_free = true) {
 				my_predio <- (shuffle(predios) first_with (each.is_free = true));
 				location <- my_predio.location;
@@ -207,11 +207,16 @@ global {
 		ask predios where (each.is_free = false) {
 			ask cells_inside where (each.grid_value = 3) {
 				do cult_attribution;
-				do color_cult;
 			}
 
 		}
 
+	}
+	
+	action init_revenu {
+		ask hogares {
+			common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
+		}
 	}
 
 }
@@ -219,27 +224,37 @@ global {
 grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
 	bool is_deforest;
 	string cult;
-	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #yellow : #red));
+	float rev;
+	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
 
 	action cult_attribution {
 		if flip(0.6666) = true {
 			cult <- 'v_maniocmais';
+			rev <- rnd ((450/12),(900/12));
+			color <- #yellow;
 		}
 		else {
-			if flip (0.3333) = true {
+			if flip(0.6666) = true {
 				cult <- 'v_maraichage';
+				rev <- rnd ((1500/12),(2500/12));
+				color <- #purple;
+			}
+			else {
+				if flip (0.3333) = true {
+					cult <- 'v_petit-elevage';
+					rev <- rnd ((450/12),(1800/12));
+					color <- #palevioletred;
+				}
+				else {
+					if flip (0.15) = true {
+						cult <- 'v_plantain';
+						rev <- rnd ((250/12),(2210/12));
+						color <- #springgreen;
+					}
+				}
 			}
 		}
 
-	}
-	
-	action color_cult {
-		if cult = 'v_maniocmais' {
-			color <- #orange;
-		}
-		if cult = 'v_maraichage' {
-			color <- #purple;
-		}
 	}
 
 }
@@ -266,6 +281,10 @@ species predios {
 	}
 
 	aspect default {
+		draw shape color: #transparent border: #black;
+	}
+	
+	aspect carto {
 		draw shape color: color border: #black;
 	}
 
@@ -387,7 +406,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			//species predios;
+			species predios aspect: default;
 			species viviendas;
 			//species sectores;
 			species hogares;
@@ -409,7 +428,7 @@ experiment Simulation type: gui {
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
 		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares", "my_predio"];
-		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio"];
+		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 		//-------------------------------------
