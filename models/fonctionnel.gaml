@@ -60,16 +60,11 @@ global {
 
 	//-----------------------------------------------------------------------------------------------
 	init {
-		do init_cells;
-<<<<<<< HEAD
-		
+		do init_cells;	
 		do init_predios;
 		do init_viviendas;
-		
-=======
 		do init_predios;
 		do init_viviendas;
->>>>>>> alternative-loc
 		//do init_comunas;
 		do init_pop;
 		do init_cult;
