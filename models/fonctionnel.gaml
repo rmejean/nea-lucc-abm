@@ -12,14 +12,13 @@ global {
 	file f_PERSONAS_predios <- file("../includes/censo/personas_sin_com-urb.csv");
 	file f_HOGARES_predios <- file("../includes/censo/hogares_sin_com-urb.csv");
 	file f_VIVIENDAS_predios <- file("../includes/censo/viviendas_sin_com-urb_oc.csv");
-	
 	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
 	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
 	file f_VIVIENDAS_comunas <- file("../includes/censo/com_viviendas.csv");
 
 	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
-	file sectores_shp <- file("../includes/sectores_dayuma_INEC.shp");
+	file sectores_shp <- file("../includes/sectores_entiers.shp");
 	file predios_con_def_shp <- file("../includes/predios_con_def.shp");
 	//file predios_sin_def_shp <- file("../includes/predios_sin_def.shp");
 	file comunas_shp <- file("../includes/comunas.shp");
@@ -62,12 +61,19 @@ global {
 	//-----------------------------------------------------------------------------------------------
 	init {
 		do init_cells;
+<<<<<<< HEAD
 		
 		do init_predios;
 		do init_viviendas;
 		
+=======
+		do init_predios;
+		do init_viviendas;
+>>>>>>> alternative-loc
 		//do init_comunas;
 		do init_pop;
+		do init_cult;
+		do init_revenu;
 	}
 
 	action init_cells {
@@ -87,14 +93,13 @@ global {
 	}
 
 	action init_predios {
-		create predios from: predios_con_def_shp;
+		create predios from: predios_con_def_shp {
+			is_free <- true;
+		}
+
 		ask predios {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
-			
-			ask viviendas inside self {
-				predio <- myself;
-			}
 		}
 
 	}
@@ -115,21 +120,25 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
-		viv_gen <- viv_gen add_capacity_distribution (1,1);
-		//viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-		//viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		//		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
+		//		viv_gen <- viv_gen add_capacity_distribution (1,1);
+		//		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
+		//		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		//
 		create viviendas from: viv_gen {
-			my_sector <- first(sectores where (each.dpa_secdis = self.sec_id));
-			
+			if one_matches(predios, each.is_free = true) {
+				my_predio <- (shuffle(predios) first_with (each.is_free = true));
+				location <- my_predio.location;
+				ask my_predio {
+					is_free <- false;
+				}
+
+			}
+
 		}
+
 	}
 
-	//	action init_comunas {
-	//		create comunas from: comunas_shp;
-	//		//A DEVELOPPER (pas encore prises en compte)
-	//	}
 	action init_pop {
 	//
 	// --------------------------
@@ -153,7 +162,7 @@ global {
 			my_vivienda <- first(viviendas where (each.viv_id = self.viv_id));
 			if my_vivienda != nil {
 				location <- my_vivienda.location;
-				my_predio <- my_vivienda.predio;
+				my_predio <- my_vivienda.my_predio;
 			} else {
 				do die;
 			}
@@ -201,23 +210,70 @@ global {
 
 	}
 
+	action init_cult {
+		ask predios where (each.is_free = false) {
+			ask cells_inside where (each.grid_value = 3) {
+				do cult_attribution;
+			}
+
+		}
+
+	}
+	
+	action init_revenu {
+		ask hogares {
+			common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
+		}
+	}
+
 }
 
 grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
 	bool is_deforest;
-	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #yellow : #red));
+	string cult;
+	float rev;
+	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
+
+	action cult_attribution {
+		if flip(0.6666) = true {
+			cult <- 'v_maniocmais';
+			rev <- rnd ((450/12),(900/12));
+			color <- #yellow;
+		}
+		else {
+			if flip(0.6666) = true {
+				cult <- 'v_maraichage';
+				rev <- rnd ((1500/12),(2500/12));
+				color <- #purple;
+			}
+			else {
+				if flip (0.3333) = true {
+					cult <- 'v_petit-elevage';
+					rev <- rnd ((450/12),(1800/12));
+					color <- #palevioletred;
+				}
+				else {
+					if flip (0.15) = true {
+						cult <- 'v_plantain';
+						rev <- rnd ((250/12),(2210/12));
+						color <- #springgreen;
+					}
+				}
+			}
+		}
+
+	}
+
 }
 
 species predios {
-	float is_free;
-	int area_total;
-	int area_deforest;
+	bool is_free;
+	int area_total <- length(cells_inside);
+	int area_deforest <- cells_inside count each.is_deforest;
 	float ratio_deforest;
 	rgb color;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
 	action calcul_tx_deforest {
-		area_total <- length(cells_inside);
-		area_deforest <- cells_inside count each.is_deforest;
 		if area_total > 0 {
 			ratio_deforest <- (area_deforest / area_total);
 		} else {
@@ -232,6 +288,10 @@ species predios {
 	}
 
 	aspect default {
+		draw shape color: #transparent border: #black;
+	}
+	
+	aspect carto {
 		draw shape color: color border: #black;
 	}
 
@@ -241,10 +301,9 @@ species viviendas {
 	string sec_id;
 	string hog_id;
 	string viv_id;
-	bool is_free;
 	sectores my_sector;
 	hogares my_hogar;
-	predios predio;
+	predios my_predio;
 	int Total_Personas;
 	int nro_hogares;
 
@@ -354,7 +413,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			species predios;
+			species predios aspect: default;
 			species viviendas;
 			//species sectores;
 			species hogares;
@@ -375,8 +434,8 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
-		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares", "predio"];
-		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio"];
+		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares", "my_predio"];
+		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 		//-------------------------------------
