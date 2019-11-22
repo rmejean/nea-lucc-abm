@@ -60,7 +60,7 @@ global {
 
 	//-----------------------------------------------------------------------------------------------
 	init {
-		do init_cells;	
+		do init_cells;
 		do init_predios;
 		do init_viviendas;
 		do init_predios;
@@ -88,7 +88,7 @@ global {
 	}
 
 	action init_predios {
-		create predios from: predios_con_def_shp {
+		create predios from: predios_con_def_shp with: [clave_data::string(read('clave_cata'))] {
 			is_free <- true;
 		}
 
@@ -196,7 +196,7 @@ global {
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			MOF <- sum(membres_hogar collect each.vMOF);
+			do MOF_calc;
 		}
 
 		ask sectores {
@@ -214,11 +214,12 @@ global {
 		}
 
 	}
-	
+
 	action init_revenu {
 		ask hogares {
 			common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
 		}
+
 	}
 
 }
@@ -232,29 +233,29 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	action cult_attribution {
 		if flip(0.6666) = true {
 			cult <- 'v_maniocmais';
-			rev <- rnd ((450/12),(900/12));
+			rev <- rnd((450 / 12), (900 / 12));
 			color <- #yellow;
-		}
-		else {
+		} else {
 			if flip(0.6666) = true {
 				cult <- 'v_maraichage';
-				rev <- rnd ((1500/12),(2500/12));
+				rev <- rnd((1500 / 12), (2500 / 12));
 				color <- #purple;
-			}
-			else {
-				if flip (0.3333) = true {
+			} else {
+				if flip(0.3333) = true {
 					cult <- 'v_petit-elevage';
-					rev <- rnd ((450/12),(1800/12));
+					rev <- rnd((450 / 12), (1800 / 12));
 					color <- #palevioletred;
-				}
-				else {
-					if flip (0.15) = true {
+				} else {
+					if flip(0.15) = true {
 						cult <- 'v_plantain';
-						rev <- rnd ((250/12),(2210/12));
+						rev <- rnd((250 / 12), (2210 / 12));
 						color <- #springgreen;
 					}
+
 				}
+
 			}
+
 		}
 
 	}
@@ -262,6 +263,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 }
 
 species predios {
+	string clave_data;
 	bool is_free;
 	int area_total <- length(cells_inside);
 	int area_deforest <- cells_inside count each.is_deforest;
@@ -285,7 +287,7 @@ species predios {
 	aspect default {
 		draw shape color: #transparent border: #black;
 	}
-	
+
 	aspect carto {
 		draw shape color: color border: #black;
 	}
@@ -331,6 +333,10 @@ species hogares {
 	list<personas> membres_hogar;
 	float MOF;
 	float common_pot_inc;
+
+	action MOF_calc {
+		MOF <- (sum(membres_hogar collect each.vMOF) * 30);
+	}
 
 	aspect default {
 		draw circle(15) color: #red border: #black;
@@ -433,6 +439,7 @@ experiment Simulation type: gui {
 		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
+		browse "suivi predios" value: predios attributes: ["clave_cata", "is_free", "area_total", "area_deforest", "ratio_deforest", "cells_inside"];
 		//-------------------------------------
 		display Ages {
 			chart "Ages" type: histogram {
