@@ -1,1 +1,25 @@
-=SI.CONDITIONS(AD=0;0;AD="1 persona";1;AD="2 personas";2;AD="3 personas";3;AD="4 personas";4;AD="5 personas";5;AD="6 personas";6;AD="7 personas";7;AD="8 personas";8;AD="9 personas";9;AD=10;10)
+Quelques fonctions excel pour formater rapidement les fichiers *censo*
+
+``=SI.CONDITIONS(AD2=0;0;AD2="1 persona";1;AD2="2 personas";2;AD2="3 personas";3;AD2="4 personas";4;AD2="5 personas";5;AD2="6 personas";6;AD2="7 personas";7;AD2="8 personas";8;AD2="9 personas";9;AD2=10;10;AD2>10;AD2)``
+
+Pour sélectionner les HOGARES et PERSONAS à supprimer (ceux qui sont reliés aux viviendas particulières, supprimées)
+
+``=SI.CONDITIONS(CT2="220151999004050241";1;
+CT2="220151999007020031";1;
+CT2="220151999007020021";1;
+CT2="220151999004050231";1;
+CT2="220151999014010051";1;
+CT2="220151999004050201";1;
+CT2="220151999004050031";1;
+CT2="220151999004050181";1;
+CT2="220151999004050211";1;
+CT2="220151999004050221";1;
+CT2="220151999007020261";1;
+CT2="220151999007020271";1;
+CT2="220151999007020281";1;
+CT2="220158999005020031";1;
+CT2="220151999018020021";1;
+CT2="220157999004020021";1;
+CT2="220151999006011211";1;)``
+
+Enfin, pour que le nombre de viv, hog et pers concordent, ne pas oublier de supprimer les pers. du ménage hog_id = 220151999004050242 (car aucun HOGAR n'a cet ID)

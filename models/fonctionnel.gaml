@@ -9,12 +9,12 @@ model Dayuma_INIT_GENSTAR
 global {
 
 //Chargement des fichiers CSV
-	file f_PERSONAS_predios <- file("../includes/censo/personas_sin_com-urb.csv");
-	file f_HOGARES_predios <- file("../includes/censo/hogares_sin_com-urb.csv");
-	file f_VIVIENDAS_predios <- file("../includes/censo/viviendas_sin_com-urb_oc.csv");
-	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
-	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
-	file f_VIVIENDAS_comunas <- file("../includes/censo/com_viviendas.csv");
+	file f_PERSONAS_predios <- file("../includes/censo/Personas_des_161_locsincom.csv");
+	file f_HOGARES_predios <- file("../includes/censo/Hogares_des_161_locsincom.csv");
+	file f_VIVIENDAS_predios <- file("../includes/censo/Viviendas_des_161_locsincom_oc.csv");
+//	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
+//	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
+//	file f_VIVIENDAS_comunas <- file("../includes/censo/com_viviendas.csv");
 
 	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
