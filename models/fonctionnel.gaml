@@ -11,10 +11,8 @@ global {
 //Chargement des fichiers CSV
 	file f_PERSONAS_predios <- file("../includes/censo/Personas_des_161_locsincom.csv");
 	file f_HOGARES_predios <- file("../includes/censo/Hogares_des_161_locsincom.csv");
-	file f_VIVIENDAS_predios <- file("../includes/censo/Viviendas_des_161_locsincom_oc.csv");
-//	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
-//	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
-//	file f_VIVIENDAS_comunas <- file("../includes/censo/com_viviendas.csv");
+	//	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
+	//	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
 
 	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
@@ -40,8 +38,6 @@ global {
 	//Variables globales pour monitors
 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
-	int nb_viviendas -> length(viviendas);
-	//int nb_viviendas_free -> length(viviendas where each.is_free);
 	float ratio_deforest_min -> predios min_of (each.ratio_deforest);
 	float ratio_deforest_max -> predios max_of (each.ratio_deforest);
 	float ratio_deforest_mean -> predios mean_of (each.ratio_deforest);
@@ -51,7 +47,6 @@ global {
 	int area_deforest_min -> predios min_of (each.area_deforest);
 	int area_deforest_max -> predios max_of (each.area_deforest);
 	float area_deforest_mean -> predios mean_of (each.area_deforest);
-	//int nb_personnes150153999016 -> length(hogares where (each.sec_id = "150153999016"));
 
 	//	//Palettes
 	//	list<string> palette <- brewer_palettes(5);
@@ -62,9 +57,6 @@ global {
 	init {
 		do init_cells;
 		do init_predios;
-		do init_viviendas;
-		do init_predios;
-		do init_viviendas;
 		//do init_comunas;
 		do init_pop;
 		do init_cult;
@@ -88,48 +80,13 @@ global {
 	}
 
 	action init_predios {
-		create predios from: predios_con_def_shp with: [clave_data::string(read('clave_cata'))] {
+		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))] {
 			is_free <- true;
 		}
 
 		ask predios {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
-		}
-
-	}
-
-	action init_viviendas {
-		create sectores from: sectores_shp with: [dpa_secdis::string(read('DPA_SECDIS'))];
-		gen_population_generator viv_gen;
-		viv_gen <- viv_gen with_generation_algo "US";
-		viv_gen <- add_census_file(viv_gen, f_VIVIENDAS_predios.path, "Sample", ",", 1, 1);
-		// --------------------------
-		// Setup Attributs
-		// --------------------------	
-		viv_gen <- viv_gen add_attribute ("sec_id", string, list_id);
-		viv_gen <- viv_gen add_attribute ("hog_id", string, list_id);
-		viv_gen <- viv_gen add_attribute ("viv_id", string, list_id);
-		viv_gen <- viv_gen add_attribute ("Total_Personas", int, echelle_GLOBALE);
-		viv_gen <- viv_gen add_attribute ("nro_hogares", int, ["0", "1", "2"]);
-		// -------------------------
-		// Spatialization 
-		// -------------------------
-		//		viv_gen <- viv_gen localize_on_geometries (predios_con_def_shp.path);
-		//		viv_gen <- viv_gen add_capacity_distribution (1,1);
-		//		viv_gen <- viv_gen localize_on_census (sectores_shp.path);
-		//		viv_gen <- viv_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
-		//
-		create viviendas from: viv_gen {
-			if one_matches(predios, each.is_free = true) {
-				my_predio <- (shuffle(predios) first_with (each.is_free = true));
-				location <- my_predio.location;
-				ask my_predio {
-					is_free <- false;
-				}
-
-			}
-
 		}
 
 	}
@@ -152,14 +109,22 @@ global {
 		hog_gen <- hog_gen add_attribute ("Total_Personas", int, echelle_pop);
 		hog_gen <- hog_gen add_attribute ("Total_Hombres", int, echelle_pop);
 		hog_gen <- hog_gen add_attribute ("Total_Mujeres", int, echelle_pop);
-		// -------------------------			
+		// -------------------------
+		// Spatialization 
+		// -------------------------
+		//		hog_gen <- hog_gen localize_on_geometries (predios_con_def_shp.path);
+		//		hog_gen <- hog_gen add_capacity_distribution (1,1);
+		//		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
+		//		hog_gen <- hog_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		//
 		create hogares from: hog_gen {
-			my_vivienda <- first(viviendas where (each.viv_id = self.viv_id));
-			if my_vivienda != nil {
-				location <- my_vivienda.location;
-				my_predio <- my_vivienda.my_predio;
-			} else {
-				do die;
+			if one_matches(predios, each.is_free = true) {
+				my_predio <- (shuffle(predios) first_with (each.is_free = true));
+				location <- my_predio.location;
+				ask my_predio {
+					is_free <- false;
+				}
+
 			}
 
 		}
@@ -263,7 +228,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 }
 
 species predios {
-	string clave_data;
+	string clave_cata;
 	bool is_free;
 	int area_total <- length(cells_inside);
 	int area_deforest <- cells_inside count each.is_deforest;
@@ -415,7 +380,6 @@ experiment Simulation type: gui {
 		display map type: opengl {
 			grid cell;
 			species predios aspect: default;
-			species viviendas;
 			//species sectores;
 			species hogares;
 			species personas;
@@ -423,8 +387,6 @@ experiment Simulation type: gui {
 
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
-		monitor "Total viviendas" value: nb_viviendas;
-		//monitor "Total viviendas libres" value: nb_viviendas_free;
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;
 		monitor "Moy. ratio deforest" value: ratio_deforest_mean;
@@ -435,7 +397,6 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
-		browse "suivi viviendas" value: viviendas attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "nro_hogares", "my_predio"];
 		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
