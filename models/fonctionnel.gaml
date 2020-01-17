@@ -112,9 +112,9 @@ global {
 		// Spatialization 
 		// -------------------------
 		hog_gen <- hog_gen localize_on_geometries (predios_con_def_shp.path);
-		hog_gen <- hog_gen add_capacity_constraint 1;
+		hog_gen <- hog_gen add_capacity_constraint (1);
 		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
-		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
+		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile,5#km,1#km,1); //à préciser
 		create hogares from: hog_gen {
 			my_predio <- one_of(predios overlapping self);
 			ask my_predio {
@@ -366,7 +366,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			species predios aspect: default;
+			species predios aspect: carto;
 			//species sectores;
 			species hogares;
 			species personas;
