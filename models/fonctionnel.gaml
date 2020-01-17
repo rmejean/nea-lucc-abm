@@ -120,18 +120,7 @@ global {
 			ask my_predio {
 				is_free <- false;
 			}
-
 		}
-		//			if one_matches(predios, each.is_free = true) {
-		//				my_predio <- (shuffle(predios) first_with (each.is_free = true));
-		//				location <- my_predio.location;
-		//				ask my_predio {
-		//					is_free <- false;
-		//				}
-		//
-		//			}
-		//
-		//		}
 
 		//
 		// --------------------------
@@ -366,7 +355,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			species predios aspect: carto;
+			//species predios aspect: carto;
 			//species sectores;
 			species hogares;
 			species personas;
