@@ -26,7 +26,6 @@ global {
 
 	//name of the property that contains the id of the census spatial areas in the shapefile
 	string stringOfCensusIdInShapefile <- "DPA_SECDIS";
-
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
 	string stringOfCensusIdInCSVfile <- "sec_id";
 	geometry shape <- envelope(MAE_2008);
@@ -112,22 +111,27 @@ global {
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		//		hog_gen <- hog_gen localize_on_geometries (predios_con_def_shp.path);
-		//		hog_gen <- hog_gen add_capacity_distribution (1,1);
-		//		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
-		//		hog_gen <- hog_gen add_spatial_mapper (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
-		//
+		hog_gen <- hog_gen localize_on_geometries (predios_con_def_shp.path);
+		hog_gen <- hog_gen add_capacity_constraint 1;
+		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
+		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile);
 		create hogares from: hog_gen {
-			if one_matches(predios, each.is_free = true) {
-				my_predio <- (shuffle(predios) first_with (each.is_free = true));
-				location <- my_predio.location;
-				ask my_predio {
-					is_free <- false;
-				}
-
+			my_predio <- one_of(predios overlapping self);
+			ask my_predio {
+				is_free <- false;
 			}
 
 		}
+		//			if one_matches(predios, each.is_free = true) {
+		//				my_predio <- (shuffle(predios) first_with (each.is_free = true));
+		//				location <- my_predio.location;
+		//				ask my_predio {
+		//					is_free <- false;
+		//				}
+		//
+		//			}
+		//
+		//		}
 
 		//
 		// --------------------------
@@ -259,22 +263,6 @@ species predios {
 
 }
 
-species viviendas {
-	string sec_id;
-	string hog_id;
-	string viv_id;
-	sectores my_sector;
-	hogares my_hogar;
-	predios my_predio;
-	int Total_Personas;
-	int nro_hogares;
-
-	aspect default {
-		draw circle(20) color: #black border: #black;
-	}
-
-}
-
 species comunas {
 	int area_total;
 	int area_deforest;
@@ -293,7 +281,6 @@ species hogares {
 	int Total_Personas;
 	int Total_Hombres;
 	int Total_Mujeres;
-	viviendas my_vivienda;
 	predios my_predio;
 	list<personas> membres_hogar;
 	float MOF;
