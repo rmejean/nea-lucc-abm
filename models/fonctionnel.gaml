@@ -47,11 +47,6 @@ global {
 	int area_deforest_max -> predios max_of (each.area_deforest);
 	float area_deforest_mean -> predios mean_of (each.area_deforest);
 
-	//	//Palettes
-	//	list<string> palette <- brewer_palettes(5);
-	//	string sequentialPalette <- "YlOrRd";
-	//	list<rgb> SequentialColors <- brewer_colors(sequentialPalette);
-
 	//-----------------------------------------------------------------------------------------------
 	init {
 		do init_cells;
@@ -114,12 +109,14 @@ global {
 		hog_gen <- hog_gen localize_on_geometries (predios_con_def_shp.path);
 		hog_gen <- hog_gen add_capacity_constraint (1);
 		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
-		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile,5#km,1#km,1); //à préciser
+		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 5 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
 			my_predio <- one_of(predios overlapping self);
 			ask my_predio {
 				is_free <- false;
+				my_hogar <- myself;
 			}
+
 		}
 
 		//
@@ -186,34 +183,55 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	bool is_deforest;
 	string cult;
 	float rev;
+	float MOF_cost;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
 
 	action cult_attribution {
 		if flip(0.6666) = true {
 			cult <- 'v_maniocmais';
-			rev <- rnd((450 / 12), (900 / 12));
-			color <- #yellow;
+			do cult_parameters;
 		} else {
 			if flip(0.6666) = true {
 				cult <- 'v_maraichage';
-				rev <- rnd((1500 / 12), (2500 / 12));
-				color <- #purple;
+				do cult_parameters;
 			} else {
 				if flip(0.3333) = true {
 					cult <- 'v_petit-elevage';
-					rev <- rnd((450 / 12), (1800 / 12));
-					color <- #palevioletred;
+					do cult_parameters;
 				} else {
 					if flip(0.15) = true {
 						cult <- 'v_plantain';
-						rev <- rnd((250 / 12), (2210 / 12));
-						color <- #springgreen;
+						do cult_parameters;
 					}
 
 				}
 
 			}
 
+		}
+
+	}
+
+	action cult_parameters {
+		if cult = 'v_maniocmais' {
+			rev <- rnd((450 / 12), (900 / 12));
+			MOF_cost <- 9.0;
+			color <- #yellow;
+		}
+		if cult = 'v_maraichage' {
+			rev <- rnd((1500 / 12), (2500 / 12));
+			MOF_cost <- 12.6;
+			color <- #purple;
+		}
+		if cult = 'v_petit-elevage' {
+			rev <- rnd((450 / 12), (1800 / 12));
+			MOF_cost <- 6.4;
+			color <- #palevioletred;
+		}
+		if cult = 'v_plantain' {
+			rev <- rnd((250 / 12), (2210 / 12));
+			MOF_cost <- 3.6;
+			color <- #springgreen;
 		}
 
 	}
@@ -227,6 +245,7 @@ species predios {
 	int area_deforest <- cells_inside count each.is_deforest;
 	float ratio_deforest;
 	rgb color;
+	hogares my_hogar;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
 	action calcul_tx_deforest {
 		if area_total > 0 {
