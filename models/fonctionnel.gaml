@@ -406,30 +406,15 @@ experiment Simulation type: gui {
 			}
 
 		}
-		//		
-		//		display Sex {
-		//			chart "sex" type: pie {
-		//				loop se over: ["Hombre", "Mujer"] {
-		//					data se value: people count(each.Sexe = se);
-		//				}
-		//			}
-		//		}
-		//		
-		//			display Ages2 {
-		//			chart "Ages2" type: histogram {
-		//				loop i from: 0 to: 110 {
-		//					data ""+i value: people where (each.sec_id = "220158999006") count(each.Age = i);
-		//				}
-		//			}
-		//		}
+		
+		display area_def {
+			chart "Ages" type: histogram {
+				loop i from: 0 to: 170 {
+					data "" + i value: predios count (each.area_deforest = i);
+				}
+			}
 
-		//				display Sex2 {
-		//			chart "sexe par secteur" type: pie {
-		//				loop se2 over: ["Hombre", "Mujer"] {
-		//					data se2 value: people with:[sec_id = "220153999001"] count(each.Sexe = se2);
-		//				}
-		//			}
-		//		}
+		}
 	}
 
 }
