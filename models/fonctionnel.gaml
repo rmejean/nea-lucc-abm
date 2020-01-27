@@ -52,8 +52,8 @@ global {
 	init {
 		do init_cells;
 		do init_predios;
-		do init_vias;
 		//do init_comunas;
+		do init_vias;
 		do init_pop;
 		do init_cult;
 		do init_revenu;
@@ -185,12 +185,25 @@ global {
 	}
 
 	action init_cult {
-		ask predios where (each.is_free = false) {
-			ask cells_inside where (each.grid_value = 3) {
-				do cult_attribution;
+		ask hogares {
+			if my_predio.area_deforest > 50 {
+				livelihood_strategy <- 'SP3';
 			}
-
+			if my_predio.area_deforest between (10,50) {
+				livelihood_strategy <- 'SP2';
+			}
+			if distance_to (my_predio.location, vias where (each.orden = 1) closest_to self) > 4#km {
+				livelihood_strategy <- 'SP1.1';
+			}
 		}
+		
+		
+//		ask predios where (each.is_free = false) {
+//			ask cells_inside where (each.grid_value = 3) {
+//				do cult_attribution;
+//			}
+//
+//		}
 
 	}
 
@@ -334,9 +347,10 @@ species hogares {
 	predios my_predio;
 	list<personas> membres_hogar;
 	personas chef_hogar;
+	string chef_auto_id;
 	float MOF;
 	float common_pot_inc;
-	string chef_auto_id;
+	string livelihood_strategy;
 
 	action MOF_calc {
 		MOF <- (sum(membres_hogar collect each.vMOF) * 30);
@@ -438,7 +452,7 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
-		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
+		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc", "chef_auto_id"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 		browse "suivi predios" value: predios attributes: ["clave_cata", "is_free", "area_total", "area_deforest", "ratio_deforest", "cells_inside"];
