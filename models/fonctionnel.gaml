@@ -19,6 +19,7 @@ global {
 	file sectores_shp <- file("../includes/sectores_entiers.shp");
 	file predios_con_def_shp <- file("../includes/predios_con_def.shp");
 	//file predios_sin_def_shp <- file("../includes/predios_sin_def.shp");
+	file vias_shp <- shape_file("../includes/routes_SIGTIERRAS_cut.shp");
 	file comunas_shp <- file("../includes/comunas.shp");
 
 	//Chargement du Land Cover
@@ -51,6 +52,7 @@ global {
 	init {
 		do init_cells;
 		do init_predios;
+		do init_vias;
 		//do init_comunas;
 		do init_pop;
 		do init_cult;
@@ -76,6 +78,18 @@ global {
 	action init_predios {
 		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))] {
 			is_free <- true;
+		}
+
+		ask predios {
+			do calcul_tx_deforest;
+			do carto_tx_deforest;
+		}
+
+	}
+	
+	action init_vias {
+		create vias from: vias_shp with: [orden::int(1,2,3)] {
+			
 		}
 
 		ask predios {
@@ -119,11 +133,11 @@ global {
 
 		}
 
-		//
-		// --------------------------
-		// Setup PERSONAS
-		// --------------------------
-		//
+	//
+	// --------------------------
+	// Setup PERSONAS
+	// --------------------------
+	//
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "US";
 		pop_gen <- add_census_file(pop_gen, f_PERSONAS_predios.path, "Sample", ",", 1, 1);
@@ -136,21 +150,31 @@ global {
 		pop_gen <- pop_gen add_attribute ("Sexo", string, ["Hombre", "Mujer"]);
 		pop_gen <- pop_gen add_attribute ("Age", int, echelle_ages);
 		pop_gen <- pop_gen add_attribute ("orden_en_hogar", int, echelle_GLOBALE);
+		pop_gen <- pop_gen add_attribute ("auto_id", string, []);
 		// --------------------------
 		create personas from: pop_gen {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
 			if my_hogar != nil {
 				location <- my_hogar.location;
 				my_predio <- my_hogar.my_predio;
+				if orden_en_hogar = 1 {
+					chef <- true;
+				} else {
+					chef <- false;
+				}
+
 				do vMOF_calc;
 			} else {
 				do die;
 			}
-
 		}
+		// --------------------------
+		// Instructions
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
+			chef_hogar <- one_of (membres_hogar where (each.chef = true));
+			chef_auto_id <- chef_hogar.auto_id;
 			do MOF_calc;
 		}
 
@@ -218,20 +242,29 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			MOF_cost <- 9.0;
 			color <- #yellow;
 		}
+
 		if cult = 'v_maraichage' {
 			rev <- rnd((1500 / 12), (2500 / 12));
 			MOF_cost <- 12.6;
 			color <- #purple;
 		}
+
 		if cult = 'v_petit-elevage' {
 			rev <- rnd((450 / 12), (1800 / 12));
 			MOF_cost <- 6.4;
 			color <- #palevioletred;
 		}
+
 		if cult = 'v_plantain' {
 			rev <- rnd((250 / 12), (2210 / 12));
 			MOF_cost <- 3.6;
 			color <- #springgreen;
+		}
+
+		if cult = 'friche' {
+			rev <- 0.0;
+			MOF_cost <- 0.0;
+			color <- #white;
 		}
 
 	}
@@ -271,6 +304,15 @@ species predios {
 
 }
 
+species vias {
+	int orden;
+
+	aspect default {
+		draw shape color: #black border: #black;
+	}
+
+}
+
 species comunas {
 	int area_total;
 	int area_deforest;
@@ -291,8 +333,10 @@ species hogares {
 	int Total_Mujeres;
 	predios my_predio;
 	list<personas> membres_hogar;
+	personas chef_hogar;
 	float MOF;
 	float common_pot_inc;
+	string chef_auto_id;
 
 	action MOF_calc {
 		MOF <- (sum(membres_hogar collect each.vMOF) * 30);
@@ -311,6 +355,8 @@ species personas parent: hogares {
 	int orden_en_hogar;
 	float vMOF;
 	float inc;
+	string auto_id;
+	bool chef;
 
 	action vMOF_calc {
 		if Age < 11 {
@@ -406,15 +452,17 @@ experiment Simulation type: gui {
 			}
 
 		}
-		
+
 		display area_def {
 			chart "Ages" type: histogram {
 				loop i from: 0 to: 170 {
 					data "" + i value: predios count (each.area_deforest = i);
 				}
+
 			}
 
 		}
+
 	}
 
 }
