@@ -56,7 +56,7 @@ global {
 		do init_vias;
 		do init_pop;
 		do init_LS;
-		do init_cult;
+		//do init_cult;
 		do init_revenu;
 	}
 
@@ -81,10 +81,10 @@ global {
 			is_free <- true;
 		}
 
-		ask predios {
-			do calcul_tx_deforest;
-			do carto_tx_deforest;
-		}
+//		ask predios {
+//			do calcul_tx_deforest;
+//			do carto_tx_deforest;
+//		}
 
 	}
 
@@ -288,6 +288,10 @@ global {
 			}
 
 		}
+		
+		ask predios {
+			do carto_LS;
+		}
 
 	}
 	//---------------------------------------------------------
@@ -300,6 +304,9 @@ global {
 			}
 
 			if livelihood_strategy = 'SP3' {
+				ask my_predio.cells_deforest {
+					
+				}
 			}
 
 			if livelihood_strategy = 'SP2' {
@@ -365,10 +372,10 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			color <- #yellow;
 		}
 
-		if cult = 'v_maraichage' {
+		if cult = 'v_fruits' {
 			rev <- rnd((1500 / 12), (2500 / 12));
 			MOF_cost <- 12.6;
-			color <- #purple;
+			color <- #orange;
 		}
 
 		if cult = 'v_petit-elevage' {
@@ -381,6 +388,21 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- rnd((250 / 12), (2210 / 12));
 			MOF_cost <- 3.6;
 			color <- #springgreen;
+		}
+		if cult = 'r_coffee' {
+			rev <- rnd((5100 / 12), (3000 / 12));
+			MOF_cost <- 3.1;
+			color <- #brown;
+		}
+		if cult = 'r_cacao' {
+			rev <- rnd((1100 / 12), (900 / 12));
+			MOF_cost <- 3.0;
+			color <- #red;
+		}
+		if cult = 'r_elevage' {
+			rev <- rnd((1240 / 12), (1010 / 12));
+			MOF_cost <- 20.5;
+			color <- #purple;
 		}
 
 		if cult = 'friche' {
@@ -421,6 +443,11 @@ species predios {
 	action carto_tx_deforest {
 		color <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
 		rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
+	}
+	
+	action carto_LS {
+		color <- my_hogar.livelihood_strategy = 'SP3' ? #blue :  (my_hogar.livelihood_strategy = 'SP2' ? #green : (my_hogar.livelihood_strategy = 'SP1.1' ?
+			#yellow : (my_hogar.livelihood_strategy = 'SP1.2' ? #pink : #purple)));
 	}
 
 	aspect default {
@@ -550,7 +577,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			//species predios aspect: carto;
+			species predios aspect: carto;
 			//species sectores;
 			species hogares;
 			species personas;
