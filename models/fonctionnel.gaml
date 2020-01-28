@@ -55,6 +55,7 @@ global {
 		//do init_comunas;
 		do init_vias;
 		do init_pop;
+		do init_LS;
 		do init_cult;
 		do init_revenu;
 	}
@@ -86,15 +87,9 @@ global {
 		}
 
 	}
-	
-	action init_vias {
-		create vias from: vias_shp with: [orden::int(1,2,3)] {
-			
-		}
 
-		ask predios {
-			do calcul_tx_deforest;
-			do carto_tx_deforest;
+	action init_vias {
+		create vias from: vias_shp with: [orden::int(get("orden"))] {
 		}
 
 	}
@@ -126,6 +121,7 @@ global {
 		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 5 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
 			my_predio <- one_of(predios overlapping self);
+			location <- one_of(my_predio.cells_deforest).location; //A VERIFIER
 			ask my_predio {
 				is_free <- false;
 				my_hogar <- myself;
@@ -133,11 +129,11 @@ global {
 
 		}
 
-	//
-	// --------------------------
-	// Setup PERSONAS
-	// --------------------------
-	//
+		//
+		// --------------------------
+		// Setup PERSONAS
+		// --------------------------
+		//
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "US";
 		pop_gen <- add_census_file(pop_gen, f_PERSONAS_predios.path, "Sample", ",", 1, 1);
@@ -167,15 +163,20 @@ global {
 			} else {
 				do die;
 			}
+
 		}
 		// --------------------------
-		// Instructions
+		// Instructions post-génération
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			chef_hogar <- one_of (membres_hogar where (each.chef = true));
+			chef_hogar <- one_of(membres_hogar where (each.chef = true));
 			chef_auto_id <- chef_hogar.auto_id;
 			do MOF_calc;
+			ask my_predio.cells_inside {
+				my_hogar <- myself;
+			}
+
 		}
 
 		ask sectores {
@@ -184,26 +185,159 @@ global {
 
 	}
 
+	//---------------------------------------------------------
+	//Initialisation des LS (livelihood strategies) des ménages
+	//---------------------------------------------------------
+	action init_LS {
+		ask hogares {
+		//SP3 : basé sur la taille des parcelles (pâturages)
+			if my_predio.area_deforest > 50 {
+				float proba <- rnd(100.0);
+				if proba < 66.666 {
+					livelihood_strategy <- 'SP3';
+				}
+
+				if proba between (66.666, 74.916) {
+					livelihood_strategy <- 'SP2';
+				}
+
+				if proba between (74.916, 83.166) {
+					livelihood_strategy <- 'SP1.1';
+				}
+
+				if proba between (83.166, 91.416) {
+					livelihood_strategy <- 'SP1.2';
+				}
+
+				if proba between (91.416, 100.00) {
+					livelihood_strategy <- 'SP1.3';
+				}
+
+			}
+			//SP2 : basé sur la taille des parcelles (pâturages)
+			if my_predio.area_deforest between (10, 50) {
+				float proba <- rnd(100.0);
+				if proba < 66.666 {
+					livelihood_strategy <- 'SP2';
+				}
+
+				if proba between (66.666, 74.916) {
+					livelihood_strategy <- 'SP3';
+				}
+
+				if proba between (74.916, 83.166) {
+					livelihood_strategy <- 'SP1.1';
+				}
+
+				if proba between (83.166, 91.416) {
+					livelihood_strategy <- 'SP1.2';
+				}
+
+				if proba between (91.416, 100.00) {
+					livelihood_strategy <- 'SP1.3';
+				}
+
+			}
+			//SP1.1 : basé sur l'éloignement à la route principale (via Auca, indigènes et comunas)
+			if distance_to(my_predio, vias where (each.orden = 1) closest_to self) > 4 #km {
+				float proba <- rnd(100.0);
+				if proba < 66.666 {
+					livelihood_strategy <- 'SP1.1';
+				}
+
+				if proba between (66.666, 74.916) {
+					livelihood_strategy <- 'SP3';
+				}
+
+				if proba between (74.916, 83.166) {
+					livelihood_strategy <- 'SP2';
+				}
+
+				if proba between (83.166, 91.416) {
+					livelihood_strategy <- 'SP1.2';
+				}
+
+				if proba between (91.416, 100.00) {
+					livelihood_strategy <- 'SP1.3';
+				}
+
+			}
+			//SP1.2 : basé sur la proximité aux routes secondaires
+			if distance_to(my_predio, vias where (each.orden = 2) closest_to self) < distance_to(my_predio, vias where (each.orden = 1) closest_to self) {
+				float proba <- rnd(100.0);
+				if proba < 66.666 {
+					livelihood_strategy <- 'SP1.2';
+				}
+
+				if proba between (66.666, 74.916) {
+					livelihood_strategy <- 'SP3';
+				}
+
+				if proba between (74.916, 83.166) {
+					livelihood_strategy <- 'SP2';
+				}
+
+				if proba between (83.166, 91.416) {
+					livelihood_strategy <- 'SP1.1';
+				}
+
+				if proba between (91.416, 100.00) {
+					livelihood_strategy <- 'SP1.3';
+				}
+
+			}
+
+		}
+
+	}
+	//---------------------------------------------------------
+	//Initialisation des cultures selon la LS des ménages
+	//---------------------------------------------------------
 	action init_cult {
 		ask hogares {
-			if my_predio.area_deforest > 50 {
-				livelihood_strategy <- 'SP3';
+			ask first(cell overlapping self) {
+				cult <- 'house';
 			}
-			if my_predio.area_deforest between (10,50) {
-				livelihood_strategy <- 'SP2';
+
+			if livelihood_strategy = 'SP3' {
 			}
-			if distance_to (my_predio.location, vias where (each.orden = 1) closest_to self) > 4#km {
-				livelihood_strategy <- 'SP1.1';
+
+			if livelihood_strategy = 'SP2' {
 			}
+
+			if livelihood_strategy = 'SP1.1' {
+			}
+
+			if livelihood_strategy = 'SP1.2' {
+			}
+
+			if livelihood_strategy = 'SP1.3' {
+			}
+
+			//		if flip(0.6666) = true {
+			//			cult <- 'v_maniocmais';
+			//			do cult_parameters;
+			//		} else {
+			//			if flip(0.6666) = true {
+			//				cult <- 'v_maraichage';
+			//				do cult_parameters;
+			//			} else {
+			//				if flip(0.3333) = true {
+			//					cult <- 'v_petit-elevage';
+			//					do cult_parameters;
+			//				} else {
+			//					if flip(0.15) = true {
+			//						cult <- 'v_plantain';
+			//						do cult_parameters;
+			//					}
+			//
+			//				}
+			//
+			//			}
+			//
+			//		}
+
 		}
-		
-		
-//		ask predios where (each.is_free = false) {
-//			ask cells_inside where (each.grid_value = 3) {
-//				do cult_attribution;
-//			}
-//
-//		}
 
 	}
 
@@ -221,33 +355,8 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	string cult;
 	float rev;
 	float MOF_cost;
+	hogares my_hogar;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
-
-	action cult_attribution {
-		if flip(0.6666) = true {
-			cult <- 'v_maniocmais';
-			do cult_parameters;
-		} else {
-			if flip(0.6666) = true {
-				cult <- 'v_maraichage';
-				do cult_parameters;
-			} else {
-				if flip(0.3333) = true {
-					cult <- 'v_petit-elevage';
-					do cult_parameters;
-				} else {
-					if flip(0.15) = true {
-						cult <- 'v_plantain';
-						do cult_parameters;
-					}
-
-				}
-
-			}
-
-		}
-
-	}
 
 	action cult_parameters {
 		if cult = 'v_maniocmais' {
@@ -279,6 +388,11 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			MOF_cost <- 0.0;
 			color <- #white;
 		}
+		if cult = 'house' {
+			rev <- 0.0;
+			MOF_cost <- 0.0;
+			color <- #red;
+		}
 
 	}
 
@@ -293,6 +407,8 @@ species predios {
 	rgb color;
 	hogares my_hogar;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
+	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
+
 	action calcul_tx_deforest {
 		if area_total > 0 {
 			ratio_deforest <- (area_deforest / area_total);
@@ -452,7 +568,8 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
-		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc", "chef_auto_id"];
+		browse "suivi hogares" value: hogares attributes:
+		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc", "chef_auto_id"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 		browse "suivi predios" value: predios attributes: ["clave_cata", "is_free", "area_total", "area_deforest", "ratio_deforest", "cells_inside"];
