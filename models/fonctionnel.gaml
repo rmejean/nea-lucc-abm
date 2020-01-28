@@ -81,10 +81,10 @@ global {
 			is_free <- true;
 		}
 
-//		ask predios {
-//			do calcul_tx_deforest;
-//			do carto_tx_deforest;
-//		}
+		ask predios {
+			do calcul_tx_deforest;
+			do carto_tx_deforest;
+		}
 
 	}
 
@@ -427,6 +427,8 @@ species predios {
 	int area_deforest <- cells_inside count each.is_deforest;
 	float ratio_deforest;
 	rgb color;
+	rgb color_tx_def;
+	rgb color_LS;
 	hogares my_hogar;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
@@ -441,21 +443,21 @@ species predios {
 	}
 
 	action carto_tx_deforest {
-		color <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
+		color_tx_def <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
 		rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
 	
 	action carto_LS {
-		color <- my_hogar.livelihood_strategy = 'SP3' ? #blue :  (my_hogar.livelihood_strategy = 'SP2' ? #green : (my_hogar.livelihood_strategy = 'SP1.1' ?
+		color_LS <- my_hogar.livelihood_strategy = 'SP3' ? #blue :  (my_hogar.livelihood_strategy = 'SP2' ? #green : (my_hogar.livelihood_strategy = 'SP1.1' ?
 			#yellow : (my_hogar.livelihood_strategy = 'SP1.2' ? #pink : #purple)));
 	}
 
-	aspect default {
-		draw shape color: #transparent border: #black;
+	aspect carto_tx_def {
+		draw shape color: color_tx_def border: #black;
 	}
 
-	aspect carto {
-		draw shape color: color border: #black;
+	aspect carto_LS {
+		draw shape color: color_LS border: #black;
 	}
 
 }
@@ -577,7 +579,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			species predios aspect: carto;
+			species predios aspect: carto_LS;
 			//species sectores;
 			species hogares;
 			species personas;
