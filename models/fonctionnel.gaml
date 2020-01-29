@@ -305,6 +305,7 @@ global {
 
 			if livelihood_strategy = 'SP3' {
 				ask my_predio.cells_deforest {
+					
 				}
 
 			}
@@ -367,15 +368,6 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	//-----------------------------
 	//Farming activities parameters
 	//-----------------------------
-	//Income ----------------------
-	float inc_maniocmais <- rnd((450 / 12), (900 / 12));
-	float inc_fruits <- rnd((1500 / 12), (2500 / 12));
-	float inc_s_livestock <- rnd((450 / 12), (1800 / 12));
-	float inc_plantain <- rnd((250 / 12), (2210 / 12));
-	float inc_coffee <- rnd((5100 / 12), (3000 / 12));
-	float inc_cacao <- rnd((1100 / 12), (900 / 12));
-	float inc_livestock <- rnd((1240 / 12), (1010 / 12));
-	float inc_no_farming <- 0.0;
 	//MOF -------------------------
 	float MOFcost_maniocmais <- 9.0;
 	float MOFcost_fruits <- 12.6;
@@ -386,40 +378,49 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	float MOFcost_livestock <- 20.5;
 	float MOFcost_no_farming <- 0.0;
 
-	action cult_parameters {
-		if cult = 'v_maniocmais' {
+	action color_cult {
+		if cult = 'maniocmais' {
+			rev <- rnd((450 / 12), (900 / 12));
 			color <- #yellow;
 		}
 
-		if cult = 'v_fruits' {
+		if cult = 'fruits' {
+			rev <- rnd((1500 / 12), (2500 / 12));
 			color <- #orange;
 		}
 
-		if cult = 'v_petit-elevage' {
+		if cult = 's_livestock' {
+			rev <- rnd((450 / 12), (1800 / 12));
 			color <- #palevioletred;
 		}
 
-		if cult = 'v_plantain' {
+		if cult = 'plantain' {
+			rev <- rnd((250 / 12), (2210 / 12));
 			color <- #springgreen;
 		}
 
-		if cult = 'r_coffee' {
+		if cult = 'coffee' {
+			rev <- rnd((5100 / 12), (3000 / 12));
 			color <- #brown;
 		}
 
-		if cult = 'r_cacao' {
+		if cult = 'cacao' {
+			rev <- rnd((1100 / 12), (900 / 12));
 			color <- #red;
 		}
 
-		if cult = 'r_elevage' {
+		if cult = 'livestock' {
+			rev <- rnd((1240 / 12), (1010 / 12));
 			color <- #purple;
 		}
 
 		if cult = 'friche' {
+			rev <- 0.0;
 			color <- #white;
 		}
 
 		if cult = 'house' {
+			rev <- 0.0;
 			color <- #red;
 		}
 
