@@ -288,8 +288,8 @@ global {
 			}
 
 		}
-		
-		ask predios {
+
+		ask predios where (each.is_free = false) {
 			do carto_LS;
 		}
 
@@ -305,8 +305,8 @@ global {
 
 			if livelihood_strategy = 'SP3' {
 				ask my_predio.cells_deforest {
-					
 				}
+
 			}
 
 			if livelihood_strategy = 'SP2' {
@@ -364,55 +364,62 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	float MOF_cost;
 	hogares my_hogar;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
+	//-----------------------------
+	//Farming activities parameters
+	//-----------------------------
+	//Income ----------------------
+	float inc_maniocmais <- rnd((450 / 12), (900 / 12));
+	float inc_fruits <- rnd((1500 / 12), (2500 / 12));
+	float inc_s_livestock <- rnd((450 / 12), (1800 / 12));
+	float inc_plantain <- rnd((250 / 12), (2210 / 12));
+	float inc_coffee <- rnd((5100 / 12), (3000 / 12));
+	float inc_cacao <- rnd((1100 / 12), (900 / 12));
+	float inc_livestock <- rnd((1240 / 12), (1010 / 12));
+	float inc_no_farming <- 0.0;
+	//MOF -------------------------
+	float MOFcost_maniocmais <- 9.0;
+	float MOFcost_fruits <- 12.6;
+	float MOFcost_s_livestock <- 6.4;
+	float MOFcost_plantain <- 3.6;
+	float MOFcost_coffee <- 3.1;
+	float MOFcost_cacao <- 3.0;
+	float MOFcost_livestock <- 20.5;
+	float MOFcost_no_farming <- 0.0;
 
 	action cult_parameters {
 		if cult = 'v_maniocmais' {
-			rev <- rnd((450 / 12), (900 / 12));
-			MOF_cost <- 9.0;
 			color <- #yellow;
 		}
 
 		if cult = 'v_fruits' {
-			rev <- rnd((1500 / 12), (2500 / 12));
-			MOF_cost <- 12.6;
 			color <- #orange;
 		}
 
 		if cult = 'v_petit-elevage' {
-			rev <- rnd((450 / 12), (1800 / 12));
-			MOF_cost <- 6.4;
 			color <- #palevioletred;
 		}
 
 		if cult = 'v_plantain' {
-			rev <- rnd((250 / 12), (2210 / 12));
-			MOF_cost <- 3.6;
 			color <- #springgreen;
 		}
+
 		if cult = 'r_coffee' {
-			rev <- rnd((5100 / 12), (3000 / 12));
-			MOF_cost <- 3.1;
 			color <- #brown;
 		}
+
 		if cult = 'r_cacao' {
-			rev <- rnd((1100 / 12), (900 / 12));
-			MOF_cost <- 3.0;
 			color <- #red;
 		}
+
 		if cult = 'r_elevage' {
-			rev <- rnd((1240 / 12), (1010 / 12));
-			MOF_cost <- 20.5;
 			color <- #purple;
 		}
 
 		if cult = 'friche' {
-			rev <- 0.0;
-			MOF_cost <- 0.0;
 			color <- #white;
 		}
+
 		if cult = 'house' {
-			rev <- 0.0;
-			MOF_cost <- 0.0;
 			color <- #red;
 		}
 
@@ -428,7 +435,7 @@ species predios {
 	float ratio_deforest;
 	rgb color;
 	rgb color_tx_def;
-	rgb color_LS;
+	rgb LS_color;
 	hogares my_hogar;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
@@ -446,10 +453,10 @@ species predios {
 		color_tx_def <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
 		rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
-	
+
 	action carto_LS {
-		color_LS <- my_hogar.livelihood_strategy = 'SP3' ? #blue :  (my_hogar.livelihood_strategy = 'SP2' ? #green : (my_hogar.livelihood_strategy = 'SP1.1' ?
-			#yellow : (my_hogar.livelihood_strategy = 'SP1.2' ? #pink : #purple)));
+		LS_color <- my_hogar.livelihood_strategy = 'SP3' ? #lightseagreen : (my_hogar.livelihood_strategy = 'SP2' ? #paleturquoise : (my_hogar.livelihood_strategy = 'SP1.1' ?
+		#greenyellow : (my_hogar.livelihood_strategy = 'SP1.2' ? #tan : #rosybrown)));
 	}
 
 	aspect carto_tx_def {
@@ -457,7 +464,7 @@ species predios {
 	}
 
 	aspect carto_LS {
-		draw shape color: color_LS border: #black;
+		draw shape color: LS_color border: #black;
 	}
 
 }
