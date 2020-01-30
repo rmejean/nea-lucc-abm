@@ -305,7 +305,7 @@ global {
 
 			if livelihood_strategy = 'SP3' {
 				ask my_predio.cells_deforest {
-					
+					loop while: 
 				}
 
 			}
