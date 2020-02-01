@@ -48,6 +48,21 @@ global {
 	int area_deforest_max -> predios max_of (each.area_deforest);
 	float area_deforest_mean -> predios mean_of (each.area_deforest);
 
+	//-----------------------------
+	//Farming activities parameters
+	//-----------------------------
+	//MOF -------------------------
+	float MOFcost_maniocmais <- 9.0;
+	float MOFcost_fruits <- 12.6;
+	float MOFcost_s_livestock <- 6.4;
+	float MOFcost_plantain <- 3.6;
+	float MOFcost_coffee <- 3.1;
+	float MOFcost_cacao <- 3.0;
+	float MOFcost_livestock <- 20.5;
+	float MOFcost_no_farming <- 0.0;
+	//Life cost --------------------
+	float $_ANFP <- 250.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
+
 	//-----------------------------------------------------------------------------------------------
 	init {
 		do init_cells;
@@ -56,7 +71,7 @@ global {
 		do init_vias;
 		do init_pop;
 		do init_LS;
-		//do init_cult;
+		do init_farming_patchwork;
 		do init_revenu;
 	}
 
@@ -121,7 +136,7 @@ global {
 		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 5 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
 			my_predio <- one_of(predios overlapping self);
-			location <- one_of(my_predio.cells_deforest).location; //A VERIFIER
+			location <- one_of(my_predio.cells_deforest).location; //A AMELIORER
 			ask my_predio {
 				is_free <- false;
 				my_hogar <- myself;
@@ -297,28 +312,84 @@ global {
 	//---------------------------------------------------------
 	//Initialisation des cultures selon la LS des ménages
 	//---------------------------------------------------------
-	action init_cult {
+	action init_farming_patchwork {
+	//Départ : attribuer un pixel pour l'habitation
 		ask hogares {
 			ask first(cell overlapping self) {
 				cult <- 'house';
+				color <- #white;
 			}
-
+			//Patchwork du SP3
 			if livelihood_strategy = 'SP3' {
-				ask my_predio.cells_deforest {
-					loop while: 
+				ask one_of(my_predio.cells_deforest where (each.cult = 'house')).neighbors { //attention : il faut que les voisins soient DANS LA MEME PARCELLE!!
+					cult <- 'livestock';
+					myself.MOF <- myself.MOF - MOFcost_livestock;
+					color <- #purple;
+				}
+
+				loop while: self.MOF > MOFcost_livestock {
+					ask one_of(my_predio.cells_deforest where (each.cult = 'livestock')).neighbors {
+						cult <- 'livestock';
+						myself.MOF <- myself.MOF - MOFcost_livestock;
+						color <- #purple;
+					}
+
 				}
 
 			}
-
+			//Patchwork du SP2
 			if livelihood_strategy = 'SP2' {
-			}
+				ask one_of(my_predio.cells_deforest where (each.cult = 'house')).neighbors {
+					cult <- 'livestock';
+					myself.MOF <- myself.MOF - MOFcost_livestock;
+					color <- #purple;
+				}
 
+				loop while: self.MOF > MOFcost_livestock {
+					ask one_of(my_predio.cells_deforest where (each.cult = 'livestock')).neighbors {
+						cult <- 'livestock';
+						myself.MOF <- myself.MOF - MOFcost_livestock;
+						color <- #purple;
+					}
+
+				}
+
+			}
+			//Patchwork du SP1.1
 			if livelihood_strategy = 'SP1.1' {
-			}
+			//Cultures vivrières
+				ask one_of(my_predio.cells_deforest where (each.cult = 'house')).neighbors {
+					cult <- 'maniocmais';
+					myself.MOF <- myself.MOF - MOFcost_maniocmais;
+					color <- #beige;
+				}
 
+				ask one_of(my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais')).neighbors {
+					cult <- 'fruits';
+					myself.MOF <- myself.MOF - MOFcost_fruits;
+					color <- #orange;
+				}
+				//Culture de rente (café)
+				if self.MOF > MOFcost_coffee {
+					ask one_of(my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits')).neighbors {
+						cult <- 'coffee';
+						myself.MOF <- myself.MOF - MOFcost_coffee;
+						color <- #orange;
+					}
+				}
+				//Friches longues
+				list<cell> px_cult <- my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits' or 'coffee');
+				int nb_px_cult <- length(px_cult);
+				ask (rnd(nb_px_cult - 1, nb_px_cult + 1) among px_cult as cell).neighbors {
+					cult <- 'friche';
+					color <- #brown;
+				}
+
+			}
+			//Patchwork du SP1.2
 			if livelihood_strategy = 'SP1.2' {
 			}
-
+			//Patchwork du SP1.3
 			if livelihood_strategy = 'SP1.3' {
 			}
 
@@ -358,25 +429,13 @@ global {
 
 }
 
-grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
+grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false use_neighbors_cache: false {
 	bool is_deforest;
 	string cult;
 	float rev;
 	float MOF_cost;
 	hogares my_hogar;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
-	//-----------------------------
-	//Farming activities parameters
-	//-----------------------------
-	//MOF -------------------------
-	float MOFcost_maniocmais <- 9.0;
-	float MOFcost_fruits <- 12.6;
-	float MOFcost_s_livestock <- 6.4;
-	float MOFcost_plantain <- 3.6;
-	float MOFcost_coffee <- 3.1;
-	float MOFcost_cacao <- 3.0;
-	float MOFcost_livestock <- 20.5;
-	float MOFcost_no_farming <- 0.0;
 
 	action color_cult {
 		if cult = 'maniocmais' {
@@ -438,7 +497,7 @@ species predios {
 	rgb color_tx_def;
 	rgb LS_color;
 	hogares my_hogar;
-	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ? il faut vérifier si pas de doubles comptes!
+	list<cell> cells_inside -> {cell inside self}; //ancienne version : il y avait overlapping
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
 
 	action calcul_tx_deforest {
@@ -458,6 +517,10 @@ species predios {
 	action carto_LS {
 		LS_color <- my_hogar.livelihood_strategy = 'SP3' ? #lightseagreen : (my_hogar.livelihood_strategy = 'SP2' ? #paleturquoise : (my_hogar.livelihood_strategy = 'SP1.1' ?
 		#greenyellow : (my_hogar.livelihood_strategy = 'SP1.2' ? #tan : #rosybrown)));
+	}
+	
+	aspect default {
+		draw shape border: #black;
 	}
 
 	aspect carto_tx_def {
@@ -490,7 +553,7 @@ species comunas {
 
 }
 
-species hogares {
+species hogares control: weighted_tasks {
 	string sec_id;
 	string hog_id;
 	string viv_id;
@@ -587,7 +650,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			species predios aspect: carto_LS;
+			species predios aspect: default;
 			//species sectores;
 			species hogares;
 			species personas;
