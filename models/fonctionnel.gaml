@@ -135,8 +135,8 @@ global {
 		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
 		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 5 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
-			my_predio <- one_of(predios overlapping self);
-			location <- one_of(my_predio.cells_deforest).location; //A AMELIORER
+			my_predio <- first(predios overlapping self);
+			location <- one_of(my_predio.cells_deforest).location; //A AMELIORER : first est trop régulier, one_of trop hasardeux
 			ask my_predio {
 				is_free <- false;
 				my_hogar <- myself;
@@ -200,10 +200,10 @@ global {
 
 	}
 
+	action init_LS {
 	//---------------------------------------------------------
 	//Initialisation des LS (livelihood strategies) des ménages
 	//---------------------------------------------------------
-	action init_LS {
 		ask hogares {
 		//SP3 : basé sur la taille des parcelles (pâturages)
 			if my_predio.area_deforest > 50 {
@@ -309,11 +309,13 @@ global {
 		}
 
 	}
+
+	action init_farming_patchwork {
 	//---------------------------------------------------------
 	//Initialisation des cultures selon la LS des ménages
 	//---------------------------------------------------------
-	action init_farming_patchwork {
-	//Départ : attribuer un pixel pour l'habitation
+
+	//Départ : attribuer un pixel pour l'habitation du ménage (la vivienda)
 		ask hogares {
 			ask first(cell overlapping self) {
 				cult <- 'house';
@@ -321,66 +323,99 @@ global {
 			}
 			//Patchwork du SP3
 			if livelihood_strategy = 'SP3' {
-				ask one_of(my_predio.cells_deforest where (each.cult = 'house')).neighbors { //attention : il faut que les voisins soient DANS LA MEME PARCELLE!!
-					cult <- 'livestock';
-					myself.MOF <- myself.MOF - MOFcost_livestock;
-					color <- #purple;
-				}
-
-				loop while: self.MOF > MOFcost_livestock {
-					ask one_of(my_predio.cells_deforest where (each.cult = 'livestock')).neighbors {
+				if first(my_predio.cells_deforest where (each.cult = 'house')).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
+					ask first(first(my_predio.cells_deforest where (each.cult = 'house')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
 						cult <- 'livestock';
 						myself.MOF <- myself.MOF - MOFcost_livestock;
 						color <- #purple;
 					}
 
+					loop while: self.MOF > MOFcost_livestock {
+						if (my_predio.cells_deforest where (each.cult = 'livestock') as cell).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
+							ask first(first(my_predio.cells_deforest where (each.cult = 'livestock')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
+								cult <- 'livestock';
+								myself.MOF <- myself.MOF - MOFcost_livestock;
+								color <- #purple;
+							}
+
+						} else {
+							write 'Problème SP3 : pas de voisins à la 1st livestock cell éligibles au livestock.';
+						}
+
+					}
+
+				} else {
+					write 'Problème SP3 : pas de voisins à la maison éligibles au livestock.';
 				}
 
 			}
 			//Patchwork du SP2
 			if livelihood_strategy = 'SP2' {
-				ask one_of(my_predio.cells_deforest where (each.cult = 'house')).neighbors {
-					cult <- 'livestock';
-					myself.MOF <- myself.MOF - MOFcost_livestock;
-					color <- #purple;
-				}
-
-				loop while: self.MOF > MOFcost_livestock {
-					ask one_of(my_predio.cells_deforest where (each.cult = 'livestock')).neighbors {
+				if first(my_predio.cells_deforest where (each.cult = 'house')).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
+					ask first(first(my_predio.cells_deforest where (each.cult = 'house')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
 						cult <- 'livestock';
 						myself.MOF <- myself.MOF - MOFcost_livestock;
 						color <- #purple;
 					}
 
+					loop while: self.MOF > MOFcost_livestock {
+						if (my_predio.cells_deforest where (each.cult = 'livestock') as cell).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
+							ask first(first(my_predio.cells_deforest where (each.cult = 'livestock')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
+								cult <- 'livestock';
+								myself.MOF <- myself.MOF - MOFcost_livestock;
+								color <- #purple;
+							}
+
+						} else {
+							write 'Problème SP2 : pas de voisins à la 1st livestock cell éligibles au livestock.';
+						}
+
+					}
+
+				} else {
+					write 'Problème SP2 : pas de voisins à la maison éligibles au livestock.';
 				}
 
 			}
 			//Patchwork du SP1.1
 			if livelihood_strategy = 'SP1.1' {
 			//Cultures vivrières
-				ask one_of(my_predio.cells_deforest where (each.cult = 'house')).neighbors {
-					cult <- 'maniocmais';
-					myself.MOF <- myself.MOF - MOFcost_maniocmais;
-					color <- #beige;
+				if first(my_predio.cells_deforest where (each.cult = 'house')).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
+					ask first(first(my_predio.cells_deforest where (each.cult = 'house')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
+						cult <- 'maniocmais';
+						myself.MOF <- myself.MOF - MOFcost_maniocmais;
+						color <- #beige;
+					}
+
+				} else {
+					write 'Problème SP1.1 : pas de voisins à la maison éligibles au maniocmais.';
 				}
 
-				ask one_of(my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais')).neighbors {
-					cult <- 'fruits';
-					myself.MOF <- myself.MOF - MOFcost_fruits;
-					color <- #orange;
-				}
-				//Culture de rente (café)
-				if self.MOF > MOFcost_coffee {
-					ask one_of(my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits')).neighbors {
-						cult <- 'coffee';
-						myself.MOF <- myself.MOF - MOFcost_coffee;
+				if (my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais') as cell).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
+					ask first(first(my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
+						cult <- 'fruits';
+						myself.MOF <- myself.MOF - MOFcost_fruits;
 						color <- #orange;
 					}
+
 				}
+				//Culture de rente (café)
+				if (my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits') as cell).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
+					if self.MOF > MOFcost_coffee {
+						ask first(first(my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
+							cult <- 'coffee';
+							myself.MOF <- myself.MOF - MOFcost_coffee;
+							color <- #orange;
+						}
+
+					}
+
+				}
+
 				//Friches longues
 				list<cell> px_cult <- my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits' or 'coffee');
 				int nb_px_cult <- length(px_cult);
-				ask (rnd(nb_px_cult - 1, nb_px_cult + 1) among px_cult as cell).neighbors {
+				ask (rnd(nb_px_cult - 1, nb_px_cult + 1) among px_cult as cell).neighbors where (each.my_hogar = myself and each.is_deforest = true) {
 					cult <- 'friche';
 					color <- #brown;
 				}
@@ -497,7 +532,7 @@ species predios {
 	rgb color_tx_def;
 	rgb LS_color;
 	hogares my_hogar;
-	list<cell> cells_inside -> {cell inside self}; //ancienne version : il y avait overlapping
+	list<cell> cells_inside -> {cell overlapping self}; //ancienne version : il y avait overlapping
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
 
 	action calcul_tx_deforest {
@@ -518,7 +553,7 @@ species predios {
 		LS_color <- my_hogar.livelihood_strategy = 'SP3' ? #lightseagreen : (my_hogar.livelihood_strategy = 'SP2' ? #paleturquoise : (my_hogar.livelihood_strategy = 'SP1.1' ?
 		#greenyellow : (my_hogar.livelihood_strategy = 'SP1.2' ? #tan : #rosybrown)));
 	}
-	
+
 	aspect default {
 		draw shape border: #black;
 	}
@@ -650,7 +685,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			species predios aspect: default;
+			//species predios aspect: default;
 			//species sectores;
 			species hogares;
 			species personas;
