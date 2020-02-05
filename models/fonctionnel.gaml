@@ -8,9 +8,11 @@ model Dayuma_INIT_GENSTAR
 
 global {
 
-//Chargement des fichiers CSV
+	//Chargement des fichiers CSV pop.
 	file f_PERSONAS_predios <- file("../includes/censo/Personas_des_161_locsincom.csv");
 	file f_HOGARES_predios <- file("../includes/censo/Hogares_des_161_locsincom.csv");
+	//Chargement des fichiers CSV landscape
+	file f_FREQ_SP3 <- file("../includes/LS_patchwork_frequencies/SP3.csv");
 	//	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
 	//	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
 
@@ -34,10 +36,12 @@ global {
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
 	list<string> list_id <- ([]);
+	list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
 
 	//Variables globales pour monitors
 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
+	int nb_patches -> length(patches);
 	float ratio_deforest_min -> predios min_of (each.ratio_deforest);
 	float ratio_deforest_max -> predios max_of (each.ratio_deforest);
 	float ratio_deforest_mean -> predios mean_of (each.ratio_deforest);
@@ -480,20 +484,13 @@ global {
 		ask predios where (each.LS = 'SP3') {
 			gen_population_generator AL_genSP3;
 			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
-			AL_genSP3 <- add_census_file(AL_genSP3, f_HOGARES_predios.path, "Sample", ",", 1, 1);
+			AL_genSP3 <- add_census_file(AL_genSP3, f_FREQ_SP3.path, "GlobalFrequencyTable", ",", 2, 1);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
-			AL_genSP3 <- AL_genSP3 add_attribute ("sec_id", string, list_id);
-			AL_genSP3 <- AL_genSP3 add_attribute ("hog_id", string, list_id);
-			AL_genSP3 <- AL_genSP3 add_attribute ("viv_id", string, list_id);
-			// -------------------------
-			// Spatialization 
-			// -------------------------
-			AL_genSP3 <- AL_genSP3 localize_on_geometries (predios_con_def_shp.path);
-			AL_genSP3 <- AL_genSP3 add_capacity_constraint (1);
-			AL_genSP3 <- AL_genSP3 add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 5 #km, 1 #km, 1); //à préciser
-			create hogares from: AL_genSP3 number: length(cells_deforest);
+			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
+
+			create patches from: AL_genSP3 number: length(cells_deforest);
 		}
 
 	}
@@ -505,6 +502,10 @@ global {
 
 	}
 
+}
+
+species patches {
+	string type;
 }
 
 grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false use_neighbors_cache: false {
@@ -737,6 +738,7 @@ experiment Simulation type: gui {
 
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
+		monitor "Total patches" value: nb_patches;
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;
 		monitor "Moy. ratio deforest" value: ratio_deforest_mean;
