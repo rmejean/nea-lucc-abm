@@ -72,7 +72,8 @@ global {
 		do init_pop;
 		do init_LS;
 		//do init_farming_patchwork;
-		do init_revenu;
+		do init_AGL;
+		//do init_revenu;
 	}
 
 	action init_cells {
@@ -210,22 +211,27 @@ global {
 				float proba <- rnd(100.0);
 				if proba < 66.666 {
 					livelihood_strategy <- 'SP3';
+					my_predio.LS <- 'SP3';
 				}
 
 				if proba between (66.666, 74.916) {
 					livelihood_strategy <- 'SP2';
+					my_predio.LS <- 'SP2';
 				}
 
 				if proba between (74.916, 83.166) {
 					livelihood_strategy <- 'SP1.1';
+					my_predio.LS <- 'SP1.1';
 				}
 
 				if proba between (83.166, 91.416) {
 					livelihood_strategy <- 'SP1.2';
+					my_predio.LS <- 'SP1.2';
 				}
 
 				if proba between (91.416, 100.00) {
 					livelihood_strategy <- 'SP1.3';
+					my_predio.LS <- 'SP1.3';
 				}
 
 			}
@@ -234,22 +240,27 @@ global {
 				float proba <- rnd(100.0);
 				if proba < 66.666 {
 					livelihood_strategy <- 'SP2';
+					my_predio.LS <- 'SP2';
 				}
 
 				if proba between (66.666, 74.916) {
 					livelihood_strategy <- 'SP3';
+					my_predio.LS <- 'SP3';
 				}
 
 				if proba between (74.916, 83.166) {
 					livelihood_strategy <- 'SP1.1';
+					my_predio.LS <- 'SP1.1';
 				}
 
 				if proba between (83.166, 91.416) {
 					livelihood_strategy <- 'SP1.2';
+					my_predio.LS <- 'SP1.2';
 				}
 
 				if proba between (91.416, 100.00) {
 					livelihood_strategy <- 'SP1.3';
+					my_predio.LS <- 'SP1.3';
 				}
 
 			}
@@ -258,22 +269,27 @@ global {
 				float proba <- rnd(100.0);
 				if proba < 66.666 {
 					livelihood_strategy <- 'SP1.1';
+					my_predio.LS <- 'SP1.1';
 				}
 
 				if proba between (66.666, 74.916) {
 					livelihood_strategy <- 'SP3';
+					my_predio.LS <- 'SP3';
 				}
 
 				if proba between (74.916, 83.166) {
 					livelihood_strategy <- 'SP2';
+					my_predio.LS <- 'SP2';
 				}
 
 				if proba between (83.166, 91.416) {
 					livelihood_strategy <- 'SP1.2';
+					my_predio.LS <- 'SP1.2';
 				}
 
 				if proba between (91.416, 100.00) {
 					livelihood_strategy <- 'SP1.3';
+					my_predio.LS <- 'SP1.3';
 				}
 
 			}
@@ -282,22 +298,27 @@ global {
 				float proba <- rnd(100.0);
 				if proba < 66.666 {
 					livelihood_strategy <- 'SP1.2';
+					my_predio.LS <- 'SP1.2';
 				}
 
 				if proba between (66.666, 74.916) {
 					livelihood_strategy <- 'SP3';
+					my_predio.LS <- 'SP3';
 				}
 
 				if proba between (74.916, 83.166) {
 					livelihood_strategy <- 'SP2';
+					my_predio.LS <- 'SP2';
 				}
 
 				if proba between (83.166, 91.416) {
 					livelihood_strategy <- 'SP1.1';
+					my_predio.LS <- 'SP1.1';
 				}
 
 				if proba between (91.416, 100.00) {
 					livelihood_strategy <- 'SP1.3';
+					my_predio.LS <- 'SP1.3';
 				}
 
 			}
@@ -320,10 +341,9 @@ global {
 			ask first(cell overlapping self) {
 				cult <- 'house';
 				color <- #white;
-				
 			}
 			//Patchwork du SP3
-			if livelihood_strategy = 'SP3' {		
+			if livelihood_strategy = 'SP3' {
 				if first(my_predio.cells_deforest where (each.cult = 'house')).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
 					ask first(first(my_predio.cells_deforest where (each.cult = 'house')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
 						cult <- 'livestock';
@@ -456,6 +476,28 @@ global {
 
 	}
 
+	action init_AGL {
+		ask predios where (each.LS = 'SP3') {
+			gen_population_generator AL_genSP3;
+			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
+			AL_genSP3 <- add_census_file(AL_genSP3, f_HOGARES_predios.path, "Sample", ",", 1, 1);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			AL_genSP3 <- AL_genSP3 add_attribute ("sec_id", string, list_id);
+			AL_genSP3 <- AL_genSP3 add_attribute ("hog_id", string, list_id);
+			AL_genSP3 <- AL_genSP3 add_attribute ("viv_id", string, list_id);
+			// -------------------------
+			// Spatialization 
+			// -------------------------
+			AL_genSP3 <- AL_genSP3 localize_on_geometries (predios_con_def_shp.path);
+			AL_genSP3 <- AL_genSP3 add_capacity_constraint (1);
+			AL_genSP3 <- AL_genSP3 add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 5 #km, 1 #km, 1); //à préciser
+			create hogares from: AL_genSP3 number: length(cells_deforest);
+		}
+
+	}
+
 	action init_revenu {
 		ask hogares {
 			common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
@@ -529,6 +571,7 @@ species predios {
 	int area_total <- length(cells_inside);
 	int area_deforest <- cells_inside count each.is_deforest;
 	float ratio_deforest;
+	string LS;
 	rgb color;
 	rgb color_tx_def;
 	rgb LS_color;
@@ -589,7 +632,7 @@ species comunas {
 
 }
 
-species hogares control: weighted_tasks {
+species hogares {
 	string sec_id;
 	string hog_id;
 	string viv_id;
