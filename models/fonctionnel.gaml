@@ -71,7 +71,7 @@ global {
 		do init_vias;
 		do init_pop;
 		do init_LS;
-		do init_farming_patchwork;
+		//do init_farming_patchwork;
 		do init_revenu;
 	}
 
@@ -320,9 +320,10 @@ global {
 			ask first(cell overlapping self) {
 				cult <- 'house';
 				color <- #white;
+				
 			}
 			//Patchwork du SP3
-			if livelihood_strategy = 'SP3' {
+			if livelihood_strategy = 'SP3' {		
 				if first(my_predio.cells_deforest where (each.cult = 'house')).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
 					ask first(first(my_predio.cells_deforest where (each.cult = 'house')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
 						cult <- 'livestock';
