@@ -500,43 +500,44 @@ global {
 				ask pxl_cible {
 					is_free <- false;
 				}
+
 				location <- pxl_cible.location;
 				ask pxl_cible {
 					cult <- myself.type;
 					do color_cult;
 				}
+
 				do die;
 			}
 
 		}
 
-		//		ask predios where (each.LS = 'SP1.1') {
-		//			gen_population_generator AL_genSP1_1;
-		//			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
-		//			AL_genSP1_1 <- add_census_file(AL_genSP1_1, f_FREQ_SP1_1.path, "GlobalFrequencyTable", ",", 1, 1);
-		//			// --------------------------
-		//			// Setup Attributs
-		//			// --------------------------	
-		//			list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
-		//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
-		//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("id", string, ["test"]);
-		//			create patches from: AL_genSP1_1 number: length(self.cells_deforest) {
-		//				my_predio <- myself;
-		//				cell pxl_cible <- one_of(my_predio.cells_deforest where (each.is_free = true));
-		//				if pxl_cible != nil {
-		//					location <- pxl_cible.location;
-		//					ask pxl_cible {
-		//						is_free <- false;
-		//						cult <- myself.type;
-		//						do color_cult;
-		//					}
-		//
-		//				}
-		//
-		//				do die;
-		//			}
-		//
-		//		}
+		ask predios where (each.LS = 'SP1.1') {
+			gen_population_generator AL_genSP1_1;
+			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "IS";
+			AL_genSP1_1 <- add_census_file(AL_genSP1_1, f_FREQ_SP1_1.path, "GlobalFrequencyTable", ",", 1, 1);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
+			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
+			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("id", string, ["test"]);
+			create patches from: AL_genSP1_1 number: length(self.cells_deforest where (each.is_free = true)) {
+				cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+				ask pxl_cible {
+					is_free <- false;
+				}
+
+				location <- pxl_cible.location;
+				ask pxl_cible {
+					cult <- myself.type;
+					do color_cult;
+				}
+
+				do die;
+			}
+
+		}
 
 	}
 
