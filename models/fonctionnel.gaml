@@ -8,11 +8,16 @@ model Dayuma_INIT_GENSTAR
 
 global {
 
-	//Chargement des fichiers CSV pop.
+//Chargement des fichiers CSV pop.
 	file f_PERSONAS_predios <- file("../includes/censo/Personas_des_161_locsincom.csv");
 	file f_HOGARES_predios <- file("../includes/censo/Hogares_des_161_locsincom.csv");
 	//Chargement des fichiers CSV landscape
+	file f_FREQ_SP1_1 <- file("../includes/LS_patchwork_frequencies/SP1_1.csv");
+	file f_FREQ_SP1_2 <- file("../includes/LS_patchwork_frequencies/SP1_2.csv");
+	file f_FREQ_SP1_3 <- file("../includes/LS_patchwork_frequencies/SP1_3.csv");
+	file f_FREQ_SP2 <- file("../includes/LS_patchwork_frequencies/SP2.csv");
 	file f_FREQ_SP3 <- file("../includes/LS_patchwork_frequencies/SP3.csv");
+
 	//	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
 	//	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
 
@@ -487,26 +492,51 @@ global {
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
-			
 			list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
-				
 			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
 			AL_genSP3 <- AL_genSP3 add_attribute ("id", string, ["test"]);
+			create patches from: AL_genSP3 number: length(self.cells_deforest where (each.is_free = true)) {
+				cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+				ask pxl_cible {
+					is_free <- false;
+				}
+				location <- pxl_cible.location;
+				ask pxl_cible {
+					cult <- myself.type;
+					do color_cult;
+				}
+				do die;
+			}
 
-			create patches from: AL_genSP3 number: length(self.cells_deforest) ;
-//			{
-//				my_predio <- myself;
-//				cell pxl_cible <- one_of (my_predio.cells_deforest where (each.is_free = true));
-//				location <- pxl_cible.location;
-//				ask pxl_cible {
-//					is_free <- false;
-//					cult <- myself.type;
-//					do color_cult;
-//				}
-//				do die;
-//				
-//			}
 		}
+
+		//		ask predios where (each.LS = 'SP1.1') {
+		//			gen_population_generator AL_genSP1_1;
+		//			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
+		//			AL_genSP1_1 <- add_census_file(AL_genSP1_1, f_FREQ_SP1_1.path, "GlobalFrequencyTable", ",", 1, 1);
+		//			// --------------------------
+		//			// Setup Attributs
+		//			// --------------------------	
+		//			list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
+		//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
+		//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("id", string, ["test"]);
+		//			create patches from: AL_genSP1_1 number: length(self.cells_deforest) {
+		//				my_predio <- myself;
+		//				cell pxl_cible <- one_of(my_predio.cells_deforest where (each.is_free = true));
+		//				if pxl_cible != nil {
+		//					location <- pxl_cible.location;
+		//					ask pxl_cible {
+		//						is_free <- false;
+		//						cult <- myself.type;
+		//						do color_cult;
+		//					}
+		//
+		//				}
+		//
+		//				do die;
+		//			}
+		//
+		//		}
 
 	}
 
@@ -526,7 +556,7 @@ species patches {
 }
 
 grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false use_neighbors_cache: false {
-	bool is_deforest;
+	bool is_deforest <- true;
 	bool is_free <- true;
 	string cult;
 	float rev;
