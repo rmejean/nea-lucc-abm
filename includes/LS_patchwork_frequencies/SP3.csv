@@ -1,9 +1,9 @@
-type,freq
+,test
 maniocmais,0
 fruits,0
 s_livestock,0
 plantain,0
 coffee,0
 cacao,0
-livestock,"0,93"
-friche,"0,07"
+livestock,0.9
+friche,0.1

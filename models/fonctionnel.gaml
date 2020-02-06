@@ -36,7 +36,6 @@ global {
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
 	list<string> list_id <- ([]);
-	list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
 
 	//Variables globales pour monitors
 	int nb_menages -> length(hogares);
@@ -484,16 +483,15 @@ global {
 		ask predios where (each.LS = 'SP3') {
 			gen_population_generator AL_genSP3;
 			AL_genSP3 <- AL_genSP3 with_generation_algo "IS";
-			AL_genSP3 <- add_census_file(AL_genSP3, f_FREQ_SP3.path, "GlobalFrequencyTable", ",", 2, 1);
+			AL_genSP3 <- add_census_file(AL_genSP3, f_FREQ_SP3.path, "GlobalFrequencyTable", ",", 1, 1);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
+			
+			list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
+				
 			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
-			map mapper1 <- [
-				["maniocmais"]::["maniocmais"],["fruits"]::["fruits"],["s_livestock"]::["s_livestock"],["plantain"]::["plantain"],
-				["coffee"]::["coffee"],["cacao"]::["cacao"],["livestock"]::["livestock"],["friche"]::["friche"]		
-			];
-			AL_genSP3 <- AL_genSP3 add_mapper("type", string, mapper1);
+			AL_genSP3 <- AL_genSP3 add_attribute ("id", string, ["test"]);
 
 			create patches from: AL_genSP3 number: length(cells_deforest);
 		}
@@ -511,6 +509,7 @@ global {
 
 species patches {
 	string type;
+	string id;
 }
 
 grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false use_neighbors_cache: false {
