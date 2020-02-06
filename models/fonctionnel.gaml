@@ -483,12 +483,17 @@ global {
 	action init_AGL {
 		ask predios where (each.LS = 'SP3') {
 			gen_population_generator AL_genSP3;
-			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
+			AL_genSP3 <- AL_genSP3 with_generation_algo "IS";
 			AL_genSP3 <- add_census_file(AL_genSP3, f_FREQ_SP3.path, "GlobalFrequencyTable", ",", 2, 1);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
 			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
+			map mapper1 <- [
+				["maniocmais"]::["maniocmais"],["fruits"]::["fruits"],["s_livestock"]::["s_livestock"],["plantain"]::["plantain"],
+				["coffee"]::["coffee"],["cacao"]::["cacao"],["livestock"]::["livestock"],["friche"]::["friche"]		
+			];
+			AL_genSP3 <- AL_genSP3 add_mapper("type", string, mapper1);
 
 			create patches from: AL_genSP3 number: length(cells_deforest);
 		}
