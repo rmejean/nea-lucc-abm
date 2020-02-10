@@ -1,9 +1,9 @@
 ,test
-maniocmais,0
-fruits,0
-s_livestock,0
-plantain,0
-coffee,0
-cacao,0
-livestock,0.9
+maniocmais,0.3
+fruits,0.1
+s_livestock,0.1
+plantain,0.1
+coffee,0.05
+cacao,0.15
+livestock,0.1
 friche,0.1

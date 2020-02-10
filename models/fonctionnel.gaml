@@ -101,11 +101,12 @@ global {
 	}
 
 	action init_predios {
-		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))] {
-			is_free <- true;
-		}
-
+		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))];
 		ask predios {
+			if length(cells_deforest) = 0 { //supprimer les éventuelles parcelles sans déforestation
+				do die;
+			}
+
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
 		}
@@ -216,7 +217,7 @@ global {
 		ask hogares {
 		//SP3 : basé sur la taille des parcelles (pâturages)
 			if my_predio.area_deforest > 50 {
-				float proba <- rnd(100.0);
+				float proba <- rnd(100.00);
 				if proba < 66.666 {
 					livelihood_strategy <- 'SP3';
 					my_predio.LS <- 'SP3';
@@ -457,29 +458,6 @@ global {
 			if livelihood_strategy = 'SP1.3' {
 			}
 
-			//		if flip(0.6666) = true {
-			//			cult <- 'v_maniocmais';
-			//			do cult_parameters;
-			//		} else {
-			//			if flip(0.6666) = true {
-			//				cult <- 'v_maraichage';
-			//				do cult_parameters;
-			//			} else {
-			//				if flip(0.3333) = true {
-			//					cult <- 'v_petit-elevage';
-			//					do cult_parameters;
-			//				} else {
-			//					if flip(0.15) = true {
-			//						cult <- 'v_plantain';
-			//						do cult_parameters;
-			//					}
-			//
-			//				}
-			//
-			//			}
-			//
-			//		}
-
 		}
 
 	}
@@ -496,15 +474,48 @@ global {
 			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
 			AL_genSP3 <- AL_genSP3 add_attribute ("id", string, ["test"]);
 			create patches from: AL_genSP3 number: length(self.cells_deforest where (each.is_free = true)) {
-				cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-				ask pxl_cible {
-					is_free <- false;
+				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						cult <- myself.type;
+						do param_activities;
+					}
+
 				}
 
-				location <- pxl_cible.location;
-				ask pxl_cible {
-					cult <- myself.type;
-					do color_cult;
+				do die;
+			}
+
+		}
+
+		ask predios where (each.LS = 'SP2') {
+			gen_population_generator AL_genSP2;
+			AL_genSP2 <- AL_genSP2 with_generation_algo "IS";
+			AL_genSP2 <- add_census_file(AL_genSP2, f_FREQ_SP2.path, "GlobalFrequencyTable", ",", 1, 1);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
+			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
+			AL_genSP2 <- AL_genSP2 add_attribute ("id", string, ["test"]);
+			create patches from: AL_genSP2 number: length(self.cells_deforest where (each.is_free = true)) {
+				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						cult <- myself.type;
+						do param_activities;
+					}
+
 				}
 
 				do die;
@@ -523,18 +534,81 @@ global {
 			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
 			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("id", string, ["test"]);
 			create patches from: AL_genSP1_1 number: length(self.cells_deforest where (each.is_free = true)) {
-				cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-				ask pxl_cible {
-					is_free <- false;
-				}
+				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
 
-				location <- pxl_cible.location;
-				ask pxl_cible {
-					cult <- myself.type;
-					do color_cult;
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						cult <- myself.type;
+						do param_activities;
+					}
+
 				}
 
 				do die;
+			}
+
+		}
+
+		ask predios where (each.LS = 'SP1.2') {
+			gen_population_generator AL_genSP1_2;
+			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "IS";
+			AL_genSP1_2 <- add_census_file(AL_genSP1_2, f_FREQ_SP1_2.path, "GlobalFrequencyTable", ",", 1, 1);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
+			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
+			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("id", string, ["test"]);
+			create patches from: AL_genSP1_2 number: length(self.cells_deforest where (each.is_free = true)) {
+				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						cult <- myself.type;
+						do param_activities;
+					}
+
+				}
+
+				do die;
+			}
+
+			ask predios where (each.LS = 'SP1.3') {
+				gen_population_generator AL_genSP1_3;
+				AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "IS";
+				AL_genSP1_3 <- add_census_file(AL_genSP1_3, f_FREQ_SP1_3.path, "GlobalFrequencyTable", ",", 1, 1);
+				// --------------------------
+				// Setup Attributs
+				// --------------------------	
+				list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
+				AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
+				AL_genSP1_3 <- AL_genSP1_3 add_attribute ("id", string, ["test"]);
+				create patches from: AL_genSP1_3 number: length(self.cells_deforest where (each.is_free = true)) {
+					if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						cult <- myself.type;
+						do param_activities;
+					}
+
+				}
+
+				do die;
+				}
+
 			}
 
 		}
@@ -565,7 +639,7 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 	hogares my_hogar;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
 
-	action color_cult {
+	action param_activities {
 		if cult = 'maniocmais' {
 			rev <- rnd((450 / 12), (900 / 12));
 			color <- #yellow;
@@ -617,7 +691,7 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 
 species predios {
 	string clave_cata;
-	bool is_free;
+	bool is_free <- true;
 	int area_total <- length(cells_inside);
 	int area_deforest <- cells_inside count each.is_deforest;
 	float ratio_deforest;
@@ -782,7 +856,7 @@ experiment Simulation type: gui {
 			//species predios aspect: default;
 			//species sectores;
 			species hogares;
-			species personas;
+			//species personas;
 		}
 
 		monitor "Total ménages" value: nb_menages;
