@@ -11,15 +11,15 @@ global {
 //Chargement des fichiers CSV pop.
 	file f_PERSONAS_predios <- file("../includes/censo/Personas_des_161_locsincom.csv");
 	file f_HOGARES_predios <- file("../includes/censo/Hogares_des_161_locsincom.csv");
+	//	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
+	//	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
+
 	//Chargement des fichiers CSV landscape
 	file f_FREQ_SP1_1 <- file("../includes/LS_patchwork_frequencies/SP1_1.csv");
 	file f_FREQ_SP1_2 <- file("../includes/LS_patchwork_frequencies/SP1_2.csv");
 	file f_FREQ_SP1_3 <- file("../includes/LS_patchwork_frequencies/SP1_3.csv");
 	file f_FREQ_SP2 <- file("../includes/LS_patchwork_frequencies/SP2.csv");
 	file f_FREQ_SP3 <- file("../includes/LS_patchwork_frequencies/SP3.csv");
-
-	//	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
-	//	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
 
 	//Chargement des fichiers SHP
 	file buildings_shp <- file("../includes/constructions_dayuma_SIGTIERRAS.shp");
@@ -37,18 +37,31 @@ global {
 	//name of the property that contains the id of the census spatial areas in the csv file (and population)
 	string stringOfCensusIdInCSVfile <- "sec_id";
 	geometry shape <- envelope(MAE_2008);
+
+	//Lists
 	list<string> echelle_pop <- (list<string>(range(95)));
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
 	list<string> list_id <- ([]);
+	list<string> criterias <- ["def_rate", "dist_via_auca", "indigena"];
+	list
+	criteria_WM_SP1_1 <- [["name"::"def_rate", "weight"::SP1_1_weight_def_rate], ["name"::"dist_via_auca", "weight"::SP1_1_weight_dist_via_auca], ["name"::"indigena", "weight"::SP1_1_weight_indigena]];
+	list
+	criteria_WM_SP1_2 <- [["name"::"def_rate", "weight"::SP1_2_weight_def_rate], ["name"::"dist_via_auca", "weight"::SP1_2_weight_dist_via_auca], ["name"::"indigena", "weight"::SP1_2_weight_indigena]];
+	list
+	criteria_WM_SP1_3 <- [["name"::"def_rate", "weight"::SP1_3_weight_def_rate], ["name"::"dist_via_auca", "weight"::SP1_3_weight_dist_via_auca], ["name"::"indigena", "weight"::SP1_3_weight_indigena]];
+	list
+	criteria_WM_SP2 <- [["name"::"def_rate", "weight"::SP2_weight_def_rate], ["name"::"dist_via_auca", "weight"::SP2_weight_dist_via_auca], ["name"::"indigena", "weight"::SP2_weight_indigena]];
+	list
+	criteria_WM_SP3 <- [["name"::"def_rate", "weight"::SP3_weight_def_rate], ["name"::"dist_via_auca", "weight"::SP3_weight_dist_via_auca], ["name"::"indigena", "weight"::SP3_weight_indigena]];
 
 	//Variables globales pour monitors
 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
 	int nb_patches -> length(patches);
-	float ratio_deforest_min -> predios min_of (each.ratio_deforest);
-	float ratio_deforest_max -> predios max_of (each.ratio_deforest);
-	float ratio_deforest_mean -> predios mean_of (each.ratio_deforest);
+	float ratio_deforest_min -> predios min_of (each.def_rate);
+	float ratio_deforest_max -> predios max_of (each.def_rate);
+	float ratio_deforest_mean -> predios mean_of (each.def_rate);
 	int area_min -> predios min_of (each.area_total);
 	int area_max -> predios max_of (each.area_total);
 	float area_mean -> predios mean_of (each.area_total);
@@ -71,20 +84,46 @@ global {
 	//Life cost --------------------
 	float $_ANFP <- 250.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
 
+	//----------------------------
+	//Init des critères pour l'EMC
+	//----------------------------
+	//SP1.1
+	float SP1_1_weight_def_rate <- 1.0;
+	float SP1_1_weight_dist_via_auca <- 1.0;
+	float SP1_1_weight_indigena <- 1.0;
+	//SP1.2
+	float SP1_2_weight_def_rate <- 1.0;
+	float SP1_2_weight_dist_via_auca <- 1.0;
+	float SP1_2_weight_indigena <- 1.0;
+	//SP1.3
+	float SP1_3_weight_def_rate <- 1.0;
+	float SP1_3_weight_dist_via_auca <- 1.0;
+	float SP1_3_weight_indigena <- 1.0;
+	//SP2
+	float SP2_weight_def_rate <- 1.0;
+	float SP2_weight_dist_via_auca <- 1.0;
+	float SP2_weight_indigena <- 1.0;
+	//SP3
+	float SP3_weight_def_rate <- 1.0;
+	float SP3_weight_dist_via_auca <- 1.0;
+	float SP3_weight_indigena <- 1.0;
+
+	//-----------------------------------------------------------------------------------------------
+	//--------------------------------------INITIALIZATION-------------------------------------------
 	//-----------------------------------------------------------------------------------------------
 	init {
 		do init_cells;
+		do init_vias;
 		do init_predios;
 		//do init_comunas;
-		do init_vias;
 		do init_pop;
-		do init_LS;
-		//do init_farming_patchwork;
+		//do init_LS;
+		do init_LS_EMC;
 		do init_AGL;
 		//do init_revenu;
 	}
 
-	action init_cells {
+	action init_cells { //Init des cellules
 		ask cell {
 			if grid_value = 0.0 {
 				do die;
@@ -100,10 +139,10 @@ global {
 
 	}
 
-	action init_predios {
+	action init_predios { //Init des parcelles
 		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))];
 		ask predios {
-			if length(cells_deforest) = 0 { //supprimer les éventuelles parcelles sans déforestation
+			if length(cells_deforest) = 0 { //supprimer les éventuelles parcelles sans déforestation... Peut-être pas à conserver !
 				do die;
 			}
 
@@ -113,13 +152,13 @@ global {
 
 	}
 
-	action init_vias {
+	action init_vias { //Init des routes
 		create vias from: vias_shp with: [orden::int(get("orden"))] {
 		}
 
 	}
 
-	action init_pop {
+	action init_pop { //Init de la population
 	//
 	// --------------------------
 	// Setup HOGARES
@@ -197,6 +236,17 @@ global {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
 			chef_hogar <- one_of(membres_hogar where (each.chef = true));
 			chef_auto_id <- chef_hogar.auto_id;
+			if chef_hogar.auto_id = "indigena" {
+				ask my_predio {
+					indigena <- 1;
+				}
+
+			} else {
+				ask my_predio {
+					indigena <- 0;
+				}
+			}
+
 			do MOF_calc;
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
@@ -210,7 +260,7 @@ global {
 
 	}
 
-	action init_LS {
+	action init_LS { //ESSAI (PROVISOIRE)
 	//---------------------------------------------------------
 	//Initialisation des LS (livelihood strategies) des ménages
 	//---------------------------------------------------------
@@ -340,125 +390,35 @@ global {
 
 	}
 
-	action init_farming_patchwork {
-	//---------------------------------------------------------
-	//Initialisation des cultures selon la LS des ménages
-	//---------------------------------------------------------
-
-	//Départ : attribuer un pixel pour l'habitation du ménage (la vivienda)
-		ask hogares {
-			ask first(cell overlapping self) {
-				cult <- 'house';
-				color <- #white;
-			}
-			//Patchwork du SP3
-			if livelihood_strategy = 'SP3' {
-				if first(my_predio.cells_deforest where (each.cult = 'house')).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
-					ask first(first(my_predio.cells_deforest where (each.cult = 'house')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
-						cult <- 'livestock';
-						myself.MOF <- myself.MOF - MOFcost_livestock;
-						color <- #purple;
-					}
-
-					loop while: self.MOF > MOFcost_livestock {
-						if (my_predio.cells_deforest where (each.cult = 'livestock') as cell).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
-							ask first(first(my_predio.cells_deforest where (each.cult = 'livestock')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
-								cult <- 'livestock';
-								myself.MOF <- myself.MOF - MOFcost_livestock;
-								color <- #purple;
-							}
-
-						} else {
-							write 'Problème SP3 : pas de voisins à la 1st livestock cell éligibles au livestock.';
-						}
-
-					}
-
-				} else {
-					write 'Problème SP3 : pas de voisins à la maison éligibles au livestock.';
-				}
-
-			}
-			//Patchwork du SP2
-			if livelihood_strategy = 'SP2' {
-				if first(my_predio.cells_deforest where (each.cult = 'house')).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
-					ask first(first(my_predio.cells_deforest where (each.cult = 'house')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
-						cult <- 'livestock';
-						myself.MOF <- myself.MOF - MOFcost_livestock;
-						color <- #purple;
-					}
-
-					loop while: self.MOF > MOFcost_livestock {
-						if (my_predio.cells_deforest where (each.cult = 'livestock') as cell).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
-							ask first(first(my_predio.cells_deforest where (each.cult = 'livestock')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
-								cult <- 'livestock';
-								myself.MOF <- myself.MOF - MOFcost_livestock;
-								color <- #purple;
-							}
-
-						} else {
-							write 'Problème SP2 : pas de voisins à la 1st livestock cell éligibles au livestock.';
-						}
-
-					}
-
-				} else {
-					write 'Problème SP2 : pas de voisins à la maison éligibles au livestock.';
-				}
-
-			}
-			//Patchwork du SP1.1
-			if livelihood_strategy = 'SP1.1' {
-			//Cultures vivrières
-				if first(my_predio.cells_deforest where (each.cult = 'house')).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
-					ask first(first(my_predio.cells_deforest where (each.cult = 'house')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
-						cult <- 'maniocmais';
-						myself.MOF <- myself.MOF - MOFcost_maniocmais;
-						color <- #beige;
-					}
-
-				} else {
-					write 'Problème SP1.1 : pas de voisins à la maison éligibles au maniocmais.';
-				}
-
-				if (my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais') as cell).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
-					ask first(first(my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
-						cult <- 'fruits';
-						myself.MOF <- myself.MOF - MOFcost_fruits;
-						color <- #orange;
-					}
-
-				}
-				//Culture de rente (café)
-				if (my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits') as cell).neighbors one_matches (each.my_hogar = myself and each.is_deforest = true) {
-					if self.MOF > MOFcost_coffee {
-						ask first(first(my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits')).neighbors where (each.my_hogar = myself and each.is_deforest = true)) {
-							cult <- 'coffee';
-							myself.MOF <- myself.MOF - MOFcost_coffee;
-							color <- #orange;
-						}
-
-					}
-
-				}
-
-				//Friches longues
-				list<cell> px_cult <- my_predio.cells_deforest where (each.cult = 'house' or 'maniocmais' or 'fruits' or 'coffee');
-				int nb_px_cult <- length(px_cult);
-				ask (rnd(nb_px_cult - 1, nb_px_cult + 1) among px_cult as cell).neighbors where (each.my_hogar = myself and each.is_deforest = true) {
-					cult <- 'friche';
-					color <- #brown;
-				}
-
-			}
-			//Patchwork du SP1.2
-			if livelihood_strategy = 'SP1.2' {
-			}
-			//Patchwork du SP1.3
-			if livelihood_strategy = 'SP1.3' {
-			}
-
+	action init_LS_EMC { //Création des 5 agents-LS
+		create LS number: 1 {
+			SP <- '1.1';
+			do EMC;
 		}
+
+		create LS number: 1 {
+			SP <- '1.2';
+			do EMC;
+		}
+
+		create LS number: 1 {
+			SP <- '1.3';
+			do EMC;
+		}
+
+		create LS number: 1 {
+			SP <- '2';
+			do EMC;
+		}
+
+		create LS number: 1 {
+			SP <- '3';
+			do EMC;
+		}
+		
+//		ask predios where (each.is_free = false) {
+//			do carto_LS;
+//		}
 
 	}
 
@@ -593,20 +553,20 @@ global {
 				AL_genSP1_3 <- AL_genSP1_3 add_attribute ("id", string, ["test"]);
 				create patches from: AL_genSP1_3 number: length(self.cells_deforest where (each.is_free = true)) {
 					if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-					ask pxl_cible {
-						is_free <- false;
+						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+						ask pxl_cible {
+							is_free <- false;
+						}
+
+						location <- pxl_cible.location;
+						ask pxl_cible {
+							cult <- myself.type;
+							do param_activities;
+						}
+
 					}
 
-					location <- pxl_cible.location;
-					ask pxl_cible {
-						cult <- myself.type;
-						do param_activities;
-					}
-
-				}
-
-				do die;
+					do die;
 				}
 
 			}
@@ -626,12 +586,11 @@ global {
 
 species patches {
 	string type;
-	string id;
 	predios my_predio;
 }
 
 grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false use_neighbors_cache: false {
-	bool is_deforest <- true;
+	bool is_deforest <- true; //POURQUOI TRUE ?!
 	bool is_free <- true;
 	string cult;
 	float rev;
@@ -692,10 +651,13 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 species predios {
 	string clave_cata;
 	bool is_free <- true;
+	bool is_free_EMC <- true;
 	int area_total <- length(cells_inside);
 	int area_deforest <- cells_inside count each.is_deforest;
-	float ratio_deforest;
-	string LS;
+	float def_rate; //Taux de déforestation
+	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //Distance à la Via Auca
+	int indigena;//Indice ethnie
+	string LS;//Livelihood strategy
 	rgb color;
 	rgb color_tx_def;
 	rgb LS_color;
@@ -705,16 +667,16 @@ species predios {
 
 	action calcul_tx_deforest {
 		if area_total > 0 {
-			ratio_deforest <- (area_deforest / area_total);
+			def_rate <- (area_deforest / area_total);
 		} else {
-			ratio_deforest <- 0.0;
+			def_rate <- 0.0;
 		}
 
 	}
 
 	action carto_tx_deforest {
-		color_tx_def <- ratio_deforest = 0 ? #white : (between(ratio_deforest, 0.1, 0.25) ? rgb(253, 204, 138) : (between(ratio_deforest, 0.25, 0.50) ?
-		rgb(253, 204, 138) : (between(ratio_deforest, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
+		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 0.1, 0.25) ? rgb(253, 204, 138) : (between(def_rate, 0.25, 0.50) ?
+		rgb(253, 204, 138) : (between(def_rate, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
 
 	action carto_LS {
@@ -752,6 +714,74 @@ species comunas {
 
 	aspect default {
 		draw shape color: #black border: #black;
+	}
+
+}
+
+species LS {
+	string SP;
+
+	action EMC { //EVALUATION MULTI CRITERES
+		if SP = '1.1' {
+			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP1_1);
+			if choice >= 0 {
+				ask predios at choice {
+					is_free_EMC <- false;
+					self.LS <- 'SP1.1';
+				}
+
+			}
+
+		}
+
+		if SP = '1.2' {
+			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP1_2);
+			if choice >= 0 {
+				ask predios at choice {
+					is_free_EMC <- false;
+					self.LS <- 'SP1.2';
+				}
+
+			}
+
+		}
+
+		if SP = '1.3' {
+			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP1_3);
+			if choice >= 0 {
+				ask predios at choice {
+					is_free_EMC <- false;
+					self.LS <- 'SP1.3';
+				}
+
+			}
+
+		}
+
+		if SP = '2' {
+			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP2);
+			if choice >= 0 {
+				ask predios at choice {
+					is_free_EMC <- false;
+					self.LS <- 'SP2';
+				}
+
+			}
+
+		}
+
+		if SP = '3' {
+			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP3);
+			if choice >= 0 {
+				ask predios at choice {
+					is_free_EMC <- false;
+					self.LS <- 'SP3';
+				}
+
+			}
+
+		}
+
 	}
 
 }
