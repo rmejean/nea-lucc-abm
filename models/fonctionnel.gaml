@@ -392,27 +392,27 @@ global {
 
 	action init_LS_EMC { //Création des 5 agents-LS
 		create LS number: 1 {
-			SP <- '1.1';
+			code_LS <- '1.1';
 			do EMC;
 		}
 
 		create LS number: 1 {
-			SP <- '1.2';
+			code_LS <- '1.2';
 			do EMC;
 		}
 
 		create LS number: 1 {
-			SP <- '1.3';
+			code_LS <- '1.3';
 			do EMC;
 		}
 
 		create LS number: 1 {
-			SP <- '2';
+			code_LS <- '2';
 			do EMC;
 		}
 
 		create LS number: 1 {
-			SP <- '3';
+			code_LS <- '3';
 			do EMC;
 		}
 		
@@ -587,6 +587,7 @@ global {
 species patches {
 	string type;
 	predios my_predio;
+	string id;
 }
 
 grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false use_neighbors_cache: false {
@@ -719,11 +720,24 @@ species comunas {
 }
 
 species LS {
-	string SP;
+	string code_LS;
+	
+	list<list> predios_eval {
+		list<list> candidates;
+		loop bat over: predios {
+			list<float> cand;
+			add bat.def_rate to: cand;
+			add bat.indigena to: cand;
+			add bat.dist_via_auca to: cand;
+			add cand to: candidates;
+		}
+		return candidates;
+	}
 
 	action EMC { //EVALUATION MULTI CRITERES
-		if SP = '1.1' {
-			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP1_1);
+		if code_LS = '1.1' {
+			list<list> cands <- predios_eval();
+			int choice <- weighted_means_DM(cands, criteria_WM_SP1_1);
 			if choice >= 0 {
 				ask predios at choice {
 					is_free_EMC <- false;
@@ -734,8 +748,9 @@ species LS {
 
 		}
 
-		if SP = '1.2' {
-			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP1_2);
+		if code_LS = '1.2' {
+			list<list> cands <- predios_eval();
+			int choice <- weighted_means_DM(cands, criteria_WM_SP1_2);
 			if choice >= 0 {
 				ask predios at choice {
 					is_free_EMC <- false;
@@ -746,8 +761,9 @@ species LS {
 
 		}
 
-		if SP = '1.3' {
-			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP1_3);
+		if code_LS = '1.3' {
+			list<list> cands <- predios_eval();
+			int choice <- weighted_means_DM(cands, criteria_WM_SP1_3);
 			if choice >= 0 {
 				ask predios at choice {
 					is_free_EMC <- false;
@@ -758,8 +774,9 @@ species LS {
 
 		}
 
-		if SP = '2' {
-			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP2);
+		if code_LS = '2' {
+			list<list> cands <- predios_eval();
+			int choice <- weighted_means_DM(cands, criteria_WM_SP2);
 			if choice >= 0 {
 				ask predios at choice {
 					is_free_EMC <- false;
@@ -770,8 +787,9 @@ species LS {
 
 		}
 
-		if SP = '3' {
-			int choice <- weighted_means_DM(predios where (each.is_free_EMC = true), criteria_WM_SP3);
+		if code_LS = '3' {
+			list<list> cands <- predios_eval();
+			int choice <- weighted_means_DM(cands, criteria_WM_SP3);
 			if choice >= 0 {
 				ask predios at choice {
 					is_free_EMC <- false;
