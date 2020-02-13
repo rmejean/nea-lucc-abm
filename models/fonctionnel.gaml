@@ -188,6 +188,7 @@ global {
 			location <- one_of(my_predio.cells_deforest).location; //A AMELIORER : first est trop régulier, one_of trop hasardeux
 			ask my_predio {
 				is_free <- false;
+				is_free_EMC <- true;
 				my_hogar <- myself;
 			}
 
@@ -245,6 +246,7 @@ global {
 				ask my_predio {
 					indigena <- 0;
 				}
+
 			}
 
 			do MOF_calc;
@@ -393,32 +395,37 @@ global {
 	action init_LS_EMC { //Création des 5 agents-LS
 		create LS number: 1 {
 			code_LS <- '1.1';
-			do EMC;
+			do ranking_EMC;
+			do apply_EMC;
 		}
 
 		create LS number: 1 {
 			code_LS <- '1.2';
-			do EMC;
+			do ranking_EMC;
+			do apply_EMC;
 		}
 
 		create LS number: 1 {
 			code_LS <- '1.3';
-			do EMC;
+			do ranking_EMC;
+			do apply_EMC;
 		}
 
 		create LS number: 1 {
 			code_LS <- '2';
-			do EMC;
+			do ranking_EMC;
+			do apply_EMC;
 		}
 
 		create LS number: 1 {
 			code_LS <- '3';
-			do EMC;
+			do ranking_EMC;
+			do apply_EMC;
 		}
-		
-//		ask predios where (each.is_free = false) {
-//			do carto_LS;
-//		}
+
+		//		ask predios where (each.is_free = false) {
+		//			do carto_LS;
+		//		}
 
 	}
 
@@ -652,19 +659,25 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 species predios {
 	string clave_cata;
 	bool is_free <- true;
-	bool is_free_EMC <- true;
+	bool is_free_EMC;
+	int id_EMC_LS1_1 <- 0;
+	int id_EMC_LS1_2 <- 0;
+	int id_EMC_LS1_3 <- 0;
+	int id_EMC_LS2 <- 0;
+	int id_EMC_LS3 <- 0;
 	int area_total <- length(cells_inside);
 	int area_deforest <- cells_inside count each.is_deforest;
 	float def_rate; //Taux de déforestation
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //Distance à la Via Auca
-	int indigena;//Indice ethnie
-	string LS;//Livelihood strategy
+	int indigena; //Indice ethnie
+	string LS; //Livelihood strategy
 	rgb color;
 	rgb color_tx_def;
 	rgb LS_color;
 	hogares my_hogar;
 	list<cell> cells_inside -> {cell overlapping self}; //ancienne version : il y avait overlapping
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
+	list<int> rankings_LS_EMC;
 
 	action calcul_tx_deforest {
 		if area_total > 0 {
@@ -721,27 +734,31 @@ species comunas {
 
 species LS {
 	string code_LS;
-	
 	list<list> predios_eval {
 		list<list> candidates;
-		loop bat over: predios {
+		loop parcel over: (predios where (each.is_free = false)) { // ne mettre que les predios où il y a des ménages
 			list<float> cand;
-			add bat.def_rate to: cand;
-			add bat.indigena to: cand;
-			add bat.dist_via_auca to: cand;
+			add parcel.def_rate to: cand;
+			add parcel.indigena to: cand;
+			add parcel.dist_via_auca to: cand;
 			add cand to: candidates;
 		}
+
 		return candidates;
 	}
 
-	action EMC { //EVALUATION MULTI CRITERES
+	action ranking_EMC { //PROCEDURE D'EVALUATION MULTI CRITERES
 		if code_LS = '1.1' {
-			list<list> cands <- predios_eval();
-			int choice <- weighted_means_DM(cands, criteria_WM_SP1_1);
-			if choice >= 0 {
-				ask predios at choice {
-					is_free_EMC <- false;
-					self.LS <- 'SP1.1';
+			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP1_1);
+				if choice >= 0 {
+					ask predios at choice {
+						id_EMC_LS1_1 <- max(id_EMC_LS1_1) + 1;
+						add id_EMC_LS1_1 to: rankings_LS_EMC;
+						is_free_EMC <- false;
+					}
+
 				}
 
 			}
@@ -749,12 +766,16 @@ species LS {
 		}
 
 		if code_LS = '1.2' {
-			list<list> cands <- predios_eval();
-			int choice <- weighted_means_DM(cands, criteria_WM_SP1_2);
-			if choice >= 0 {
-				ask predios at choice {
-					is_free_EMC <- false;
-					self.LS <- 'SP1.2';
+			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP1_2);
+				if choice >= 0 {
+					ask predios at choice {
+						id_EMC_LS1_2 <- max(id_EMC_LS1_2) + 1;
+						add id_EMC_LS1_2 to: rankings_LS_EMC;
+						is_free_EMC <- false;
+					}
+
 				}
 
 			}
@@ -762,12 +783,16 @@ species LS {
 		}
 
 		if code_LS = '1.3' {
-			list<list> cands <- predios_eval();
-			int choice <- weighted_means_DM(cands, criteria_WM_SP1_3);
-			if choice >= 0 {
-				ask predios at choice {
-					is_free_EMC <- false;
-					self.LS <- 'SP1.3';
+			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP1_3);
+				if choice >= 0 {
+					ask predios at choice {
+						id_EMC_LS1_3 <- max(id_EMC_LS1_3) + 1;
+						add id_EMC_LS1_3 to: rankings_LS_EMC;
+						is_free_EMC <- false;
+					}
+
 				}
 
 			}
@@ -775,12 +800,16 @@ species LS {
 		}
 
 		if code_LS = '2' {
-			list<list> cands <- predios_eval();
-			int choice <- weighted_means_DM(cands, criteria_WM_SP2);
-			if choice >= 0 {
-				ask predios at choice {
-					is_free_EMC <- false;
-					self.LS <- 'SP2';
+			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP2);
+				if choice >= 0 {
+					ask predios at choice {
+						id_EMC_LS2<- max(id_EMC_LS2) + 1;
+						add id_EMC_LS2 to: rankings_LS_EMC;
+						is_free_EMC <- false;
+					}
+
 				}
 
 			}
@@ -788,18 +817,26 @@ species LS {
 		}
 
 		if code_LS = '3' {
-			list<list> cands <- predios_eval();
-			int choice <- weighted_means_DM(cands, criteria_WM_SP3);
-			if choice >= 0 {
-				ask predios at choice {
-					is_free_EMC <- false;
-					self.LS <- 'SP3';
+			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP3);
+				if choice >= 0 {
+					ask predios at choice {
+						id_EMC_LS3 <- max(id_EMC_LS3) + 1;
+						add id_EMC_LS3 to: rankings_LS_EMC;
+						is_free_EMC <- false;
+					}
+
 				}
 
 			}
 
 		}
 
+	}
+	
+	action apply_EMC {
+		map<int,string> map1 <- [::"LS1"];
 	}
 
 }
