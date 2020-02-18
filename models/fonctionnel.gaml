@@ -14,7 +14,7 @@ global {
 	//	file f_PERSONAS_comunas <- file("../includes/censo/com_personas.csv");
 	//	file f_HOGARES_comunas <- file("../includes/censo/com_hogares.csv");
 
-	//Chargement des fichiers CSV landscape
+	//Chargement des fichiers CSV landscape generator
 	file f_FREQ_SP1_1 <- file("../includes/LS_patchwork_frequencies/SP1_1.csv");
 	file f_FREQ_SP1_2 <- file("../includes/LS_patchwork_frequencies/SP1_2.csv");
 	file f_FREQ_SP1_3 <- file("../includes/LS_patchwork_frequencies/SP1_3.csv");
@@ -675,9 +675,9 @@ species predios {
 	rgb color_tx_def;
 	rgb LS_color;
 	hogares my_hogar;
-	list<cell> cells_inside -> {cell overlapping self}; //ancienne version : il y avait overlapping
+	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
-	list<int> rankings_LS_EMC;
+	list<int> rankings_LS_EMC <- ([]);
 
 	action calcul_tx_deforest {
 		if area_total > 0 {
@@ -755,7 +755,7 @@ species LS {
 				if choice >= 0 {
 					ask predios at choice {
 						id_EMC_LS1_1 <- max(id_EMC_LS1_1) + 1;
-						add id_EMC_LS1_1 to: rankings_LS_EMC;
+						add id_EMC_LS1_1 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
 					}
 
@@ -772,7 +772,7 @@ species LS {
 				if choice >= 0 {
 					ask predios at choice {
 						id_EMC_LS1_2 <- max(id_EMC_LS1_2) + 1;
-						add id_EMC_LS1_2 to: rankings_LS_EMC;
+						add id_EMC_LS1_2 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
 					}
 
@@ -789,7 +789,7 @@ species LS {
 				if choice >= 0 {
 					ask predios at choice {
 						id_EMC_LS1_3 <- max(id_EMC_LS1_3) + 1;
-						add id_EMC_LS1_3 to: rankings_LS_EMC;
+						add id_EMC_LS1_3 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
 					}
 
@@ -805,8 +805,8 @@ species LS {
 				int choice <- weighted_means_DM(cands, criteria_WM_SP2);
 				if choice >= 0 {
 					ask predios at choice {
-						id_EMC_LS2<- max(id_EMC_LS2) + 1;
-						add id_EMC_LS2 to: rankings_LS_EMC;
+						id_EMC_LS2 <- max(id_EMC_LS2) + 1;
+						add id_EMC_LS2 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
 					}
 
@@ -823,7 +823,7 @@ species LS {
 				if choice >= 0 {
 					ask predios at choice {
 						id_EMC_LS3 <- max(id_EMC_LS3) + 1;
-						add id_EMC_LS3 to: rankings_LS_EMC;
+						add id_EMC_LS3 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
 					}
 
@@ -834,9 +834,36 @@ species LS {
 		}
 
 	}
-	
+
 	action apply_EMC {
-		map<int,string> map1 <- [::"LS1"];
+		ask predios {
+			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 0 {
+				self.LS <- "SP1.1";
+				my_hogar.livelihood_strategy <- "SP1.1";
+			}
+
+			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 1 {
+				self.LS <- "SP1.2";
+				my_hogar.livelihood_strategy <- "SP1.2";
+			}
+
+			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 2 {
+				self.LS <- "SP1.3";
+				my_hogar.livelihood_strategy <- "SP1.3";
+			}
+
+			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 3 {
+				self.LS <- "SP2";
+				my_hogar.livelihood_strategy <- "SP2";
+			}
+
+			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 4 {
+				self.LS <- "SP3";
+				my_hogar.livelihood_strategy <- "SP3";
+			}
+
+		}
+
 	}
 
 }
