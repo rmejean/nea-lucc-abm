@@ -1,6 +1,6 @@
 /*
 * Name: Northern Ecuadorian Amazon Land Use & Cover Change Agent-Based Model
-* Version: 0.0
+* Version: 0.1
 * Year : 2020
 * Author: Romain Mejean, PhD student in Geography @t UMR 5602 GEODE CNRS/Université Toulouse 2 Jean Jaurès
 * Contact : romain.mejean@univ-tlse2.fr
@@ -65,6 +65,7 @@ global {
 	}
 
 	action init_cells { //Init des cellules
+	write "START OF INIT CELLS";
 		ask cell {
 			if grid_value = 0.0 {
 				do die;
@@ -77,10 +78,12 @@ global {
 			}
 
 		}
+		write "END OF INIT CELLS";
 
 	}
 
 	action init_predios { //Plots init
+	write "START OF INIT CELLS";
 		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))];
 		ask predios {
 			if length(cells_deforest) = 0 { //Delete any plots with no deforestation
@@ -90,6 +93,7 @@ global {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
 		}
+		write "END OF INIT PLOTS";
 
 	}
 
@@ -100,6 +104,8 @@ global {
 	}
 
 	action init_pop { //Population init with GENSTAR
+	write "---START OF INIT POPULATION---";
+	write "START OF SETUP HOUSEHOLDS";
 	//
 	// --------------------------
 	// Setup HOGARES
@@ -134,7 +140,8 @@ global {
 			}
 
 		}
-
+		write "END OF SETUP HOUSEHOLD";
+		write "START OF SETUP PEOPLE";
 		//
 		// --------------------------
 		// Setup PERSONAS
@@ -171,12 +178,13 @@ global {
 			}
 
 		}
+		write "END OF SETUP PEOPLE";
 		// --------------------------
 		// Instructions post-génération
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			if membres_hogar contains (membres_hogar where (each.chef = true)) {
+			if membres_hogar contains (membres_hogar where (each.chef = true)) {// c'est ça le bug!
 				chef_hogar <- one_of(membres_hogar where (each.chef = true));
 				chef_auto_id <- chef_hogar.auto_id;
 				if chef_hogar.auto_id = "indigena" {
@@ -213,6 +221,7 @@ global {
 		ask sectores {
 			do carto_pop;
 		}
+		write "---END OF INIT POPULATION---";
 
 	}
 
@@ -220,6 +229,7 @@ global {
 	//---------------------------------------------------------
 	//Initialisation des LS (livelihood strategies) des ménages
 	//---------------------------------------------------------
+	write "START OF INIT LS";
 		ask hogares {
 		//SP3 : basé sur la taille des parcelles (pâturages)
 			if my_predio.area_deforest > 50 {
@@ -338,7 +348,7 @@ global {
 
 			}
 
-			write "LS affectées (procédure d'essai)";
+			write "Livelihood strategies affected (temporary procedure)";
 		}
 
 		ask predios where (each.is_free = false) {
@@ -385,7 +395,7 @@ global {
 	}
 
 	action init_AGL {
-		write "START OF INIT AGL";
+		write "---START OF INIT AGL---";
 		write "START OF INIT AGL SP3";
 		ask predios where (each.LS = 'SP3') {
 			gen_population_generator AL_genSP3;
@@ -550,7 +560,7 @@ global {
 		}
 		//
 		write "END OF INIT AGL 1.3";
-		write "END OF INIT AGL";
+		write "---END OF INIT AGL---";
 	}
 
 	action init_revenu {
