@@ -24,6 +24,7 @@ global {
 	//Global variables for monitors
 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
+	int nb_predios -> length(predios);
 	int nb_patches -> length(patches);
 	float ratio_deforest_min -> predios min_of (each.def_rate);
 	float ratio_deforest_max -> predios max_of (each.def_rate);
@@ -94,7 +95,7 @@ global {
 			}
 
 			do calcul_tx_deforest;
-			//do carto_tx_deforest;
+			do carto_tx_deforest;
 		}
 
 		write "---END OF INIT PLOTS";
@@ -344,9 +345,9 @@ global {
 			write "Livelihood strategies affected (temporary procedure)";
 		}
 
-//		ask predios where (each.is_free = false) {
-//			do carto_LS;
-//		}
+		ask predios where (each.is_free = false) {
+			do carto_LS;
+		}
 
 	}
 
@@ -379,9 +380,9 @@ global {
 
 		write "---END OF INIT LS WITH EMC";
 
-		//		ask predios where (each.is_free = false) {
-		//			do carto_LS;
-		//		}
+				ask predios where (each.is_free = false) {
+					do carto_LS;
+				}
 
 	}
 
@@ -592,9 +593,23 @@ species sectores {
 
 experiment Simulation type: gui {
 	output {
-		display map type: opengl {
+		display map_AGL type: opengl {
 			grid cell;
 			species predios aspect: default;
+			//species sectores;
+			species hogares;
+			//species personas;
+		}
+		display map_LS type: opengl {
+			grid cell;
+			species predios aspect: carto_LS;
+			//species sectores;
+			species hogares;
+			//species personas;
+		}
+		display map_tx_def type: opengl {
+			grid cell;
+			species predios aspect: carto_tx_def;
 			//species sectores;
 			species hogares;
 			//species personas;
@@ -602,6 +617,7 @@ experiment Simulation type: gui {
 
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
+		monitor "Total parcelles" value: nb_predios;
 		monitor "Total patches" value: nb_patches;
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;
