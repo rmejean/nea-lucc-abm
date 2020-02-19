@@ -1,5 +1,7 @@
 model data_import
 
+// IMPORTATION OF DATA
+
 global {
 
     //Importing population csv files (INEC, 2010)

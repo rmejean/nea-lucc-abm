@@ -10,11 +10,12 @@
 model NEA_LUCC_ABM
 
 import "data_import.gaml"
+import "species_def.gaml"
 import "MCA_criteria.gaml"
 
 global {
 
-	//Lists
+//Lists
 	list<string> echelle_pop <- (list<string>(range(95)));
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
@@ -53,21 +54,21 @@ global {
 	//--------------------------------------INITIALIZATION-------------------------------------------
 	//-----------------------------------------------------------------------------------------------
 	init {
-		write "-----START OF INITIALIZATION-----";
+		write "START OF INITIALIZATION";
 		do init_cells;
 		do init_vias;
 		do init_predios;
 		//do init_comunas;
 		do init_pop;
-		do init_LS;
-		//do init_LS_EMC;
+		//do init_LS;
+		do init_LS_EMC;
 		do init_AGL;
 		//do init_revenu;
-		write "-----END OF INITIALIZATION-----";
+		write "END OF INITIALIZATION";
 	}
 
 	action init_cells { //Cells init
-		write "---START OF INIT CELLS---";
+		write "---START OF INIT CELLS";
 		ask cell {
 			if grid_value = 0.0 {
 				do die;
@@ -81,11 +82,11 @@ global {
 
 		}
 
-		write "---END OF INIT CELLS---";
+		write "---END OF INIT CELLS";
 	}
 
 	action init_predios { //Plots init
-		write "START OF INIT PLOTS";
+		write "---START OF INIT PLOTS";
 		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))];
 		ask predios {
 			if length(cells_deforest) = 0 { //Delete any plots with no deforestation
@@ -93,23 +94,23 @@ global {
 			}
 
 			do calcul_tx_deforest;
-			do carto_tx_deforest;
+			//do carto_tx_deforest;
 		}
 
-		write "---END OF INIT PLOTS---";
+		write "---END OF INIT PLOTS";
 	}
 
 	action init_vias { //Roads init
-		write "START OF INIT ROADS";
+		write "---START OF INIT ROADS";
 		create vias from: vias_shp with: [orden::int(get("orden"))] {
 		}
 
-		write "---END OF INIT ROADS---";
+		write "---END OF INIT ROADS";
 	}
 
 	action init_pop { //Population init with GENSTAR
-		write "---START OF INIT POPULATION---";
-		write "START OF SETUP HOUSEHOLDS";
+		write "---START OF INIT POPULATION";
+		write "------START OF SETUP HOUSEHOLDS";
 		//
 		// --------------------------
 		// Setup HOGARES
@@ -145,8 +146,8 @@ global {
 
 		}
 
-		write "END OF SETUP HOUSEHOLD";
-		write "START OF SETUP PEOPLE";
+		write "------END OF SETUP HOUSEHOLDS";
+		write "------START OF SETUP PEOPLE";
 		//
 		// --------------------------
 		// Setup PERSONAS
@@ -184,7 +185,7 @@ global {
 
 		}
 
-		write "END OF SETUP PEOPLE";
+		write "------END OF SETUP PEOPLE";
 		// --------------------------
 		// Instructions post-génération
 		// --------------------------
@@ -214,14 +215,14 @@ global {
 			do carto_pop;
 		}
 
-		write "---END OF INIT POPULATION---";
+		write "---END OF INIT POPULATION";
 	}
 
 	action init_LS { //ESSAI (provisoire ou forçage si besoin)
 	//---------------------------------------------------------
 	//Initialisation des LS (livelihood strategies) des ménages
 	//---------------------------------------------------------
-		write "---START OF INIT LS---";
+		write "---START OF INIT LS";
 		ask hogares {
 		//SP3 : basé sur la taille des parcelles (pâturages)
 			if my_predio.area_deforest > 50 {
@@ -343,42 +344,40 @@ global {
 			write "Livelihood strategies affected (temporary procedure)";
 		}
 
-		ask predios where (each.is_free = false) {
-			do carto_LS;
-		}
+//		ask predios where (each.is_free = false) {
+//			do carto_LS;
+//		}
 
 	}
 
 	action init_LS_EMC { //Création des 5 agents-LS
+		write "---START OF INIT LS with EMC";
 		create LS number: 1 {
 			code_LS <- '1.1';
-			do ranking_EMC;
-			do apply_EMC;
 		}
 
 		create LS number: 1 {
 			code_LS <- '1.2';
-			do ranking_EMC;
-			do apply_EMC;
 		}
 
 		create LS number: 1 {
 			code_LS <- '1.3';
-			do ranking_EMC;
-			do apply_EMC;
 		}
 
 		create LS number: 1 {
 			code_LS <- '2';
-			do ranking_EMC;
-			do apply_EMC;
 		}
 
 		create LS number: 1 {
 			code_LS <- '3';
-			do ranking_EMC;
+		}
+
+		ask LS {
+			do ranking_MCA;
 			do apply_EMC;
 		}
+
+		write "---END OF INIT LS WITH EMC";
 
 		//		ask predios where (each.is_free = false) {
 		//			do carto_LS;
@@ -387,8 +386,8 @@ global {
 	}
 
 	action init_AGL {
-		write "---START OF INIT AGL---";
-		write "START OF INIT AGL SP3";
+		write "---START OF INIT AGL";
+		write "------START OF INIT AGL SP3";
 		ask predios where (each.LS = 'SP3') {
 			gen_population_generator AL_genSP3;
 			AL_genSP3 <- AL_genSP3 with_generation_algo "IS";
@@ -419,8 +418,8 @@ global {
 
 		}
 		//
-		write "END OF INIT AGL SP3";
-		write "START OF INIT AGL SP2";
+		write "------END OF INIT AGL SP3";
+		write "------START OF INIT AGL SP2";
 		//
 		ask predios where (each.LS = 'SP2') {
 			gen_population_generator AL_genSP2;
@@ -452,8 +451,8 @@ global {
 
 		}
 		//
-		write "END OF INIT AGL SP2";
-		write "START OF INIT AGL SP1.1";
+		write "------END OF INIT AGL SP2";
+		write "------START OF INIT AGL SP1.1";
 		//
 		ask predios where (each.LS = 'SP1.1') {
 			gen_population_generator AL_genSP1_1;
@@ -485,8 +484,8 @@ global {
 
 		}
 		//
-		write "END OF INIT AGL SP1.1";
-		write "START OF INIT AGL SP1.2";
+		write "------END OF INIT AGL SP1.1";
+		write "------START OF INIT AGL SP1.2";
 		//
 		ask predios where (each.LS = 'SP1.2') {
 			gen_population_generator AL_genSP1_2;
@@ -518,8 +517,8 @@ global {
 
 		}
 		//
-		write "END OF INIT AGL SP1.2";
-		write "START OF INIT AGL SP1.3";
+		write "------END OF INIT AGL SP1.2";
+		write "------START OF INIT AGL SP1.3";
 		//
 		ask predios where (each.LS = 'SP1.3') {
 			gen_population_generator AL_genSP1_3;
@@ -551,8 +550,8 @@ global {
 
 		}
 		//
-		write "END OF INIT AGL 1.3";
-		write "---END OF INIT AGL---";
+		write "------END OF INIT AGL 1.3";
+		write "---END OF INIT AGL";
 	}
 
 	action init_revenu {
@@ -568,359 +567,6 @@ species patches {
 	string type;
 	predios my_predio;
 	string id;
-}
-
-grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false use_neighbors_cache: false {
-	bool is_deforest <- true; //POURQUOI TRUE ?!
-	bool is_free <- true;
-	string cult;
-	float rev;
-	float MOF_cost;
-	hogares my_hogar;
-	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
-
-	action param_activities {
-		if cult = 'maniocmais' {
-			rev <- rnd((450 / 12), (900 / 12));
-			color <- #yellow;
-		}
-
-		if cult = 'fruits' {
-			rev <- rnd((1500 / 12), (2500 / 12));
-			color <- #orange;
-		}
-
-		if cult = 's_livestock' {
-			rev <- rnd((450 / 12), (1800 / 12));
-			color <- #palevioletred;
-		}
-
-		if cult = 'plantain' {
-			rev <- rnd((250 / 12), (2210 / 12));
-			color <- #springgreen;
-		}
-
-		if cult = 'coffee' {
-			rev <- rnd((5100 / 12), (3000 / 12));
-			color <- #brown;
-		}
-
-		if cult = 'cacao' {
-			rev <- rnd((1100 / 12), (900 / 12));
-			color <- #red;
-		}
-
-		if cult = 'livestock' {
-			rev <- rnd((1240 / 12), (1010 / 12));
-			color <- #purple;
-		}
-
-		if cult = 'friche' {
-			rev <- 0.0;
-			color <- #white;
-		}
-
-		if cult = 'house' {
-			rev <- 0.0;
-			color <- #red;
-		}
-
-	}
-
-}
-
-species predios {
-	string clave_cata;
-	bool is_free <- true;
-	bool is_free_EMC <- false;
-	int id_EMC_LS1_1 <- 0;
-	int id_EMC_LS1_2 <- 0;
-	int id_EMC_LS1_3 <- 0;
-	int id_EMC_LS2 <- 0;
-	int id_EMC_LS3 <- 0;
-	int area_total <- length(cells_inside);
-	int area_deforest <- cells_inside count each.is_deforest;
-	float def_rate; //Taux de déforestation
-	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //Distance à la Via Auca
-	int indigena; //Indice ethnie
-	string LS; //Livelihood strategy
-	rgb color;
-	rgb color_tx_def;
-	rgb LS_color;
-	hogares my_hogar;
-	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
-	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
-	list<int> rankings_LS_EMC <- ([]);
-
-	action calcul_tx_deforest {
-		if area_total > 0 {
-			def_rate <- (area_deforest / area_total);
-		} else {
-			def_rate <- 0.0;
-		}
-
-	}
-
-	action carto_tx_deforest {
-		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 0.1, 0.25) ? rgb(253, 204, 138) : (between(def_rate, 0.25, 0.50) ?
-		rgb(253, 204, 138) : (between(def_rate, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
-	}
-
-	action carto_LS {
-		LS_color <- my_hogar.livelihood_strategy = 'SP3' ? #lightseagreen : (my_hogar.livelihood_strategy = 'SP2' ? #paleturquoise : (my_hogar.livelihood_strategy = 'SP1.1' ?
-		#greenyellow : (my_hogar.livelihood_strategy = 'SP1.2' ? #tan : #rosybrown)));
-	}
-
-	aspect default {
-		draw shape border: #black;
-	}
-
-	aspect carto_tx_def {
-		draw shape color: color_tx_def border: #black;
-	}
-
-	aspect carto_LS {
-		draw shape color: LS_color border: #black;
-	}
-
-}
-
-species vias {
-	int orden;
-
-	aspect default {
-		draw shape color: #black border: #black;
-	}
-
-}
-
-species comunas {
-	int area_total;
-	int area_deforest;
-	float ratio_deforest;
-
-	aspect default {
-		draw shape color: #black border: #black;
-	}
-
-}
-
-species LS {
-	string code_LS;
-	list<list> predios_eval {
-		list<list> candidates;
-		loop parcel over: (predios where (each.is_free = false)) { // ne mettre que les predios où il y a des ménages
-			list<float> cand;
-			add parcel.def_rate to: cand;
-			add parcel.indigena to: cand;
-			add parcel.dist_via_auca to: cand;
-			add cand to: candidates;
-		}
-
-		return candidates;
-	}
-
-	action ranking_EMC { //PROCEDURE D'EVALUATION MULTI CRITERES
-		if code_LS = '1.1' {
-			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
-				list<list> cands <- predios_eval();
-				int choice <- weighted_means_DM(cands, criteria_WM_SP1_1);
-				if choice >= 0 {
-					ask predios at choice {
-						self.id_EMC_LS1_1 <- max(id_EMC_LS1_1) + 1;
-						add self.id_EMC_LS1_1 to: self.rankings_LS_EMC;
-						is_free_EMC <- false;
-						write "Un plot ranké pour la LS 1.1";
-					}
-
-				}
-
-			}
-
-		}
-
-		if code_LS = '1.2' {
-			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
-				list<list> cands <- predios_eval();
-				int choice <- weighted_means_DM(cands, criteria_WM_SP1_2);
-				if choice >= 0 {
-					ask predios at choice {
-						self.id_EMC_LS1_2 <- max(id_EMC_LS1_2) + 1;
-						add self.id_EMC_LS1_2 to: self.rankings_LS_EMC;
-						is_free_EMC <- false;
-						write "Un plot ranké pour la LS 1.2";
-					}
-
-				}
-
-			}
-
-		}
-
-		if code_LS = '1.3' {
-			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
-				list<list> cands <- predios_eval();
-				int choice <- weighted_means_DM(cands, criteria_WM_SP1_3);
-				if choice >= 0 {
-					ask predios at choice {
-						self.id_EMC_LS1_3 <- max(id_EMC_LS1_3) + 1;
-						add self.id_EMC_LS1_3 to: self.rankings_LS_EMC;
-						is_free_EMC <- false;
-						write "Un plot ranké pour la LS 1.3";
-					}
-
-				}
-
-			}
-
-		}
-
-		if code_LS = '2' {
-			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
-				list<list> cands <- predios_eval();
-				int choice <- weighted_means_DM(cands, criteria_WM_SP2);
-				if choice >= 0 {
-					ask predios at choice {
-						self.id_EMC_LS2 <- max(id_EMC_LS2) + 1;
-						add self.id_EMC_LS2 to: self.rankings_LS_EMC;
-						is_free_EMC <- false;
-						write "Un plot ranké pour la LS 2";
-					}
-
-				}
-
-			}
-
-		}
-
-		if code_LS = '3' {
-			loop while: (length(predios where (each.is_free_EMC = true)) > 0) {
-				list<list> cands <- predios_eval();
-				int choice <- weighted_means_DM(cands, criteria_WM_SP3);
-				if choice >= 0 {
-					ask predios at choice {
-						self.id_EMC_LS3 <- max(id_EMC_LS3) + 1;
-						add self.id_EMC_LS3 to: self.rankings_LS_EMC;
-						is_free_EMC <- false;
-						write "Un plot ranké pour la LS 3";
-					}
-
-				}
-
-			}
-
-		}
-
-	}
-
-	action apply_EMC {
-		ask predios {
-			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 0 {
-				self.LS <- "SP1.1";
-				my_hogar.livelihood_strategy <- "SP1.1";
-				write "Une LS 1.1 affectée à un plot";
-			}
-
-			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 1 {
-				self.LS <- "SP1.2";
-				my_hogar.livelihood_strategy <- "SP1.2";
-				write "Une LS 1.2 affectée à un plot";
-			}
-
-			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 2 {
-				self.LS <- "SP1.3";
-				my_hogar.livelihood_strategy <- "SP1.3";
-				write "Une LS 1.3 affectée à un plot";
-			}
-
-			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 3 {
-				self.LS <- "SP2";
-				my_hogar.livelihood_strategy <- "SP2";
-				write "Une LS 2 affectée à un plot";
-			}
-
-			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 4 {
-				self.LS <- "SP3";
-				my_hogar.livelihood_strategy <- "SP3";
-				write "Une LS 3 affectée à un plot";
-			}
-
-		}
-
-	}
-
-}
-
-species hogares {
-	string sec_id;
-	string hog_id;
-	string viv_id;
-	int Total_Personas;
-	int Total_Hombres;
-	int Total_Mujeres;
-	predios my_predio;
-	list<personas> membres_hogar;
-	personas chef_hogar;
-	string chef_auto_id;
-	float MOF;
-	float common_pot_inc;
-	string livelihood_strategy;
-
-	action MOF_calc {
-		MOF <- (sum(membres_hogar collect each.vMOF) * 30);
-	}
-
-	aspect default {
-		draw circle(15) color: #red border: #black;
-	}
-
-}
-
-species personas parent: hogares {
-	hogares my_hogar;
-	int Age;
-	string Sexo;
-	int orden_en_hogar;
-	float vMOF;
-	float inc;
-	string auto_id;
-	bool chef;
-
-	action vMOF_calc {
-		if Age < 11 {
-			vMOF <- 0.0;
-		}
-
-		if Age = 11 {
-			vMOF <- 0.16;
-		}
-
-		if Age = 12 {
-			vMOF <- 0.33;
-		}
-
-		if Age = 13 {
-			vMOF <- 0.5;
-		}
-
-		if Age = 14 {
-			vMOF <- 0.66;
-		}
-
-		if Age = 15 {
-			vMOF <- 0.83;
-		}
-
-		if Age >= 16 {
-			vMOF <- 1.0;
-		}
-
-	}
-
-	aspect default {
-		draw circle(6) color: #blue border: #black;
-	}
-
 }
 
 species sectores {
@@ -948,7 +594,7 @@ experiment Simulation type: gui {
 	output {
 		display map type: opengl {
 			grid cell;
-			//species predios aspect: default;
+			species predios aspect: default;
 			//species sectores;
 			species hogares;
 			//species personas;

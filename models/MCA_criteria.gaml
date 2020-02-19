@@ -23,23 +23,23 @@ global {
 
 //Parameters for each criterion and for each LS
 	//SP1.1
-	float SP1_1_weight_def_rate <- 1.0;
-	float SP1_1_weight_dist_via_auca <- 1.0;
+	float SP1_1_weight_def_rate <- 0.1;
+	float SP1_1_weight_dist_via_auca <- 0.1;
 	float SP1_1_weight_indigena <- 1.0;
 	//SP1.2
-	float SP1_2_weight_def_rate <- 1.0;
-	float SP1_2_weight_dist_via_auca <- 1.0;
-	float SP1_2_weight_indigena <- 1.0;
+	float SP1_2_weight_def_rate <- 0.1;
+	float SP1_2_weight_dist_via_auca <- 0.1;
+	float SP1_2_weight_indigena <- 0.7;
 	//SP1.3
-	float SP1_3_weight_def_rate <- 1.0;
-	float SP1_3_weight_dist_via_auca <- 1.0;
-	float SP1_3_weight_indigena <- 1.0;
+	float SP1_3_weight_def_rate <- 0.5;
+	float SP1_3_weight_dist_via_auca <- 0.0;
+	float SP1_3_weight_indigena <- 0.0;
 	//SP2
-	float SP2_weight_def_rate <- 1.0;
-	float SP2_weight_dist_via_auca <- 1.0;
-	float SP2_weight_indigena <- 1.0;
+	float SP2_weight_def_rate <- 0.7;
+	float SP2_weight_dist_via_auca <- 0.0;
+	float SP2_weight_indigena <- 0.0;
 	//SP3
 	float SP3_weight_def_rate <- 1.0;
-	float SP3_weight_dist_via_auca <- 1.0;
-	float SP3_weight_indigena <- 1.0;
+	float SP3_weight_dist_via_auca <- 0.0;
+	float SP3_weight_indigena <- 0.0;
 }
