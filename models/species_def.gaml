@@ -91,22 +91,26 @@ species predios {
 	int id_EMC_LS2 <- 0;
 	int id_EMC_LS3 <- 0;
 	int area_total <- length(cells_inside);
-	int area_deforest <- cells_inside count each.is_deforest;
+	int area_deforest <- length(cells_deforest);
+	int area_forest <- length(cells_forest);
 	float def_rate;
+	float forest_rate;
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //Distance à la Via Auca
- int indigena; //indigenous index
+ 	int indigena; //indigenous index
 	string LS; //livelihood strategy
 	rgb color;
 	rgb color_tx_def;
 	rgb LS_color;
 	hogares my_hogar;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
- list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
+ 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
+ 	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
 	list<int> rankings_LS_EMC <- ([]);
 
 	action calcul_tx_deforest {
 		if area_total > 0 {
 			def_rate <- (area_deforest / area_total) * 100;
+			forest_rate <- (area_forest / area_total) * 100;
 		} else {
 			def_rate <- 0.0;
 		}
@@ -235,6 +239,7 @@ species LS {
 		loop parcel over: (predios where (each.is_free_EMC = true)) { // ne mettre que les predios où il y a des ménages
  list<float> cand;
 			add parcel.def_rate to: cand;
+			add parcel.forest_rate to: cand;
 			add parcel.indigena to: cand;
 			add parcel.dist_via_auca to: cand;
 			add cand to: candidates;
