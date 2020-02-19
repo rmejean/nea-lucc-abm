@@ -176,18 +176,31 @@ global {
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			chef_hogar <- one_of(membres_hogar where (each.chef = true));
-			chef_auto_id <- chef_hogar.auto_id;
-			if chef_hogar.auto_id = "indigena" {
-				ask my_predio {
-					indigena <- 1;
+			if membres_hogar contains (membres_hogar where (each.chef = true)) {
+				chef_hogar <- one_of(membres_hogar where (each.chef = true));
+				chef_auto_id <- chef_hogar.auto_id;
+				if chef_hogar.auto_id = "indigena" {
+					ask my_predio {
+						indigena <- 1;
+					}
+
+				} else {
+					ask my_predio {
+						indigena <- 0;
+					}
+
 				}
 
 			} else {
 				ask my_predio {
-					indigena <- 0;
+					is_free <- true;
+					is_free_EMC <- false;
+					my_hogar <- nil;
 				}
-
+				ask membres_hogar {
+					do die;
+				}
+				do die;
 			}
 
 			do MOF_calc;
@@ -325,6 +338,7 @@ global {
 
 			}
 
+			write "LS affectées (procédure d'essai)";
 		}
 
 		ask predios where (each.is_free = false) {
@@ -371,6 +385,8 @@ global {
 	}
 
 	action init_AGL {
+		write "START OF INIT AGL";
+		write "START OF INIT AGL SP3";
 		ask predios where (each.LS = 'SP3') {
 			gen_population_generator AL_genSP3;
 			AL_genSP3 <- AL_genSP3 with_generation_algo "IS";
@@ -400,7 +416,10 @@ global {
 			}
 
 		}
-
+		//
+		write "END OF INIT AGL SP3";
+		write "START OF INIT AGL SP2";
+		//
 		ask predios where (each.LS = 'SP2') {
 			gen_population_generator AL_genSP2;
 			AL_genSP2 <- AL_genSP2 with_generation_algo "IS";
@@ -430,7 +449,10 @@ global {
 			}
 
 		}
-
+		//
+		write "END OF INIT AGL SP2";
+		write "START OF INIT AGL SP1.1";
+		//
 		ask predios where (each.LS = 'SP1.1') {
 			gen_population_generator AL_genSP1_1;
 			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "IS";
@@ -460,7 +482,10 @@ global {
 			}
 
 		}
-
+		//
+		write "END OF INIT AGL SP1.1";
+		write "START OF INIT AGL SP1.2";
+		//
 		ask predios where (each.LS = 'SP1.2') {
 			gen_population_generator AL_genSP1_2;
 			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "IS";
@@ -489,38 +514,43 @@ global {
 				do die;
 			}
 
-			ask predios where (each.LS = 'SP1.3') {
-				gen_population_generator AL_genSP1_3;
-				AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "IS";
-				AL_genSP1_3 <- add_census_file(AL_genSP1_3, f_FREQ_SP1_3.path, "GlobalFrequencyTable", ",", 1, 1);
-				// --------------------------
-				// Setup Attributs
-				// --------------------------	
-				list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
-				AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
-				AL_genSP1_3 <- AL_genSP1_3 add_attribute ("id", string, ["test"]);
-				create patches from: AL_genSP1_3 number: length(self.cells_deforest where (each.is_free = true)) {
-					if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-						ask pxl_cible {
-							is_free <- false;
-						}
-
-						location <- pxl_cible.location;
-						ask pxl_cible {
-							cult <- myself.type;
-							do param_activities;
-						}
-
+		}
+		//
+		write "END OF INIT AGL SP1.2";
+		write "START OF INIT AGL SP1.3";
+		//
+		ask predios where (each.LS = 'SP1.3') {
+			gen_population_generator AL_genSP1_3;
+			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "IS";
+			AL_genSP1_3 <- add_census_file(AL_genSP1_3, f_FREQ_SP1_3.path, "GlobalFrequencyTable", ",", 1, 1);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
+			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
+			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("id", string, ["test"]);
+			create patches from: AL_genSP1_3 number: length(self.cells_deforest where (each.is_free = true)) {
+				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
 					}
 
-					do die;
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						cult <- myself.type;
+						do param_activities;
+					}
+
 				}
 
+				do die;
 			}
 
 		}
-
+		//
+		write "END OF INIT AGL 1.3";
+		write "END OF INIT AGL";
 	}
 
 	action init_revenu {
@@ -630,8 +660,8 @@ species predios {
 	}
 
 	action carto_tx_deforest {
-		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 0.1, 0.25) ? rgb(253, 204, 138) : (between(def_rate, 0.25, 0.50) ? rgb(253, 204, 138) : (between(def_rate, 0.50, 0.75)
-		? rgb(252, 141, 89) : rgb(215, 48, 31))));
+		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 0.1, 0.25) ? rgb(253, 204, 138) : (between(def_rate, 0.25, 0.50) ?
+		rgb(253, 204, 138) : (between(def_rate, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
 
 	action carto_LS {
@@ -698,6 +728,7 @@ species LS {
 						self.id_EMC_LS1_1 <- max(id_EMC_LS1_1) + 1;
 						add self.id_EMC_LS1_1 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
+						write "Un plot ranké pour la LS 1.1";
 					}
 
 				}
@@ -715,6 +746,7 @@ species LS {
 						self.id_EMC_LS1_2 <- max(id_EMC_LS1_2) + 1;
 						add self.id_EMC_LS1_2 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
+						write "Un plot ranké pour la LS 1.2";
 					}
 
 				}
@@ -732,6 +764,7 @@ species LS {
 						self.id_EMC_LS1_3 <- max(id_EMC_LS1_3) + 1;
 						add self.id_EMC_LS1_3 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
+						write "Un plot ranké pour la LS 1.3";
 					}
 
 				}
@@ -749,6 +782,7 @@ species LS {
 						self.id_EMC_LS2 <- max(id_EMC_LS2) + 1;
 						add self.id_EMC_LS2 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
+						write "Un plot ranké pour la LS 2";
 					}
 
 				}
@@ -766,6 +800,7 @@ species LS {
 						self.id_EMC_LS3 <- max(id_EMC_LS3) + 1;
 						add self.id_EMC_LS3 to: self.rankings_LS_EMC;
 						is_free_EMC <- false;
+						write "Un plot ranké pour la LS 3";
 					}
 
 				}
@@ -781,26 +816,31 @@ species LS {
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 0 {
 				self.LS <- "SP1.1";
 				my_hogar.livelihood_strategy <- "SP1.1";
+				write "Une LS 1.1 affectée à un plot";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 1 {
 				self.LS <- "SP1.2";
 				my_hogar.livelihood_strategy <- "SP1.2";
+				write "Une LS 1.2 affectée à un plot";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 2 {
 				self.LS <- "SP1.3";
 				my_hogar.livelihood_strategy <- "SP1.3";
+				write "Une LS 1.3 affectée à un plot";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 3 {
 				self.LS <- "SP2";
 				my_hogar.livelihood_strategy <- "SP2";
+				write "Une LS 2 affectée à un plot";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 4 {
 				self.LS <- "SP3";
 				my_hogar.livelihood_strategy <- "SP3";
+				write "Une LS 3 affectée à un plot";
 			}
 
 		}
