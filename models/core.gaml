@@ -58,8 +58,8 @@ global {
 		do init_predios;
 		//do init_comunas;
 		do init_pop;
-		//do init_LS;
-		do init_LS_EMC;
+		do init_LS;
+		//do init_LS_EMC;
 		do init_AGL;
 		//do init_revenu;
 	}
