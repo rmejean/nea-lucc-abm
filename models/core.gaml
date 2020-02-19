@@ -14,13 +14,13 @@ import "MCA_criteria.gaml"
 
 global {
 
-//Lists
+	//Lists
 	list<string> echelle_pop <- (list<string>(range(95)));
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
 	list<string> list_id <- ([]);
 
-	//Variables globales pour monitors
+	//Global variables for monitors
 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
 	int nb_patches -> length(patches);
@@ -53,6 +53,7 @@ global {
 	//--------------------------------------INITIALIZATION-------------------------------------------
 	//-----------------------------------------------------------------------------------------------
 	init {
+		write "-----START OF INITIALIZATION-----";
 		do init_cells;
 		do init_vias;
 		do init_predios;
@@ -62,10 +63,11 @@ global {
 		//do init_LS_EMC;
 		do init_AGL;
 		//do init_revenu;
+		write "-----END OF INITIALIZATION-----";
 	}
 
-	action init_cells { //Init des cellules
-	write "START OF INIT CELLS";
+	action init_cells { //Cells init
+		write "---START OF INIT CELLS---";
 		ask cell {
 			if grid_value = 0.0 {
 				do die;
@@ -78,12 +80,12 @@ global {
 			}
 
 		}
-		write "END OF INIT CELLS";
 
+		write "---END OF INIT CELLS---";
 	}
 
 	action init_predios { //Plots init
-	write "START OF INIT CELLS";
+		write "START OF INIT PLOTS";
 		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))];
 		ask predios {
 			if length(cells_deforest) = 0 { //Delete any plots with no deforestation
@@ -93,24 +95,26 @@ global {
 			do calcul_tx_deforest;
 			do carto_tx_deforest;
 		}
-		write "END OF INIT PLOTS";
 
+		write "---END OF INIT PLOTS---";
 	}
 
 	action init_vias { //Roads init
+		write "START OF INIT ROADS";
 		create vias from: vias_shp with: [orden::int(get("orden"))] {
 		}
 
+		write "---END OF INIT ROADS---";
 	}
 
 	action init_pop { //Population init with GENSTAR
-	write "---START OF INIT POPULATION---";
-	write "START OF SETUP HOUSEHOLDS";
-	//
-	// --------------------------
-	// Setup HOGARES
-	// --------------------------
-	//
+		write "---START OF INIT POPULATION---";
+		write "START OF SETUP HOUSEHOLDS";
+		//
+		// --------------------------
+		// Setup HOGARES
+		// --------------------------
+		//
 		gen_population_generator hog_gen;
 		hog_gen <- hog_gen with_generation_algo "US";
 		hog_gen <- add_census_file(hog_gen, f_HOGARES_predios.path, "Sample", ",", 1, 1);
@@ -140,6 +144,7 @@ global {
 			}
 
 		}
+
 		write "END OF SETUP HOUSEHOLD";
 		write "START OF SETUP PEOPLE";
 		//
@@ -178,37 +183,24 @@ global {
 			}
 
 		}
+
 		write "END OF SETUP PEOPLE";
 		// --------------------------
 		// Instructions post-génération
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			if membres_hogar contains (membres_hogar where (each.chef = true)) {// c'est ça le bug!
-				chef_hogar <- one_of(membres_hogar where (each.chef = true));
-				chef_auto_id <- chef_hogar.auto_id;
-				if chef_hogar.auto_id = "indigena" {
-					ask my_predio {
-						indigena <- 1;
-					}
-
-				} else {
-					ask my_predio {
-						indigena <- 0;
-					}
-
+			chef_hogar <- one_of(membres_hogar where (each.chef = true));
+			if chef_hogar.auto_id = "indigena" {
+				ask my_predio {
+					indigena <- 1;
 				}
 
 			} else {
 				ask my_predio {
-					is_free <- true;
-					is_free_EMC <- false;
-					my_hogar <- nil;
+					indigena <- 0;
 				}
-				ask membres_hogar {
-					do die;
-				}
-				do die;
+
 			}
 
 			do MOF_calc;
@@ -221,15 +213,15 @@ global {
 		ask sectores {
 			do carto_pop;
 		}
-		write "---END OF INIT POPULATION---";
 
+		write "---END OF INIT POPULATION---";
 	}
 
 	action init_LS { //ESSAI (provisoire ou forçage si besoin)
 	//---------------------------------------------------------
 	//Initialisation des LS (livelihood strategies) des ménages
 	//---------------------------------------------------------
-	write "START OF INIT LS";
+		write "---START OF INIT LS---";
 		ask hogares {
 		//SP3 : basé sur la taille des parcelles (pâturages)
 			if my_predio.area_deforest > 50 {
