@@ -14,6 +14,7 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 	bool is_free <- true;
 	string cult;
 	float rev;
+	predios predio;
 	hogares my_hogar;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35,75,0) : (grid_value = 3 ? #burlywood : #red));
 
@@ -385,31 +386,31 @@ species LS_agents {
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 0 {
 				self.LS <- "SP1.1";
 				my_hogar.livelihood_strategy <- "SP1.1";
-				write "Une LS 1.1 affectée à un plot";
+				write "LS 1.1 assigned to a plot.";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 1 {
 				self.LS <- "SP1.2";
 				my_hogar.livelihood_strategy <- "SP1.2";
-				write "Une LS 1.2 affectée à un plot";
+				write "LS 1.2 assigned to a plot.";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 2 {
 				self.LS <- "SP1.3";
 				my_hogar.livelihood_strategy <- "SP1.3";
-				write "Une LS 1.3 affectée à un plot";
+				write "LS 1.3 assigned to a plot.";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 3 {
 				self.LS <- "SP2";
 				my_hogar.livelihood_strategy <- "SP2";
-				write "Une LS 2 affectée à un plot";
+				write "LS 2 assigned to a plot.";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 4 {
 				self.LS <- "SP3";
 				my_hogar.livelihood_strategy <- "SP3";
-				write "Une LS 3 affectée à un plot";
+				write "LS 3 assigned to a plot.";
 			}
 
 		}
