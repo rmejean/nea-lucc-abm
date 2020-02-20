@@ -50,6 +50,12 @@ global {
 	float MOFcost_no_farming <- 0.0;
 	//Life cost --------------------
 	float $_ANFP <- 250.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
+	//Saving init
+	bool init_end <- false;
+	string save_landscape <- ("../results/agricultural_landscape.shp");
+	string save_predios <- ("../results/predios.shp");
+	string save_hogares <- ("../results/hogares.shp");
+	string save_personas <- ("../results/personas.shp");
 
 	//-----------------------------------------------------------------------------------------------
 	//--------------------------------------INITIALIZATION-------------------------------------------
@@ -63,9 +69,10 @@ global {
 		do init_pop;
 		//do init_LS;
 		do init_LS_EMC;
-		do init_AGL;
-		//do init_revenu;
+		do init_ALG;
+		do init_revenu;
 		write "END OF INITIALIZATION";
+		init_end <- true;
 	}
 
 	action init_cells { //Cells init
@@ -141,7 +148,7 @@ global {
 			location <- one_of(my_predio.cells_deforest).location; //A AMELIORER : first est trop régulier, one_of trop hasardeux
 			ask my_predio {
 				is_free <- false;
-				is_free_EMC <- true;
+				is_free_MCA <- true;
 				my_hogar <- myself;
 			}
 
@@ -353,29 +360,29 @@ global {
 
 	action init_LS_EMC { //Création des 5 agents-LS
 		write "---START OF INIT LS with EMC";
-		create LS number: 1 {
+		create LS_agents number: 1 {
 			code_LS <- '1.1';
 		}
 
-		create LS number: 1 {
+		create LS_agents number: 1 {
 			code_LS <- '1.2';
 		}
 
-		create LS number: 1 {
+		create LS_agents number: 1 {
 			code_LS <- '1.3';
 		}
 
-		create LS number: 1 {
+		create LS_agents number: 1 {
 			code_LS <- '2';
 		}
 
-		create LS number: 1 {
+		create LS_agents number: 1 {
 			code_LS <- '3';
 		}
 
-		ask LS {
+		ask LS_agents {
 			do ranking_MCA;
-			do apply_EMC;
+			do apply_MCA;
 		}
 
 		write "---END OF INIT LS WITH EMC";
@@ -385,9 +392,9 @@ global {
 
 	}
 
-	action init_AGL {
-		write "---START OF INIT AGL";
-		write "------START OF INIT AGL SP3";
+	action init_ALG {
+		write "---START OF INIT ALG";
+		write "------START OF INIT ALG SP3";
 		ask predios where (each.LS = 'SP3') {
 			gen_population_generator AL_genSP3;
 			AL_genSP3 <- AL_genSP3 with_generation_algo "IS";
@@ -418,8 +425,8 @@ global {
 
 		}
 		//
-		write "------END OF INIT AGL SP3";
-		write "------START OF INIT AGL SP2";
+		write "------END OF INIT ALG SP3";
+		write "------START OF INIT ALG SP2";
 		//
 		ask predios where (each.LS = 'SP2') {
 			gen_population_generator AL_genSP2;
@@ -451,8 +458,8 @@ global {
 
 		}
 		//
-		write "------END OF INIT AGL SP2";
-		write "------START OF INIT AGL SP1.1";
+		write "------END OF INIT ALG SP2";
+		write "------START OF INIT ALG SP1.1";
 		//
 		ask predios where (each.LS = 'SP1.1') {
 			gen_population_generator AL_genSP1_1;
@@ -484,8 +491,8 @@ global {
 
 		}
 		//
-		write "------END OF INIT AGL SP1.1";
-		write "------START OF INIT AGL SP1.2";
+		write "------END OF INIT ALG SP1.1";
+		write "------START OF INIT ALG SP1.2";
 		//
 		ask predios where (each.LS = 'SP1.2') {
 			gen_population_generator AL_genSP1_2;
@@ -517,8 +524,8 @@ global {
 
 		}
 		//
-		write "------END OF INIT AGL SP1.2";
-		write "------START OF INIT AGL SP1.3";
+		write "------END OF INIT ALG SP1.2";
+		write "------START OF INIT ALG SP1.3";
 		//
 		ask predios where (each.LS = 'SP1.3') {
 			gen_population_generator AL_genSP1_3;
@@ -550,8 +557,8 @@ global {
 
 		}
 		//
-		write "------END OF INIT AGL 1.3";
-		write "---END OF INIT AGL";
+		write "------END OF INIT ALG 1.3";
+		write "---END OF INIT ALG";
 	}
 
 	action init_revenu {
@@ -591,8 +598,41 @@ species sectores {
 }
 
 experiment Simulation type: gui {
+	user_command "Save Agricultural Landscape" category: "Saving init" when: init_end = true color: #darkblue {
+		save cell to: save_landscape type: "shp" attributes: ["DEF"::is_deforest, "CULT"::cult, "HOUSEHOLD"::my_hogar];
+	}
+
+	user_command "Save Plots" category: "Saving init" when: init_end = true color: #darkblue {
+		save predios to: save_predios type: "shp" attributes:
+		["CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_RATE"::forest_rate, "DIST_VIAAUCA"::dist_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest];
+	}
+
+	user_command "Save Households" category: "Saving init" when: init_end = true color: #darkblue {
+		save hogares to: save_hogares type: "shp" attributes:
+		["SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOG_MEMBERS"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOID"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy];
+	}
+
+	user_command "Save People" category: "Saving init" when: init_end = true color: #darkblue {
+		save personas to: save_personas type: "shp" attributes:
+		["SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "HOUSEHOLD"::my_hogar, "AGE"::Age, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
+	}
+
+	user_command "Save all init files" category: "Saving init" when: init_end = true color: #darkred {
+		save cell to: save_landscape type: "shp" attributes: ["DEF"::is_deforest, "CULT"::cult, "HOUSEHOLD"::my_hogar];
+		save predios to: save_predios type: "shp" attributes:
+		["CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_RATE"::forest_rate, "DIST_VIAAUCA"::dist_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest];
+		save hogares to: save_hogares type: "shp" attributes:
+		["SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOG_MEMBERS"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOID"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy];
+		save personas to: save_personas type: "shp" attributes:
+		["SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "HOUSEHOLD"::my_hogar, "AGE"::Age, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
+	}
+
+	parameter "File chooser landscape" category: "Saving init" var: save_landscape;
+	parameter "File chooser plots" category: "Saving init" var: save_predios;
+	parameter "File chooser households" category: "Saving init" var: save_hogares;
+	parameter "File chooser people" category: "Saving init" var: save_personas;
 	output {
-		display map_AGL type: opengl {
+		display map_ALG type: opengl {
 			grid cell;
 			species predios aspect: default;
 			//species sectores;
@@ -630,10 +670,8 @@ experiment Simulation type: gui {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
-		browse "suivi hogares" value: hogares attributes:
-		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc", "chef_auto_id"];
+		browse "suivi hogares" value: hogares attributes: ["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
-		browse "pop par secteur" value: sectores attributes: ["DPA_SECDIS", "nb_hogares", "nb_personas"];
 		browse "suivi predios" value: predios attributes: ["clave_cata", "is_free", "area_total", "area_deforest", "ratio_deforest", "cells_inside"];
 		//-------------------------------------
 		display Ages {
