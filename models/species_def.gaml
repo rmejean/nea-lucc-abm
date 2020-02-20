@@ -16,7 +16,7 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 	float rev;
 	float MOF_cost;
 	hogares my_hogar;
-	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? #darkgreen : (grid_value = 3 ? #burlywood : #red));
+	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35,75,0) : (grid_value = 3 ? #burlywood : #red));
 
 	action param_activities {
 		if cult = 'maniocmais' {
@@ -46,17 +46,17 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 
 		if cult = 'cacao' {
 			rev <- rnd((1100 / 12), (900 / 12));
-			color <- #red;
+			color <- rgb(177,107,94);
 		}
 
 		if cult = 'livestock' {
 			rev <- rnd((1240 / 12), (1010 / 12));
-			color <- #darkolivegreen;
+			color <- rgb(112, 141, 61);
 		}
 
 		if cult = 'friche' {
 			rev <- 0.0;
-			color <- #white;
+			color <- rgb(81,75,0);
 		}
 
 		if cult = 'house' {
@@ -95,7 +95,7 @@ species predios {
 	int area_forest <- length(cells_forest);
 	float def_rate;
 	float forest_rate;
-	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //Distance à la Via Auca
+	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //distance to via Auca (main road on the study area, original settlement and and location of oil companies)
  	int indigena; //indigenous index
 	string LS; //livelihood strategy
 	rgb color;
@@ -118,8 +118,8 @@ species predios {
 	}
 
 	action carto_tx_deforest {
-		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 0.1, 0.25) ? rgb(253, 204, 138) : (between(def_rate, 0.25, 0.50) ?
-		rgb(253, 204, 138) : (between(def_rate, 0.50, 0.75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
+		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 10, 25) ? rgb(253, 204, 138) : (between(def_rate, 25, 50) ?
+		rgb(253, 204, 138) : (between(def_rate, 50, 75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
 
 	action carto_LS {

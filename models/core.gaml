@@ -195,7 +195,7 @@ global {
 			chef_hogar <- one_of(membres_hogar where (each.chef = true));
 			if chef_hogar.auto_id = "indigena" {
 				ask my_predio {
-					indigena <- 1;
+					indigena <- 100;
 				}
 
 			} else {
@@ -379,10 +379,9 @@ global {
 		}
 
 		write "---END OF INIT LS WITH EMC";
-
-				ask predios where (each.is_free = false) {
-					do carto_LS;
-				}
+		ask predios where (each.is_free = false) {
+			do carto_LS;
+		}
 
 	}
 
@@ -600,6 +599,7 @@ experiment Simulation type: gui {
 			species hogares;
 			//species personas;
 		}
+
 		display map_LS type: opengl {
 			grid cell;
 			species predios aspect: carto_LS;
@@ -607,6 +607,7 @@ experiment Simulation type: gui {
 			species hogares;
 			//species personas;
 		}
+
 		display map_tx_def type: opengl {
 			grid cell;
 			species predios aspect: carto_tx_def;
