@@ -1,4 +1,4 @@
-model MCA_criteria
+model init_MCA_criteria
 
 /* DEFINITION OF MCA CRITERIA & PARAMETERS
  * 

@@ -1,11 +1,11 @@
-model species_def
+model init_species_def
 //
 //
 // DEFINITION OF SPECIES ATTRIBUTES & ACTIONS
 //
 //
-import "data_import.gaml"
-import "MCA_criteria.gaml"
+import "init_data_import.gaml"
+import "init_MCA_criteria.gaml"
 //
 // DEFINITION OF CELLS
 //
