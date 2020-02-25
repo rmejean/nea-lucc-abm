@@ -203,7 +203,8 @@ global {
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
 			chef_hogar <- one_of(membres_hogar where (each.chef = true));
-			if chef_hogar.auto_id = "indigena" {
+			chef_auto_id <- chef_hogar.auto_id;
+			if chef_auto_id = "indigena" {
 				ask my_predio {
 					indigena <- 100;
 				}

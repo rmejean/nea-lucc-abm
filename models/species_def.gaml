@@ -259,7 +259,7 @@ species LS_agents {
 						self.id_EMC_LS1_1 <- predios max_of (each.id_EMC_LS1_1) + 1;
 						add self.id_EMC_LS1_1 to: self.rankings_LS_EMC;
 						is_free_MCA <- false;
-						write "Ranking of a plot for the LS 1.1";
+						write "---------Ranking of a plot for the LS 1.1";
 					}
 
 				}
@@ -285,7 +285,7 @@ species LS_agents {
 						self.id_EMC_LS1_2 <- predios max_of (each.id_EMC_LS1_2) + 1;
 						add self.id_EMC_LS1_2 to: self.rankings_LS_EMC;
 						is_free_MCA <- false;
-						write "Ranking of a plot for the LS 1.2";
+						write "---------Ranking of a plot for the LS 1.2";
 					}
 
 				}
@@ -311,7 +311,7 @@ species LS_agents {
 						self.id_EMC_LS1_3 <- predios max_of (each.id_EMC_LS1_3) + 1;
 						add self.id_EMC_LS1_3 to: self.rankings_LS_EMC;
 						is_free_MCA <- false;
-						write "Ranking of a plot for the LS 1.3";
+						write "---------Ranking of a plot for the LS 1.3";
 					}
 
 				}
@@ -337,7 +337,7 @@ species LS_agents {
 						self.id_EMC_LS2 <- predios max_of (each.id_EMC_LS2) + 1;
 						add self.id_EMC_LS2 to: self.rankings_LS_EMC;
 						is_free_MCA <- false;
-						write "Ranking of a plot for the LS 2";
+						write "---------Ranking of a plot for the LS 2";
 					}
 
 				}
@@ -363,7 +363,7 @@ species LS_agents {
 						self.id_EMC_LS3 <- predios max_of (each.id_EMC_LS3) + 1;
 						add self.id_EMC_LS3 to: self.rankings_LS_EMC;
 						is_free_MCA <- false;
-						write "Ranking of a plot for the LS 3";
+						write "---------Ranking of a plot for the LS 3";
 					}
 
 				}
@@ -386,31 +386,31 @@ species LS_agents {
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 0 {
 				self.LS <- "SP1.1";
 				my_hogar.livelihood_strategy <- "SP1.1";
-				write "LS 1.1 assigned to a plot.";
+				write "---------LS 1.1 assigned to a plot.";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 1 {
 				self.LS <- "SP1.2";
 				my_hogar.livelihood_strategy <- "SP1.2";
-				write "LS 1.2 assigned to a plot.";
+				write "---------LS 1.2 assigned to a plot.";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 2 {
 				self.LS <- "SP1.3";
 				my_hogar.livelihood_strategy <- "SP1.3";
-				write "LS 1.3 assigned to a plot.";
+				write "---------LS 1.3 assigned to a plot.";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 3 {
 				self.LS <- "SP2";
 				my_hogar.livelihood_strategy <- "SP2";
-				write "LS 2 assigned to a plot.";
+				write "---------LS 2 assigned to a plot.";
 			}
 
 			if index_of((self.rankings_LS_EMC), (min(self.rankings_LS_EMC))) = 4 {
 				self.LS <- "SP3";
 				my_hogar.livelihood_strategy <- "SP3";
-				write "LS 3 assigned to a plot.";
+				write "---------LS 3 assigned to a plot.";
 			}
 
 		}
