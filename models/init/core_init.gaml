@@ -7,7 +7,7 @@
 * Description: a LUCC model in Northern Ecuadorian Amazon (parroquia de Dayuma)
 * Tags: LUCC, deforestation dynamics, livelihood strategies
 */
-model NEA_LUCC_ABM
+model core_init
 
 import "data_import.gaml"
 import "species_def.gaml"
