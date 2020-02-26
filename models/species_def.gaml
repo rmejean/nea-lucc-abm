@@ -16,7 +16,7 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 	float rev;
 	predios predio;
 	hogares my_hogar;
-	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35,75,0) : (grid_value = 3 ? #burlywood : #red));
+	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
 
 	action param_activities {
 		if cult = 'maniocmais' {
@@ -46,7 +46,7 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 
 		if cult = 'cacao' {
 			rev <- rnd((1100 / 12), (900 / 12));
-			color <- rgb(177,107,94);
+			color <- rgb(177, 107, 94);
 		}
 
 		if cult = 'livestock' {
@@ -56,7 +56,7 @@ grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false u
 
 		if cult = 'friche' {
 			rev <- 0.0;
-			color <- rgb(81,75,0);
+			color <- rgb(81, 75, 0);
 		}
 
 		if cult = 'house' {
@@ -96,15 +96,15 @@ species predios {
 	float def_rate;
 	float forest_rate;
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //distance to via Auca (main road on the study area, original settlement and and location of oil companies)
- 	int indigena; //indigenous index
+	int indigena; //indigenous index
 	string LS; //livelihood strategy
 	rgb color;
 	rgb color_tx_def;
 	rgb LS_color;
 	hogares my_hogar;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
- 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
- 	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
+	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
+	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
 	list<int> rankings_LS_EMC <- ([]);
 
 	action calcul_tx_deforest {
@@ -118,8 +118,8 @@ species predios {
 	}
 
 	action carto_tx_deforest {
-		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 10, 25) ? rgb(253, 204, 138) : (between(def_rate, 25, 50) ?
-		rgb(253, 204, 138) : (between(def_rate, 50, 75) ? rgb(252, 141, 89) : rgb(215, 48, 31))));
+		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 10, 25) ? rgb(253, 204, 138) : (between(def_rate, 25, 50) ? rgb(253, 204, 138) : (between(def_rate, 50, 75) ?
+		rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
 
 	action carto_LS {
@@ -237,7 +237,7 @@ species LS_agents {
 	list<list> predios_eval {
 		list<list> candidates;
 		loop parcel over: (predios where (each.is_free_MCA = true)) { // ne mettre que les predios où il y a des ménages
- list<float> cand;
+			list<float> cand;
 			add parcel.def_rate to: cand;
 			add parcel.forest_rate to: cand;
 			add parcel.indigena to: cand;
@@ -247,9 +247,9 @@ species LS_agents {
 
 		return candidates;
 	}
-
-	action ranking_MCA { //PROCEDURE D'EVALUATION MULTI CRITERES
- if code_LS = '1.1' {
+	//MULTICRITERIA ANALYSIS TO RANK LS
+	action ranking_MCA {
+		if code_LS = '1.1' {
 			write "------START OF RANKING FOR LS 1.1";
 			loop while: (length(predios where (each.is_free_MCA = true)) > 0) {
 				list<list> cands <- predios_eval();
@@ -415,6 +415,37 @@ species LS_agents {
 
 		}
 
+	}
+
+}
+//
+// DEFINITION OF PATCHES FOR INIT
+//
+species patches {
+	string type;
+	predios my_predio;
+	string id;
+}
+//
+// DEFINITION OF SECTORES
+//
+species sectores {
+	string dpa_secdis;
+	list<hogares> hogares_inside;
+	list<personas> personas_inside;
+	int nb_hogares;
+	int nb_personas;
+	rgb color <- rnd_color(255);
+
+	action carto_pop { //A TRANSFORMER EN REFLEX POUR LES SECTORES ?
+		hogares_inside <- hogares inside self;
+		personas_inside <- personas inside self;
+		nb_hogares <- length(hogares_inside);
+		nb_personas <- length(personas_inside);
+	}
+
+	aspect default {
+		draw shape color: #transparent border: #black;
 	}
 
 }
