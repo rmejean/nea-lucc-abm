@@ -19,9 +19,11 @@ global {
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
 	list<string> list_id <- ([]);
+
 	//-----------------------------
 	//Farming activities parameters
 	//-----------------------------
+
 	//MOF -------------------------
 	float MOFcost_maniocmais <- 9.0;
 	float MOFcost_fruits <- 12.6;
@@ -31,6 +33,7 @@ global {
 	float MOFcost_cacao <- 3.0;
 	float MOFcost_livestock <- 20.5;
 	float MOFcost_no_farming <- 0.0;
+
 	//-----------------------------
 	//Saving init------------------
 	//-----------------------------
@@ -39,6 +42,7 @@ global {
 	string save_predios <- ("../initGENfiles/predios.shp");
 	string save_hogares <- ("../initGENfiles/hogares.shp");
 	string save_personas <- ("../initGENfiles/personas.shp");
+
 	//-----------------------------------------------------------------------------------------------
 	//--------------------------------------INITIALIZATION-------------------------------------------
 	//-----------------------------------------------------------------------------------------------

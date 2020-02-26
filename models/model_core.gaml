@@ -13,13 +13,12 @@ import "init_core.gaml"
 import "model_simulations.gaml"
 
 global {
-	//Lists
-	//-----------------------------
-	//Life cost --------------------
+	bool stop_simulation <- false;
 	float $_ANFP <- 250.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
-	//-----------------------------------------------------------------------------------------------
-	//--------------------------------------INITIALIZATION-------------------------------------------
-	//-----------------------------------------------------------------------------------------------
+	float step <- 1 #month update: step + 1;
+	//
+	//INIT
+	//
 	init {
 		write "START OF INITIALIZATION";
 		do init_cells;
@@ -31,6 +30,15 @@ global {
 		do init_revenu;
 		init_end <- true;
 		write "END OF INITIALIZATION";
+	}
+	
+	reflex dynamic when: (stop_simulation = false) {
+		write "-------------------------------------------";
+		write "Months elapsed: " + cycle;
+		if cycle = 96 {
+			stop_simulation <- true;
+			write "END OF SIMULATION";
+		}
 	}
 
 }
