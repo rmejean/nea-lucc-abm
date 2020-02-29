@@ -105,6 +105,7 @@ species predios {
 	float def_rate;
 	float forest_rate;
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //distance to via Auca (main road on the study area, original settlement and and location of oil companies)
+	float prox_via_auca <- 20000 - (self.dist_via_auca);
 	int indigena; //indigenous index
 	string LS; //livelihood strategy
 	rgb color;
@@ -251,6 +252,7 @@ species LS_agents {
 			add parcel.forest_rate to: cand;
 			add parcel.indigena to: cand;
 			add parcel.dist_via_auca to: cand;
+			add parcel.prox_via_auca to: cand;
 			add cand to: candidates;
 		}
 
