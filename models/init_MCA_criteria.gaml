@@ -34,9 +34,9 @@ global {
 	//SP1.1
 	float SP1_1_weight_def_rate <- 0.0;
 	float SP1_1_weight_forest_rate <- 1.0;
-	float SP1_1_weight_dist_via_auca <- 0.7;
+	float SP1_1_weight_dist_via_auca <- 0.8;
 	float SP1_1_weight_prox_via_auca <- 0.0;
-	float SP1_1_weight_indigena <- 0.8;
+	float SP1_1_weight_indigena <- 0.7;
 	//SP1.2
 	float SP1_2_weight_def_rate <- 0.0;
 	float SP1_2_weight_forest_rate <- 1.0;
@@ -53,12 +53,12 @@ global {
 	float SP2_weight_def_rate <- 0.7;
 	float SP2_weight_forest_rate <- 0.0;
 	float SP2_weight_dist_via_auca <- 0.0;
-	float SP2_weight_prox_via_auca <- 0.8;
+	float SP2_weight_prox_via_auca <- 0.4;
 	float SP2_weight_indigena <- 0.0;
 	//SP3
 	float SP3_weight_def_rate <- 1.0;
 	float SP3_weight_forest_rate <- 0.0;
 	float SP3_weight_dist_via_auca <- 0.0;
-	float SP3_weight_prox_via_auca <- 0.1;
+	float SP3_weight_prox_via_auca <- 0.0;
 	float SP3_weight_indigena <- 0.0;
 }
