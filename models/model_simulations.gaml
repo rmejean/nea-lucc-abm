@@ -98,7 +98,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "suivi predios" value: predios attributes: ["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside"];
 		//-------------------------------------
- display Ages {
+ display Ages synchronized: true {
 			chart "Ages" type: histogram {
 				loop i from: 0 to: 110 {
 					data "" + i value: personas count (each.Age = i);

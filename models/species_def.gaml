@@ -15,6 +15,7 @@ model init_species_def
 //
 import "init_data_import.gaml"
 import "init_MCA_criteria.gaml"
+import "model_core.gaml"
 //
 // DEFINITION OF CELLS
 //
@@ -236,7 +237,9 @@ species personas parent: hogares {
 	}
 	
 	action aging {
-		Age <- Age + 1;
+		if current_month = self.mes_nac {
+			Age <- Age + 1;
+	}
 	}
 
 	aspect default {
