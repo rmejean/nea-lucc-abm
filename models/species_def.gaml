@@ -196,6 +196,7 @@ species hogares {
 species personas parent: hogares {
 	hogares my_hogar;
 	int Age;
+	string mes_nac;
 	string Sexo;
 	int orden_en_hogar;
 	float vMOF;
@@ -232,6 +233,10 @@ species personas parent: hogares {
 			vMOF <- 1.0;
 		}
 
+	}
+	
+	action aging {
+		Age <- Age + 1;
 	}
 
 	aspect default {

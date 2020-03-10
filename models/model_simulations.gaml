@@ -27,7 +27,7 @@ global { //Global variables for monitors
 	float area_deforest_mean -> predios mean_of (each.area_deforest);
 }
 
-experiment Simulation type: gui {
+experiment Simulation type: gui until: stop_simulation = true {
 	user_command "Save Agricultural Landscape" category: "Saving init" when: init_end = true color: #darkblue {
 		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "CULT"::cult, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 	}

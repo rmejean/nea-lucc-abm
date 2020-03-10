@@ -145,6 +145,7 @@ global {
 		pop_gen <- pop_gen add_attribute ("viv_id", string, list_id);
 		pop_gen <- pop_gen add_attribute ("Sexo", string, ["Hombre", "Mujer"]);
 		pop_gen <- pop_gen add_attribute ("Age", int, echelle_ages);
+		pop_gen <- pop_gen add_attribute ("mes_nac", string, []);
 		pop_gen <- pop_gen add_attribute ("orden_en_hogar", int, echelle_GLOBALE);
 		pop_gen <- pop_gen add_attribute ("auto_id", string, []);
 		// --------------------------

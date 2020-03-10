@@ -14,8 +14,11 @@ import "model_simulations.gaml"
 
 global {
 	bool stop_simulation <- false;
-	float $_ANFP <- 250.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
+	date starting_date <- date("2008-01-01");
+	date current_date <- starting_date;
 	float step <- 1 #month update: step + 1;
+	float $_ANFP <- 250.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
+
 	//
 	//INIT
 	//
@@ -31,14 +34,22 @@ global {
 		init_end <- true;
 		write "END OF INITIALIZATION";
 	}
-	
+
 	reflex dynamic when: (stop_simulation = false) {
+		current_date <- plus_months(current_date, 1);
 		write "-------------------------------------------";
-		write "Months elapsed: " + cycle;
-		if cycle = 96 {
+		write "Current date at cycle " + cycle + ":" + current_date;
+		//write "Months elapsed: " months_between(starting_date,current_date);
+		write "time " + time;
+		if current_date > date("2016-01-01") {
 			stop_simulation <- true;
+			do pause;
 			write "END OF SIMULATION";
 		}
+
+	}
+
+	reflex aging {
 	}
 
 }
