@@ -154,12 +154,6 @@ global {
 			if my_hogar != nil {
 				location <- my_hogar.location;
 				my_predio <- my_hogar.my_predio;
-				if orden_en_hogar = 1 {
-					chef <- true;
-				} else {
-					chef <- false;
-				}
-
 				do vMOF_calc;
 			} else {
 				do die;
@@ -172,22 +166,7 @@ global {
 		// Instructions post-génération
 		// --------------------------
 		ask hogares {
-			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			chef_hogar <- one_of(membres_hogar where (each.chef = true));
-			chef_auto_id <- chef_hogar.auto_id;
-			if chef_auto_id = "indigena" {
-				ask my_predio {
-					indigena <- 100;
-				}
-
-			} else {
-				ask my_predio {
-					indigena <- 0;
-				}
-
-			}
-
-			do MOF_calc;
+			do update_hogar;
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
 			}

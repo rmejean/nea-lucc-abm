@@ -186,6 +186,25 @@ species hogares {
 		MOF <- (sum(membres_hogar collect each.vMOF) * 30);
 	}
 
+	action update_hogar {
+		membres_hogar <- personas where (each.hog_id = self.hog_id);
+		chef_hogar <- membres_hogar with_min_of (each.orden_en_hogar);
+		chef_auto_id <- chef_hogar.auto_id;
+		if chef_auto_id = "indigena" {
+			ask my_predio {
+				indigena <- 100;
+			}
+
+		} else {
+			ask my_predio {
+				indigena <- 0;
+			}
+
+		}
+
+		do MOF_calc;
+	}
+
 	aspect default {
 		draw circle(15) color: #red border: #black;
 	}
@@ -235,11 +254,34 @@ species personas parent: hogares {
 		}
 
 	}
-	
+
 	action aging {
-		if current_month = self.mes_nac {
+		if current_month = self.mes_nac { //when it's my birthday!
 			Age <- Age + 1;
-	}
+			if between(Age, 70, 80) {
+				if flip(0.1) {
+					do die;
+					ask my_hogar {
+						do update_hogar;
+					}
+
+				}
+
+			}
+
+			if Age > 80 {
+				if flip(0.33) {
+					do die;
+					ask my_hogar {
+						do update_hogar;
+					}
+
+				}
+
+			}
+
+		}
+
 	}
 
 	aspect default {
