@@ -16,6 +16,7 @@ global { //Global variables for monitors
 	int nb_personas -> length(personas);
 	int nb_predios -> length(predios);
 	int nb_patches -> length(patches);
+	float MOF_mean <- hogares mean_of (each.MOF);
 	float ratio_deforest_min -> predios min_of (each.def_rate);
 	float ratio_deforest_max -> predios max_of (each.def_rate);
 	float ratio_deforest_mean -> predios mean_of (each.def_rate);
@@ -44,7 +45,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 
 	user_command "Save People" category: "Saving init" when: init_end = true color: #darkblue {
 		save personas to: save_personas type: "shp" attributes:
-		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "HOUSEHOLD"::my_hogar, "AGE"::Age, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
+		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
 	}
 
 	user_command "Save all init files" category: "Saving init" when: init_end = true color: #darkred {
@@ -54,7 +55,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 		save hogares to: save_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOG_MEMBERS"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOID"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy];
 		save personas to: save_personas type: "shp" attributes:
-		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "HOUSEHOLD"::my_hogar, "AGE"::Age, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
+		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "VIV_ID"::viv_id, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
 	}
 
 	parameter "File chooser landscape" category: "Saving init" var: save_landscape;
@@ -84,6 +85,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 		monitor "Total personas" value: nb_personas;
 		monitor "Total parcelles" value: nb_predios;
 		monitor "Total patches" value: nb_patches;
+		monitor "Moy. MOF" value: MOF_mean;
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;
 		monitor "Moy. ratio deforest" value: ratio_deforest_mean;
@@ -94,10 +96,10 @@ experiment Simulation type: gui until: stop_simulation = true {
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
 		//-------------------------------------
- 		browse "suivi hogares" value: hogares attributes:
+ 		browse "suivi hogares" value: hogares refresh: true attributes:
 		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
-		browse "suivi personas" value: personas attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
-		browse "suivi predios" value: predios attributes: ["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside"];
+		browse "suivi personas" value: personas refresh: true attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
+		browse "suivi predios" value: predios refresh: true attributes: ["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside"];
 		//-------------------------------------
  		display Ages synchronized: true {
 			chart "Ages" type: histogram {
