@@ -187,7 +187,6 @@ species hogares {
 	}
 
 	action update_hogar {
-		membres_hogar <- personas where (each.hog_id = self.hog_id);
 		chef_hogar <- membres_hogar with_min_of (each.orden_en_hogar);
 		chef_auto_id <- chef_hogar.auto_id;
 		if chef_auto_id = "indigena" {
@@ -258,24 +257,28 @@ species personas parent: hogares {
 	action aging {
 		if current_month = self.mes_nac { //when it's my birthday!
 			Age <- Age + 1;
+			do vMOF_calc;
+			//MORT
 			if between(Age, 70, 80) {
 				if flip(0.1) {
-					do die;
+					remove self from: my_hogar.membres_hogar;
 					ask my_hogar {
 						do update_hogar;
 					}
 
+					do die;
 				}
 
 			}
 
 			if Age > 80 {
 				if flip(0.33) {
-					do die;
+					remove self from: my_hogar.membres_hogar;
 					ask my_hogar {
 						do update_hogar;
 					}
 
+					do die;
 				}
 
 			}

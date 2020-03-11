@@ -166,6 +166,7 @@ global {
 		// Instructions post-génération
 		// --------------------------
 		ask hogares {
+			membres_hogar <- personas where (each.hog_id = self.hog_id);
 			do update_hogar;
 			ask my_predio.cells_inside {
 				my_hogar <- myself;

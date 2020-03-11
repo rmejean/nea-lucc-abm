@@ -11,12 +11,12 @@ model simulations
 
 import "model_core.gaml"
 
-global { //Global variables for monitors
- int nb_menages -> length(hogares);
+//Global variables for monitors
+global {
+ 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
 	int nb_predios -> length(predios);
 	int nb_patches -> length(patches);
-	float MOF_mean <- hogares mean_of (each.MOF);
 	float ratio_deforest_min -> predios min_of (each.def_rate);
 	float ratio_deforest_max -> predios max_of (each.def_rate);
 	float ratio_deforest_mean -> predios mean_of (each.def_rate);
@@ -26,6 +26,7 @@ global { //Global variables for monitors
 	int area_deforest_min -> predios min_of (each.area_deforest);
 	int area_deforest_max -> predios max_of (each.area_deforest);
 	float area_deforest_mean -> predios mean_of (each.area_deforest);
+	float labor_mean <- hogares mean_of (each.MOF) update: hogares mean_of (each.MOF);
 }
 
 experiment Simulation type: gui until: stop_simulation = true {
@@ -69,23 +70,22 @@ experiment Simulation type: gui until: stop_simulation = true {
 			species hogares;
 		}
 
-		display map_LS type: opengl {
-			grid cell;
-			species predios aspect: carto_LS;
-			species hogares;
-		}
-
-		display map_tx_def type: opengl {
-			grid cell;
-			species predios aspect: carto_tx_def;
-			species hogares;
-		}
+//		display map_LS type: opengl {
+//			grid cell;
+//			species predios aspect: carto_LS;
+//			species hogares;
+//		}
+//
+//		display map_tx_def type: opengl {
+//			grid cell;
+//			species predios aspect: carto_tx_def;
+//			species hogares;
+//		}
 
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
 		monitor "Total parcelles" value: nb_predios;
 		monitor "Total patches" value: nb_patches;
-		monitor "Moy. MOF" value: MOF_mean;
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;
 		monitor "Moy. ratio deforest" value: ratio_deforest_mean;
@@ -95,6 +95,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 		monitor "Sup. déforest. min" value: area_deforest_min;
 		monitor "Sup. déforest. max" value: area_deforest_max;
 		monitor "Moy. déforest." value: area_deforest_mean;
+		monitor "Moy. MOF" value: labor_mean;
 		//-------------------------------------
  		browse "suivi hogares" value: hogares refresh: true attributes:
 		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
