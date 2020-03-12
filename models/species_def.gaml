@@ -112,13 +112,16 @@ species predios {
 	rgb color;
 	rgb color_tx_def;
 	rgb LS_color;
+	rgb LUC_color;
 	hogares my_hogar;
+	int subcrops_amount;
+	int cashcrops_amount;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
 	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
 	list<int> rankings_LS_EMC <- ([]);
 
-	action calcul_tx_deforest {
+	action deforestation_rate_calc {
 		if area_total > 0 {
 			def_rate <- (area_deforest / area_total) * 100;
 			forest_rate <- (area_forest / area_total) * 100;
@@ -128,26 +131,51 @@ species predios {
 
 	}
 
-	action carto_tx_deforest {
+	action crops_calc {
+		subcrops_amount <- (length(cells_deforest where (each.cult = "maniocmais" or "fruits" or "s_livestock" or "plantain")));
+		cashcrops_amount <- (length(cells_deforest where (each.cult = "cacao" or "coffee" or "livestock")));
+	}
+
+	action update_needs {
+		do crops_calc;
+		if my_hogar != nil {
+			ask my_hogar {
+				do assess_food_needs;
+			}
+
+			do map_eminent_LUC;
+		}
+
+	}
+
+	action map_deforestation_rate {
 		color_tx_def <- def_rate = 0 ? #white : (between(def_rate, 10, 25) ? rgb(253, 204, 138) : (between(def_rate, 25, 50) ? rgb(253, 204, 138) : (between(def_rate, 50, 75) ?
 		rgb(252, 141, 89) : rgb(215, 48, 31))));
 	}
 
-	action carto_LS {
-		LS_color <- my_hogar.livelihood_strategy = 'SP3' ? #lightseagreen : (my_hogar.livelihood_strategy = 'SP2' ? #paleturquoise : (my_hogar.livelihood_strategy = 'SP1.1' ?
-		#greenyellow : (my_hogar.livelihood_strategy = 'SP1.2' ? #tan : #rosybrown)));
+	action map_livelihood_strategies {
+		LS_color <- my_hogar.livelihood_strategy = 'SP3' ? #pink : (my_hogar.livelihood_strategy = 'SP2' ? #green : (my_hogar.livelihood_strategy = 'SP1.1' ?
+		#red : (my_hogar.livelihood_strategy = 'SP1.2' ? #blue : #yellow)));
+	}
+
+	action map_eminent_LUC {
+		LUC_color <- my_hogar.LUC = true ? #green : #red;
 	}
 
 	aspect default {
 		draw shape color: #transparent border: #black;
 	}
 
-	aspect carto_tx_def {
+	aspect map_def_rate {
 		draw shape color: color_tx_def border: #black;
 	}
 
-	aspect carto_LS {
+	aspect map_LS {
 		draw shape color: LS_color border: #black;
+	}
+
+	aspect map_LUC_decisions {
+		draw shape color: LUC_color border: #black;
 	}
 
 }
@@ -179,15 +207,18 @@ species hogares {
 	personas chef_hogar;
 	string chef_auto_id;
 	float MOF;
+	float subcrops_needs;
 	float common_pot_inc;
 	string livelihood_strategy;
+	bool LUC <- false;
 
-	action MOF_calc {
+	action values_calc {
 		MOF <- (sum(membres_hogar collect each.vMOF) * 30);
+		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
 	}
 
-	action update_hogar {
-		chef_hogar <- membres_hogar with_min_of (each.orden_en_hogar);
+	action setup_hogar {
+		chef_hogar <- membres_hogar with_min_of each.orden_en_hogar;
 		chef_auto_id <- chef_hogar.auto_id;
 		if chef_auto_id = "indigena" {
 			ask my_predio {
@@ -201,7 +232,14 @@ species hogares {
 
 		}
 
-		do MOF_calc;
+		do values_calc;
+	}
+
+	action assess_food_needs {
+		if subcrops_needs > my_predio.subcrops_amount {
+			LUC <- true;
+		}
+
 	}
 
 	aspect default {
@@ -219,11 +257,12 @@ species personas parent: hogares {
 	string Sexo;
 	int orden_en_hogar;
 	float vMOF;
+	float food_needs;
 	float inc;
 	string auto_id;
 	bool chef;
 
-	action vMOF_calc {
+	action values_calc {
 		if Age < 11 {
 			vMOF <- 0.0;
 		}
@@ -252,18 +291,19 @@ species personas parent: hogares {
 			vMOF <- 1.0;
 		}
 
+		food_needs <- 0.5;
 	}
 
 	action aging {
 		if current_month = self.mes_nac { //when it's my birthday!
 			Age <- Age + 1;
-			do vMOF_calc;
+			do values_calc;
 			//MORT
 			if between(Age, 70, 80) {
 				if flip(0.1) {
 					remove self from: my_hogar.membres_hogar;
 					ask my_hogar {
-						do update_hogar;
+						do values_calc;
 					}
 
 					do die;
@@ -275,7 +315,7 @@ species personas parent: hogares {
 				if flip(0.33) {
 					remove self from: my_hogar.membres_hogar;
 					ask my_hogar {
-						do update_hogar;
+						do values_calc;
 					}
 
 					do die;

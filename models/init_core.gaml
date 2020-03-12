@@ -72,8 +72,8 @@ global {
 				do die;
 			}
 
-			do calcul_tx_deforest;
-			do carto_tx_deforest;
+			do deforestation_rate_calc;
+			do map_deforestation_rate;
 		}
 
 		write "---END OF INIT PLOTS";
@@ -154,7 +154,7 @@ global {
 			if my_hogar != nil {
 				location <- my_hogar.location;
 				my_predio <- my_hogar.my_predio;
-				do vMOF_calc;
+				do values_calc;
 			} else {
 				do die;
 			}
@@ -167,7 +167,7 @@ global {
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			do update_hogar;
+			do setup_hogar;
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
 			}
@@ -210,7 +210,7 @@ global {
 
 		write "---END OF INIT LS WITH EMC";
 		ask predios where (each.is_free = false) {
-			do carto_LS;
+			do map_livelihood_strategies;
 		}
 
 	}
@@ -369,6 +369,12 @@ global {
 		} //
 		write "------END OF INIT ALG 1.3";
 		write "---END OF INIT ALG";
+		write "Calculation of the quantity of food crops & cash crops per plot...";
+		ask predios {
+			do update_needs;
+		}
+
+		write "... calculation complete.";
 	}
 
 	action init_revenu {

@@ -72,15 +72,21 @@ experiment Simulation type: gui until: stop_simulation = true {
 
 //		display map_LS type: opengl {
 //			grid cell;
-//			species predios aspect: carto_LS;
+//			species predios aspect: map_LS;
 //			species hogares;
 //		}
 //
 //		display map_tx_def type: opengl {
 //			grid cell;
-//			species predios aspect: carto_tx_def;
+//			species predios aspect: map_def_rate;
 //			species hogares;
 //		}
+
+		display map_LUC_decisions type: opengl {
+			grid cell;
+			species predios aspect: map_LUC_decisions;
+			//species hogares;
+		}
 
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
@@ -98,9 +104,9 @@ experiment Simulation type: gui until: stop_simulation = true {
 		monitor "Moy. MOF" value: labor_mean;
 		//-------------------------------------
  		browse "suivi hogares" value: hogares refresh: true attributes:
-		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc"];
+		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "MOF", "my_predio", "common_pot_inc", "subcrops_needs", "LUC"];
 		browse "suivi personas" value: personas refresh: true attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "vMOF", "my_hogar", "orden_en_hogar", "my_predio"];
-		browse "suivi predios" value: predios refresh: true attributes: ["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside"];
+		browse "suivi predios" value: predios refresh: true attributes: ["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside", "subcrops_amount", "cashcrops_amount"];
 		//-------------------------------------
  		display Ages synchronized: true {
 			chart "Ages" type: histogram {

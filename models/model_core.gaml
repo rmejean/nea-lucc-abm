@@ -13,7 +13,7 @@ import "init_core.gaml"
 import "model_simulations.gaml"
 
 global {
-	//Time aspects
+//Time aspects
 	bool stop_simulation <- false;
 	date starting_date <- date("2008-01-01");
 	date current_date <- starting_date;
@@ -29,22 +29,26 @@ global {
 		write "START OF INITIALIZATION";
 		do init_cells;
 		do init_vias;
-		do init_predios; //do init_comunas;
-		do init_pop; //do init_LS;
+		do init_predios;
+		//do init_comunas;
+		do init_pop;
 		do init_LS_EMC;
 		do init_ALG;
 		do init_revenu;
+		//ask hogares {do assess_food_needs;}
 		init_end <- true;
 		write "END OF INITIALIZATION";
 	}
-
+	//
+	//MODEL DYNAMICS
+	//
 	reflex time when: (stop_simulation = false) {
-		current_date <- plus_months (current_date,1);
-		current_month <- string(current_date,"MMMM",'es');
+		current_date <- plus_months(current_date, 1);
+		current_month <- string(current_date, "MMMM", 'es');
 		write "-------------------------------------------";
 		write "Current date at cycle " + cycle + ":" + current_date;
 		write "Current month is " + current_month;
-		write "Months elapsed: " + months_between(starting_date,current_date);
+		write "Months elapsed: " + months_between(starting_date, current_date);
 		write "time (seconds): " + time;
 		write "labor mean for step is: " + labor_mean;
 		write "area deforest mean for is: " + area_deforest_mean;
@@ -53,11 +57,19 @@ global {
 			do pause;
 			write "END OF SIMULATION";
 		}
+
 	}
 
 	reflex demography {
 		ask personas {
 			do aging;
+		}
+
+	}
+	
+	reflex LUC_decision_making {
+		ask predios {
+			do update_needs;
 		}
 	}
 
