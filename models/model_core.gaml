@@ -20,7 +20,7 @@ global {
 	string current_month;
 	float step <- 1 #month update: step + 1;
 	//Other variables
-	float $_ANFP <- 250.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
+	float $_ANFP <- 5000.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
 
 	//
 	//INIT
@@ -35,7 +35,6 @@ global {
 		do init_LS_EMC;
 		do init_ALG;
 		do init_revenu;
-		//ask hogares {do assess_food_needs;}
 		init_end <- true;
 		write "END OF INITIALIZATION";
 	}
@@ -63,6 +62,10 @@ global {
 	reflex demography {
 		ask personas {
 			do aging;
+			do values_calc;
+		}
+		ask hogares {
+			do values_calc;
 		}
 
 	}
@@ -70,6 +73,7 @@ global {
 	reflex LUC_decision_making {
 		ask predios {
 			do update_needs;
+			do map_eminent_LUC;
 		}
 	}
 

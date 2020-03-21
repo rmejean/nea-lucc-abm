@@ -142,8 +142,6 @@ species predios {
 			ask my_hogar {
 				do assess_food_needs;
 			}
-
-			do map_eminent_LUC;
 		}
 
 	}
@@ -236,7 +234,7 @@ species hogares {
 	}
 
 	action assess_food_needs {
-		if subcrops_needs > my_predio.subcrops_amount {
+		if (subcrops_needs > my_predio.subcrops_amount) or ($_ANFP > common_pot_inc * 12) {
 			LUC <- true;
 		}
 
