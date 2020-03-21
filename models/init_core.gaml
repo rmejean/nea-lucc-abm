@@ -377,7 +377,7 @@ global {
 		}
 
 		write "Calculation of the quantity of food crops & cash crops per plot...";
-		ask predios {
+		ask predios where (each.is_free = false) {
 			do update_needs;
 			do map_eminent_LUC;
 		}

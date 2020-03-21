@@ -71,7 +71,7 @@ global {
 	}
 	
 	reflex LUC_decision_making {
-		ask predios {
+		ask predios where (each.is_free = false) {
 			do update_needs;
 			do map_eminent_LUC;
 		}
