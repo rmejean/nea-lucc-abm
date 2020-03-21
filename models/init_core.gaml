@@ -369,19 +369,20 @@ global {
 		} //
 		write "------END OF INIT ALG 1.3";
 		write "---END OF INIT ALG";
-		write "Calculation of the quantity of food crops & cash crops per plot...";
-		ask predios {
-			do update_needs;
-		}
-
-		write "... calculation complete.";
 	}
 
-	action init_revenu {
+	action init_needs {
 		ask hogares {
 			common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
 		}
 
+		write "Calculation of the quantity of food crops & cash crops per plot...";
+		ask predios {
+			do update_needs;
+			do map_eminent_LUC;
+		}
+
+		write "... calculation complete.";
 	}
 
 }

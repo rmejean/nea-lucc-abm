@@ -20,7 +20,7 @@ global {
 	string current_month;
 	float step <- 1 #month update: step + 1;
 	//Other variables
-	float $_ANFP <- 5000.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
+	float $_ANFP <- 10000.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
 
 	//
 	//INIT
@@ -34,7 +34,7 @@ global {
 		do init_pop;
 		do init_LS_EMC;
 		do init_ALG;
-		do init_revenu;
+		do init_needs;
 		init_end <- true;
 		write "END OF INITIALIZATION";
 	}
