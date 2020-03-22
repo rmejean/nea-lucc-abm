@@ -28,7 +28,7 @@ global {
 	//INIT
 	//
 	init {
-		if new_init = true {
+		if new_init = false {
 			write "START OF INITIALIZATION";
 			do init_cells;
 			do init_vias;
@@ -43,11 +43,12 @@ global {
 		}
 		else {
 			write "START OF INITIALIZATION";
-			do load_saved_cells;
+			do init_saved_files;
+			//do load_saved_cells;
 			do load_saved_vias;
 			do load_saved_predios;
-			do load_saved_hogares;
-			do load_saved_personas;
+			//do load_saved_hogares;
+			//do load_saved_personas;
 			write "END OF INITIALIZATION";
 		}
 
