@@ -10,11 +10,13 @@
 model model_core
 
 import "init_core.gaml"
+import "load_saved_init.gaml"
 import "model_simulations.gaml"
 
 global {
 //Time aspects
 	bool stop_simulation <- false;
+	bool new_init <- true;
 	date starting_date <- date("2008-01-01");
 	date current_date <- starting_date;
 	string current_month;
@@ -26,17 +28,29 @@ global {
 	//INIT
 	//
 	init {
-		write "START OF INITIALIZATION";
-		do init_cells;
-		do init_vias;
-		do init_predios;
-		//do init_comunas;
-		do init_pop;
-		do init_LS_EMC;
-		do init_ALG;
-		do init_needs;
-		init_end <- true;
-		write "END OF INITIALIZATION";
+		if new_init = true {
+			write "START OF INITIALIZATION";
+			do init_cells;
+			do init_vias;
+			do init_predios;
+			//do init_comunas;
+			do init_pop;
+			do init_LS_EMC;
+			do init_ALG;
+			do init_needs;
+			init_end <- true;
+			write "END OF INITIALIZATION";
+		}
+		else {
+			write "START OF INITIALIZATION";
+			do load_saved_cells;
+			do load_saved_vias;
+			do load_saved_predios;
+			do load_saved_hogares;
+			do load_saved_personas;
+			write "END OF INITIALIZATION";
+		}
+
 	}
 	//
 	//MODEL DYNAMICS
@@ -64,17 +78,19 @@ global {
 			do aging;
 			do values_calc;
 		}
+
 		ask hogares {
 			do values_calc;
 		}
 
 	}
-	
+
 	reflex LUC_decision_making {
 		ask predios where (each.is_free = false) {
 			do update_needs;
 			do map_eminent_LUC;
 		}
+
 	}
 
 }

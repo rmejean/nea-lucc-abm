@@ -44,4 +44,12 @@ global {
 	string stringOfCensusIdInCSVfile <- "sec_id";
 	//
 	geometry shape <- envelope(MAE_2008); //spatial extension
+	
+	//Importing saved files for init generator
+	file saved_cells <- file("../initGENfiles/agricultural_landscape.shp");
+	file saved_vias <- file("../initGENfiles/vias.shp");
+	file saved_predios <- file("../initGENfiles/predios.shp");
+	file saved_hogares <- file("../initGENfiles/hogares.shp");
+	file saved_personas <- file("../initGENfiles/personas.shp");
+	
 }

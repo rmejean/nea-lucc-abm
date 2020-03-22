@@ -34,15 +34,6 @@ global {
 	float MOFcost_livestock <- 20.5;
 	float MOFcost_no_farming <- 0.0;
 
-	//-----------------------------
-	//Saving init------------------
-	//-----------------------------
-	bool init_end <- false;
-	string save_landscape <- ("../initGENfiles/agricultural_landscape.shp");
-	string save_predios <- ("../initGENfiles/predios.shp");
-	string save_hogares <- ("../initGENfiles/hogares.shp");
-	string save_personas <- ("../initGENfiles/personas.shp");
-
 	//-----------------------------------------------------------------------------------------------
 	//--------------------------------------INITIALIZATION-------------------------------------------
 	//-----------------------------------------------------------------------------------------------
@@ -115,7 +106,8 @@ global {
 		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
 			my_predio <- first(predios overlapping self);
-			location <- one_of(my_predio.cells_deforest).location; //A AMELIORER : first est trop régulier, one_of trop hasardeux
+	        my_house <- first(my_predio.cells_inside where (each.cult = "house"));
+			location <- my_house.location; //A AMELIORER : first est trop régulier, one_of trop hasardeux
 			ask my_predio {
 				is_free <- false;
 				is_free_MCA <- true;

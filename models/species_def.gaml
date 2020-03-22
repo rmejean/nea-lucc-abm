@@ -124,6 +124,7 @@ species predios {
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
 	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
+	list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
 
 	action deforestation_rate_calc {
@@ -213,6 +214,7 @@ species hogares {
 	int Total_Hombres;
 	int Total_Mujeres;
 	predios my_predio;
+	cell my_house;
 	list<personas> membres_hogar;
 	personas chef_hogar;
 	string chef_auto_id;
