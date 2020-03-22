@@ -74,6 +74,7 @@ global {
 
 			do deforestation_rate_calc;
 			do map_deforestation_rate;
+			do identify_house;
 		}
 
 		write "---END OF INIT PLOTS";
@@ -81,8 +82,7 @@ global {
 
 	action init_vias { //Roads init
 		write "---START OF INIT ROADS";
-		create vias from: vias_shp with: [orden::int(get("orden"))] {
-		}
+		create vias from: vias_shp with: [orden::int(get("orden"))];
 
 		write "---END OF INIT ROADS";
 	}

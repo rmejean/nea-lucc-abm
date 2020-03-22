@@ -16,64 +16,69 @@ model init_species_def
 import "init_data_import.gaml"
 import "init_MCA_criteria.gaml"
 import "model_core.gaml"
+import "model_simulations.gaml"
 //
 // DEFINITION OF CELLS
 //
-grid cell file: MAE_2008 use_regular_agents: true use_individual_shapes: false use_neighbors_cache: false {
+grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
 	bool is_deforest <- true;
 	bool is_free <- true;
 	string cult;
 	float rev;
 	predios predio;
 	hogares my_hogar;
-	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
+	rgb land_use_color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
 
 	action param_activities {
 		if cult = 'maniocmais' {
 			rev <- rnd((450 / 12), (900 / 12));
-			color <- #yellow;
+			land_use_color <- #yellow;
 		}
 
 		if cult = 'fruits' {
 			rev <- rnd((1500 / 12), (2500 / 12));
-			color <- #orange;
+			land_use_color <- #orange;
 		}
 
 		if cult = 's_livestock' {
 			rev <- rnd((450 / 12), (1800 / 12));
-			color <- #palevioletred;
+			land_use_color <- #palevioletred;
 		}
 
 		if cult = 'plantain' {
 			rev <- rnd((250 / 12), (2210 / 12));
-			color <- #springgreen;
+			land_use_color <- #springgreen;
 		}
 
 		if cult = 'coffee' {
 			rev <- rnd((5100 / 12), (3000 / 12));
-			color <- #brown;
+			land_use_color <- #brown;
 		}
 
 		if cult = 'cacao' {
 			rev <- rnd((1100 / 12), (900 / 12));
-			color <- rgb(177, 107, 94);
+			land_use_color <- rgb(177, 107, 94);
 		}
 
 		if cult = 'livestock' {
 			rev <- rnd((1240 / 12), (1010 / 12));
-			color <- rgb(112, 141, 61);
+			land_use_color <- rgb(112, 141, 61);
 		}
 
 		if cult = 'friche' {
 			rev <- 0.0;
-			color <- rgb(81, 75, 0);
+			land_use_color <- rgb(81, 75, 0);
 		}
 
 		if cult = 'house' {
 			rev <- 0.0;
-			color <- #red;
+			land_use_color <- #red;
 		}
 
+	}
+	
+	aspect land_use {
+		draw square(1) color: land_use_color;
 	}
 
 }
@@ -129,6 +134,13 @@ species predios {
 			def_rate <- 0.0;
 		}
 
+	}
+	
+	action identify_house {
+		ask (cells_deforest closest_to (vias closest_to self)) {
+			cult <- "house";
+			is_free <- false;
+		}
 	}
 
 	action crops_calc {
