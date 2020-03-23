@@ -541,6 +541,12 @@ species patches {
 	string type;
 	predios my_predio;
 	string id;
+	bool is_deforest;
+	bool is_free;
+	string cult;
+	float rev;
+	predios predio;
+	hogares my_hogar;
 }
 //
 // DEFINITION OF SECTORES
