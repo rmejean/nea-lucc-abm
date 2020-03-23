@@ -44,11 +44,11 @@ global {
 		else {
 			write "START OF INITIALIZATION";
 			do init_saved_files;
+			do load_saved_cells;
 			do load_saved_vias;
 			do load_saved_predios;
 			do load_saved_hogares;
 			do load_saved_personas;
-			
 			write "END OF INITIALIZATION";
 		}
 
