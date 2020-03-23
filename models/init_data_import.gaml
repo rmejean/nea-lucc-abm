@@ -46,10 +46,10 @@ global {
 	geometry shape <- envelope(MAE_2008); //spatial extension
 	
 	//Importing saved files for init generator
-	file saved_cells;// <- file("../initGENfiles/agricultural_landscape.shp");
-	file saved_vias;// <- file("../initGENfiles/vias.shp");
-	file saved_predios;// <- file("../initGENfiles/predios.shp");
-	file saved_hogares;// <- file("../initGENfiles/hogares.shp");
-	file saved_personas;// <- file("../initGENfiles/personas.shp");
+	file saved_cells;
+	file saved_vias;
+	file saved_predios;
+	file saved_hogares;
+	file saved_personas;
 	
 }

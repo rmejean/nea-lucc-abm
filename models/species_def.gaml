@@ -27,58 +27,58 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	float rev;
 	predios predio;
 	hogares my_hogar;
-	rgb land_use_color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
+	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
 
 	action param_activities {
 		if cult = 'maniocmais' {
 			rev <- rnd((450 / 12), (900 / 12));
-			land_use_color <- #yellow;
+			color <- #yellow;
 		}
 
 		if cult = 'fruits' {
 			rev <- rnd((1500 / 12), (2500 / 12));
-			land_use_color <- #orange;
+			color <- #orange;
 		}
 
 		if cult = 's_livestock' {
 			rev <- rnd((450 / 12), (1800 / 12));
-			land_use_color <- #palevioletred;
+			color <- #palevioletred;
 		}
 
 		if cult = 'plantain' {
 			rev <- rnd((250 / 12), (2210 / 12));
-			land_use_color <- #springgreen;
+			color <- #springgreen;
 		}
 
 		if cult = 'coffee' {
 			rev <- rnd((5100 / 12), (3000 / 12));
-			land_use_color <- #brown;
+			color <- #brown;
 		}
 
 		if cult = 'cacao' {
 			rev <- rnd((1100 / 12), (900 / 12));
-			land_use_color <- rgb(177, 107, 94);
+			color <- rgb(177, 107, 94);
 		}
 
 		if cult = 'livestock' {
 			rev <- rnd((1240 / 12), (1010 / 12));
-			land_use_color <- rgb(112, 141, 61);
+			color <- rgb(112, 141, 61);
 		}
 
 		if cult = 'friche' {
 			rev <- 0.0;
-			land_use_color <- rgb(81, 75, 0);
+			color <- rgb(81, 75, 0);
 		}
 
 		if cult = 'house' {
 			rev <- 0.0;
-			land_use_color <- #red;
+			color <- #red;
 		}
 
 	}
 	
 	aspect land_use {
-		draw square(1) color: land_use_color;
+		draw square(1) color: color;
 	}
 
 }
