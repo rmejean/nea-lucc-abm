@@ -28,10 +28,10 @@ global {
 		[name:: string(get("NAME")), is_deforest::bool(get("DEF")), cult::string(get("CULT")), predio::predios(get("PREDIO")), my_hogar::hogares(get("HOUSEHOLD"))]
 		{
 			ask first(cell inside (self)) {
-				is_deforest <- self.is_deforest;
-				cult <- self.cult;
-				predio <- self.predio;
-				my_hogar <- self.my_hogar;
+				is_deforest <- myself.is_deforest;
+				cult <- myself.cult;
+				predio <- myself.predio;
+				my_hogar <- myself.my_hogar;
 			}
 
 			do die;
@@ -70,7 +70,7 @@ global {
 
 	action load_saved_personas {
 		write "---START OF INIT PEOPLE";
-		create personas from: saved_hogares with:
+		create personas from: saved_personas with:
 		[name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), viv_id::string(get("NAME")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")), my_predio::predios(get("PLOT")), my_house::cell(get("HOUSE")), membres_hogar::list<personas>(get("HOG_MEMBERS")), chef_hogar::personas(get("HEAD")), chef_auto_id::string(get("HEAD_AUTOID")), MOF::float(get("MOF")), common_pot_inc::float(get("COMMON_POT")), livelihood_strategy::string(get("LS")), my_hogar::hogares(get("HOUSEHOLD")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), vMOF::float(get("vMOF")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD"))];
 		write "---END OF INIT PEOPLE";
 		write "Calculation of the quantity of food crops & cash crops per plot...";
