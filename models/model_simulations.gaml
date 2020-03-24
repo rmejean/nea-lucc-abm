@@ -47,7 +47,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 //
 //Saving pixels
 	user_command "Save Agricultural Landscape" category: "Saving init" when: init_end = true color: #darkblue {
-		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "CULT"::cult, "REV"::rev, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
+		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "CULT"::cult, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 	}
 	//Saving roasds
 	user_command "Save Roads" category: "Saving init" when: init_end = true color: #darkblue {
@@ -56,30 +56,31 @@ experiment Simulation type: gui until: stop_simulation = true {
 	//Saving plots
 	user_command "Save Plots" category: "Saving init" when: init_end = true color: #darkblue {
 		save predios to: save_predios type: "shp" attributes:
-		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_RATE"::forest_rate, "DIST_VIAAUCA"::dist_via_auca, "PROX_VIAAUCA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "CASH_C"::cashcrops_amount, "SUB_C"::subcrops_amount];
+		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "CASH_C"::cashcrops_amount, "SUB_C"::subcrops_amount];
 	}
 	//Saving households
 	user_command "Save Households" category: "Saving init" when: init_end = true color: #darkblue {
 		save hogares to: save_hogares type: "shp" attributes:
-		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBERS"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOID"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy, "LUC"::LUC];
+		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy, "LUC"::LUC];
 	}
 	//Saving people
 	user_command "Save People" category: "Saving init" when: init_end = true color: #darkblue {
 		save personas to: save_personas type: "shp" attributes:
-		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBERS"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOID"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
+		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
 	}
 	//Saving all
 	user_command "Save all init files" category: "Saving init" when: init_end = true color: #darkred {
-		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "CULT"::cult, "REV"::rev, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
+		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "CULT"::cult, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: save_predios type: "shp" attributes:
-		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_RATE"::forest_rate, "DIST_VIAAUCA"::dist_via_auca, "PROX_VIAAUCA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "CASH_C"::cashcrops_amount, "SUB_C"::subcrops_amount];
+		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "CASH_C"::cashcrops_amount, "SUB_C"::subcrops_amount];
 		save hogares to: save_hogares type: "shp" attributes:
-		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBERS"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOID"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy, "LUC"::LUC];
+		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy, "LUC"::LUC];
 		save personas to: save_personas type: "shp" attributes:
-		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBERS"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOID"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
+		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "MOF"::MOF, "COMMON_POT"::common_pot_inc, "LS"::livelihood_strategy, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "vMOF"::vMOF, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef];
 	}
 
+	parameter "Using a saved init?" category:"Parameters" var: new_init;
 	parameter "File chooser landscape" category: "Saving init" var: save_landscape;
 	parameter "File chooser roads" category: "Saving init" var: save_vias;
 	parameter "File chooser plots" category: "Saving init" var: save_predios;

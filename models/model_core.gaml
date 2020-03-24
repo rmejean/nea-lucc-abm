@@ -16,7 +16,7 @@ import "model_simulations.gaml"
 global {
 //Time aspects
 	bool stop_simulation <- false;
-	bool new_init <- false;
+	bool new_init <- true;
 	date starting_date <- date("2008-01-01");
 	date current_date <- starting_date;
 	string current_month;
@@ -29,7 +29,7 @@ global {
 	//
 	init {
 		if new_init = true {
-			write "START OF INITIALIZATION";
+			write "START OF INITIALIZATION FROM SCRATCH";
 			do init_cells;
 			do init_vias;
 			do init_predios;
@@ -42,7 +42,7 @@ global {
 			write "END OF INITIALIZATION";
 		}
 		else {
-			write "START OF INITIALIZATION";
+			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
 			do load_saved_cells;
 			do load_saved_vias;
