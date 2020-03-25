@@ -77,7 +77,7 @@ global {
 	reflex demography {
 		ask personas {
 			do aging;
-			do values_calc;
+			do labour_value_and_needs;
 		}
 
 		ask hogares {
