@@ -49,37 +49,32 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	action param_activities {
 		if cult = 'maniocmais' {
-			rev <- rnd((450 / 12), (900 / 12));
+			nb_months <- rnd (0,24);
 			color <- #yellow;
 		}
 
 		if cult = 'fruits' {
-			rev <- rnd((1500 / 12), (2500 / 12));
 			color <- #orange;
 		}
 
 		if cult = 's_livestock' {
-			rev <- rnd((450 / 12), (1800 / 12));
 			color <- #palevioletred;
 		}
 
 		if cult = 'plantain' {
-			rev <- rnd((250 / 12), (2210 / 12));
+			nb_months <- rnd (0,17);
 			color <- #springgreen;
 		}
 
 		if cult = 'coffee' {
-			rev <- rnd((5100 / 12), (3000 / 12));
 			color <- #brown;
 		}
 
 		if cult = 'cacao' {
-			rev <- rnd((1100 / 12), (900 / 12));
 			color <- rgb(177, 107, 94);
 		}
 
 		if cult = 'livestock' {
-			rev <- rnd((1240 / 12), (1010 / 12));
 			color <- rgb(112, 141, 61);
 		}
 
@@ -93,6 +88,53 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			color <- #red;
 		}
 
+	}
+	
+	action update_yields {
+		if cult = 'maniocmais' {
+			rev <- rnd((450 / 12), (900 / 12));
+		}
+
+		if cult = 'fruits' {
+			rev <- rnd((1500 / 12), (2500 / 12));
+		}
+
+		if cult = 's_livestock' {
+			rev <- rnd((450 / 12), (1800 / 12));
+		}
+
+		if cult = 'plantain' {
+			rev <- rnd((250 / 12), (2210 / 12));
+		}
+
+		if cult = 'coffee' {
+			rev <- rnd((5100 / 12), (3000 / 12));
+		}
+
+		if cult = 'cacao' {
+			rev <- rnd((1100 / 12), (900 / 12));
+		}
+
+		if cult = 'livestock' {
+			rev <- rnd((1240 / 12), (1010 / 12));
+		}
+
+	}
+	
+	action crop_cycle {
+		if cult = 'maniocmais' or 'plantain' {
+			nb_months <- nb_months + 1;
+		}
+		if cult = 'maniocmais' and nb_months = 24 {
+			cult <- 'friche';
+			rev <- 0.0;
+			color <- rgb(81, 75, 0);
+		}
+		if cult = 'plantain' and nb_months = 17 {
+			cult  <- 'friche';
+			rev <- 0.0;
+			color <- rgb(81, 75, 0);
+		}
 	}
 
 	aspect land_use {

@@ -217,6 +217,7 @@ global {
 					ask pxl_cible {
 						cult <- myself.type;
 						do param_activities;
+						do update_yields;
 					}
 
 				}
@@ -247,6 +248,7 @@ global {
 					ask pxl_cible {
 						cult <- myself.type;
 						do param_activities;
+						do update_yields;
 					}
 
 				}
@@ -277,6 +279,7 @@ global {
 					ask pxl_cible {
 						cult <- myself.type;
 						do param_activities;
+						do update_yields;
 					}
 
 				}
@@ -307,6 +310,7 @@ global {
 					ask pxl_cible {
 						cult <- myself.type;
 						do param_activities;
+						do update_yields;
 					}
 
 				}
@@ -337,6 +341,7 @@ global {
 					ask pxl_cible {
 						cult <- myself.type;
 						do param_activities;
+						do update_yields;
 					}
 
 				}

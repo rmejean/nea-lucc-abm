@@ -85,6 +85,13 @@ global {
 		}
 
 	}
+	
+	reflex agronomy {
+		ask cell {
+			do update_yields;
+			do crop_cycle;
+		}
+	}
 
 	reflex LUC_decision_making {
 		do NA_assessment;
