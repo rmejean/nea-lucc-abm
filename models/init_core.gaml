@@ -60,7 +60,6 @@ global {
 	action init_vias { //Roads init
 		write "---START OF INIT ROADS";
 		create vias from: vias_shp with: [orden::int(get("orden"))];
-
 		write "---END OF INIT ROADS";
 	}
 
@@ -92,7 +91,7 @@ global {
 		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
 			my_predio <- first(predios overlapping self);
-	        my_house <- first(my_predio.cells_inside where (each.cult = "house"));
+			my_house <- first(my_predio.cells_inside where (each.cult = "house"));
 			location <- my_house.location; //A AMELIORER : first est trop régulier, one_of trop hasardeux
 			ask my_predio {
 				is_free <- false;
@@ -132,7 +131,7 @@ global {
 			if my_hogar != nil {
 				location <- my_hogar.location;
 				my_predio <- my_hogar.my_predio;
-				do values_calc;
+				do labour_value_and_needs;
 			} else {
 				do die;
 			}
@@ -145,7 +144,8 @@ global {
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			do setup_hogar;
+			do head_and_ethnicity;
+			do values_calc;
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
 			}
@@ -347,20 +347,6 @@ global {
 		} //
 		write "------END OF INIT ALG 1.3";
 		write "---END OF INIT ALG";
-	}
-
-	action init_needs {
-		ask hogares {
-			common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
-		}
-
-		write "Calculation of the quantity of food crops & cash crops per plot...";
-		ask predios where (each.is_free = false) {
-			do update_needs;
-			do map_eminent_LUC;
-		}
-
-		write "... calculation complete.";
 	}
 
 }

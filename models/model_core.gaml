@@ -37,11 +37,10 @@ global {
 			do init_pop;
 			do init_LS_EMC;
 			do init_ALG;
-			do init_needs;
+			do NA_assessment;
 			init_end <- true;
 			write "END OF INITIALIZATION";
-		}
-		else {
+		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
 			do load_saved_cells;
@@ -49,6 +48,7 @@ global {
 			do load_saved_predios;
 			do load_saved_hogares;
 			do load_saved_personas;
+			do NA_assessment;
 			write "END OF INITIALIZATION";
 		}
 
@@ -87,11 +87,19 @@ global {
 	}
 
 	reflex LUC_decision_making {
+		do NA_assessment;
+	}
+
+	action NA_assessment {
+		write "Needs & assets assessment...";
 		ask predios where (each.is_free = false) {
 			do update_needs;
-			do map_eminent_LUC;
+			do map_needs_alert;
+			do update_assets;
+			do map_assets_alert;
 		}
 
+		write "... done!";
 	}
 
 }

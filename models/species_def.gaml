@@ -142,7 +142,7 @@ species predios {
 	float MOF_available;
 	int subcrops_amount;
 	int cashcrops_amount;
-	bool LUC <- false;
+	bool needs_alert <- false;
 	bool MOF_alert <- false;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
@@ -174,12 +174,26 @@ species predios {
 	}
 
 	action update_needs {
-		do crops_calc;
-		if my_hogar != nil {
-			ask my_hogar {
-				do assess_food_needs;
-			}
+		ask my_hogar {
+			common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
+		}
 
+		do crops_calc;
+		if (my_hogar.subcrops_needs > self.subcrops_amount) or ($_ANFP > my_hogar.common_pot_inc * 12) {
+			needs_alert <- true;
+		}
+
+	}
+
+	action update_assets {
+		MOF_total <- my_hogar.labor_force;
+		MOF_occupied <- (length(cells_deforest where (each.cult = "maniocmais")) * MOFcost_maniocmais) + (length(cells_deforest where
+		(each.cult = "fruits")) * MOFcost_fruits) + (length(cells_deforest where (each.cult = "s_livestock")) * MOFcost_s_livestock) + (length(cells_deforest where
+		(each.cult = "plantain")) * MOFcost_plantain) + (length(cells_deforest where (each.cult = "coffee")) * MOFcost_coffee) + (length(cells_deforest where
+		(each.cult = "cacao")) * MOFcost_cacao) + (length(cells_deforest where (each.cult = "livestock")) * MOFcost_livestock);
+		MOF_available <- MOF_total - MOF_occupied;
+		if MOF_available < 0 {
+			MOF_alert <- true;
 		}
 
 	}
@@ -194,10 +208,11 @@ species predios {
 		#red : (my_hogar.livelihood_strategy = 'SP1.2' ? #blue : #yellow)));
 	}
 
-	action map_eminent_LUC {
-		bool_color <- LUC = true ? #red : #green;
+	action map_needs_alert {
+		bool_color <- needs_alert = true ? #red : #green;
 	}
-	action map_MOF_alert {
+
+	action map_assets_alert {
 		bool_color <- MOF_alert = true ? #red : #green;
 	}
 
@@ -246,30 +261,17 @@ species hogares {
 	list<personas> membres_hogar;
 	personas chef_hogar;
 	string chef_auto_id;
-	float MOF;
+	float labor_force;
 	float subcrops_needs;
 	float common_pot_inc;
 	string livelihood_strategy;
 
 	action values_calc {
-		MOF <- (sum(membres_hogar collect each.vMOF) * 30);
+		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
 		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
-		ask my_predio {
-			MOF_total <- myself.MOF;
-			MOF_occupied <- (length(cells_deforest where (each.cult = "maniocmais")) * MOFcost_maniocmais) + (length(cells_deforest where
-			(each.cult = "fruits")) * MOFcost_fruits) + (length(cells_deforest where (each.cult = "s_livestock")) * MOFcost_s_livestock) + (length(cells_deforest where
-			(each.cult = "plantain")) * MOFcost_plantain) + (length(cells_deforest where (each.cult = "coffee")) * MOFcost_coffee) + (length(cells_deforest where
-			(each.cult = "cacao")) * MOFcost_cacao) + (length(cells_deforest where (each.cult = "livestock")) * MOFcost_livestock);
-			MOF_available <- MOF_total - MOF_occupied;
-			if MOF_available < 0 {
-				MOF_alert <- true;
-			}
-
-		}
-
 	}
 
-	action setup_hogar {
+	action head_and_ethnicity {
 		chef_hogar <- membres_hogar with_min_of each.orden_en_hogar;
 		chef_auto_id <- chef_hogar.auto_id;
 		if chef_auto_id = "indigena" {
@@ -280,17 +282,6 @@ species hogares {
 		} else {
 			ask my_predio {
 				indigena <- 0;
-			}
-
-		}
-
-		do values_calc;
-	}
-
-	action assess_food_needs {
-		if (subcrops_needs > my_predio.subcrops_amount) or ($_ANFP > common_pot_inc * 12) {
-			ask my_predio {
-				LUC <- true;
 			}
 
 		}
@@ -311,39 +302,39 @@ species personas parent: hogares {
 	string mes_nac;
 	string Sexo;
 	int orden_en_hogar;
-	float vMOF;
+	float labor_value;
 	float food_needs;
 	float inc;
 	string auto_id;
 	bool chef;
 
-	action values_calc {
+	action labour_value_and_needs {
 		if Age < 11 {
-			vMOF <- 0.0;
+			labor_value <- 0.0;
 		}
 
 		if Age = 11 {
-			vMOF <- 0.16;
+			labor_value <- 0.16;
 		}
 
 		if Age = 12 {
-			vMOF <- 0.33;
+			labor_value <- 0.33;
 		}
 
 		if Age = 13 {
-			vMOF <- 0.5;
+			labor_value <- 0.5;
 		}
 
 		if Age = 14 {
-			vMOF <- 0.66;
+			labor_value <- 0.66;
 		}
 
 		if Age = 15 {
-			vMOF <- 0.83;
+			labor_value <- 0.83;
 		}
 
 		if Age >= 16 {
-			vMOF <- 1.0;
+			labor_value <- 1.0;
 		}
 
 		food_needs <- 0.5;
