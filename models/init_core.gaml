@@ -20,20 +20,6 @@ global {
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
 	list<string> list_id <- ([]);
 
-	//-----------------------------
-	//Farming activities parameters
-	//-----------------------------
-
-	//MOF -------------------------
-	float MOFcost_maniocmais <- 9.0;
-	float MOFcost_fruits <- 12.6;
-	float MOFcost_s_livestock <- 6.4;
-	float MOFcost_plantain <- 3.6;
-	float MOFcost_coffee <- 3.1;
-	float MOFcost_cacao <- 3.0;
-	float MOFcost_livestock <- 20.5;
-	float MOFcost_no_farming <- 0.0;
-
 	//-----------------------------------------------------------------------------------------------
 	//--------------------------------------INITIALIZATION-------------------------------------------
 	//-----------------------------------------------------------------------------------------------

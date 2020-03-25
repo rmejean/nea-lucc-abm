@@ -17,6 +17,23 @@ import "init_data_import.gaml"
 import "init_MCA_criteria.gaml"
 import "model_core.gaml"
 import "model_simulations.gaml"
+
+global {
+
+//-----------------------------
+//Farming activities parameters
+//-----------------------------
+
+//MOF -------------------------
+	float MOFcost_maniocmais <- 9.0;
+	float MOFcost_fruits <- 12.6;
+	float MOFcost_s_livestock <- 6.4;
+	float MOFcost_plantain <- 3.6;
+	float MOFcost_coffee <- 3.1;
+	float MOFcost_cacao <- 3.0;
+	float MOFcost_livestock <- 20.5;
+	float MOFcost_no_farming <- 0.0;
+}
 //
 // DEFINITION OF CELLS
 //
@@ -24,6 +41,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	bool is_deforest <- true;
 	bool is_free <- true;
 	string cult;
+	int nb_months;
 	float rev;
 	predios predio;
 	hogares my_hogar;
@@ -76,7 +94,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		}
 
 	}
-	
+
 	aspect land_use {
 		draw square(1) color: color;
 	}
@@ -117,10 +135,15 @@ species predios {
 	rgb color;
 	rgb color_tx_def;
 	rgb LS_color;
-	rgb LUC_color;
+	rgb bool_color;
 	hogares my_hogar;
+	float MOF_total;
+	float MOF_occupied;
+	float MOF_available;
 	int subcrops_amount;
 	int cashcrops_amount;
+	bool LUC <- false;
+	bool MOF_alert <- false;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
 	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
@@ -136,12 +159,13 @@ species predios {
 		}
 
 	}
-	
+
 	action identify_house {
 		ask (cells_deforest closest_to (vias closest_to self)) {
 			cult <- "house";
 			is_free <- false;
 		}
+
 	}
 
 	action crops_calc {
@@ -155,6 +179,7 @@ species predios {
 			ask my_hogar {
 				do assess_food_needs;
 			}
+
 		}
 
 	}
@@ -170,7 +195,10 @@ species predios {
 	}
 
 	action map_eminent_LUC {
-		LUC_color <- my_hogar.LUC = true ? #green : #red;
+		bool_color <- LUC = true ? #red : #green;
+	}
+	action map_MOF_alert {
+		bool_color <- MOF_alert = true ? #red : #green;
 	}
 
 	aspect default {
@@ -186,7 +214,7 @@ species predios {
 	}
 
 	aspect map_LUC_decisions {
-		draw shape color: LUC_color border: #black;
+		draw shape color: bool_color border: #black;
 	}
 
 }
@@ -222,11 +250,23 @@ species hogares {
 	float subcrops_needs;
 	float common_pot_inc;
 	string livelihood_strategy;
-	bool LUC <- false;
 
 	action values_calc {
 		MOF <- (sum(membres_hogar collect each.vMOF) * 30);
 		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
+		ask my_predio {
+			MOF_total <- myself.MOF;
+			MOF_occupied <- (length(cells_deforest where (each.cult = "maniocmais")) * MOFcost_maniocmais) + (length(cells_deforest where
+			(each.cult = "fruits")) * MOFcost_fruits) + (length(cells_deforest where (each.cult = "s_livestock")) * MOFcost_s_livestock) + (length(cells_deforest where
+			(each.cult = "plantain")) * MOFcost_plantain) + (length(cells_deforest where (each.cult = "coffee")) * MOFcost_coffee) + (length(cells_deforest where
+			(each.cult = "cacao")) * MOFcost_cacao) + (length(cells_deforest where (each.cult = "livestock")) * MOFcost_livestock);
+			MOF_available <- MOF_total - MOF_occupied;
+			if MOF_available < 0 {
+				MOF_alert <- true;
+			}
+
+		}
+
 	}
 
 	action setup_hogar {
@@ -249,7 +289,10 @@ species hogares {
 
 	action assess_food_needs {
 		if (subcrops_needs > my_predio.subcrops_amount) or ($_ANFP > common_pot_inc * 12) {
-			LUC <- true;
+			ask my_predio {
+				LUC <- true;
+			}
+
 		}
 
 	}
