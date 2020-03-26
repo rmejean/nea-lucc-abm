@@ -33,8 +33,8 @@ global {
 //Parameters for each criterion and for each LS
 	//SP1.1
 	float SP1_1_weight_def_rate <- 0.0;
-	float SP1_1_weight_forest_rate <- 0.6;
-	float SP1_1_weight_dist_via_auca <- 1.0;
+	float SP1_1_weight_forest_rate <- 1.0;
+	float SP1_1_weight_dist_via_auca <- 0.4;
 	float SP1_1_weight_prox_via_auca <- 0.0;
 	float SP1_1_weight_indigena <- 0.3;
 	//SP1.2
@@ -50,7 +50,7 @@ global {
 	float SP1_3_weight_prox_via_auca <- 0.0;
 	float SP1_3_weight_indigena <- 0.0;
 	//SP2
-	float SP2_weight_def_rate <- 0.4;
+	float SP2_weight_def_rate <- 1.0;
 	float SP2_weight_forest_rate <- 0.0;
 	float SP2_weight_dist_via_auca <- 0.0;
 	float SP2_weight_prox_via_auca <- 1.0;

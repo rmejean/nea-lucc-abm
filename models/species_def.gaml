@@ -79,7 +79,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		}
 
 		if cult = 'friche' {
-			rev <- 0.0;
+			nb_months <- rnd(1,360);//fallow: maximum 30 years?
 			color <- rgb(81, 75, 0);
 		}
 
@@ -122,7 +122,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	}
 	
 	action crop_cycle {
-		if cult = 'maniocmais' or 'plantain' {
+		if cult = 'maniocmais' or 'plantain' or 'friche' {
 			nb_months <- nb_months + 1;
 		}
 		if cult = 'maniocmais' and nb_months = 24 {
@@ -385,7 +385,7 @@ species personas parent: hogares {
 	action aging {
 		if current_month = self.mes_nac { //when it's my birthday!
 			Age <- Age + 1;
-			do values_calc;
+			do labour_value_and_needs;
 			//MORT
 			if between(Age, 70, 80) {
 				if flip(0.1) {
