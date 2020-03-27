@@ -25,13 +25,13 @@ global {
 //-----------------------------
 
 //MOF -------------------------
-	float MOFcost_maniocmais <- 9.0;
-	float MOFcost_fruits <- 12.6;
-	float MOFcost_s_livestock <- 6.4;
-	float MOFcost_plantain <- 3.6;
-	float MOFcost_coffee <- 3.1;
-	float MOFcost_cacao <- 3.0;
-	float MOFcost_livestock <- 20.5;
+	float MOFcost_maniocmais <- 8.1;
+	float MOFcost_fruits <- 11.34;
+	float MOFcost_s_livestock <- 5.76;
+	float MOFcost_plantain <- 3.24;
+	float MOFcost_coffee <- 2.79;
+	float MOFcost_cacao <- 2.7;
+	float MOFcost_livestock <- 18.45;
 	float MOFcost_no_farming <- 0.0;
 }
 //
@@ -92,31 +92,31 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	
 	action update_yields {
 		if cult = 'maniocmais' {
-			rev <- rnd((450 / 12), (900 / 12));
+			rev <- rnd((405 / 12), (810 / 12));
 		}
 
 		if cult = 'fruits' {
-			rev <- rnd((1500 / 12), (2500 / 12));
+			rev <- rnd((1350 / 12), (2250 / 12));
 		}
 
 		if cult = 's_livestock' {
-			rev <- rnd((450 / 12), (1800 / 12));
+			rev <- rnd((405 / 12), (1620 / 12));
 		}
 
 		if cult = 'plantain' {
-			rev <- rnd((250 / 12), (2210 / 12));
+			rev <- rnd((225 / 12), (1989 / 12));
 		}
 
 		if cult = 'coffee' {
-			rev <- rnd((5100 / 12), (3000 / 12));
+			rev <- rnd((4590 / 12), (2700 / 12));
 		}
 
 		if cult = 'cacao' {
-			rev <- rnd((1100 / 12), (900 / 12));
+			rev <- rnd((990 / 12), (810 / 12));
 		}
 
 		if cult = 'livestock' {
-			rev <- rnd((1240 / 12), (1010 / 12));
+			rev <- rnd((1116 / 12), (909 / 12));
 		}
 
 	}
@@ -173,7 +173,7 @@ species predios {
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //distance to via Auca (main road on the study area, original settlement and and location of oil companies)
 	float prox_via_auca <- 20000 - (self.dist_via_auca);
 	int indigena; //indigenous index
-	string LS; //livelihood strategy
+	string LS <- 'none'; //livelihood strategy
 	rgb color;
 	rgb color_tx_def;
 	rgb LS_color;
@@ -191,6 +191,8 @@ species predios {
 	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
 	list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
+	list<predios> neighbors;
+//TODO	file test_file <- file("A DEFINIR");
 
 	action deforestation_rate_calc {
 		if area_total > 0 {
@@ -306,7 +308,7 @@ species hogares {
 	float labor_force;
 	float subcrops_needs;
 	float common_pot_inc;
-	string livelihood_strategy;
+	string livelihood_strategy <- 'none';
 
 	action values_calc {
 		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);

@@ -97,6 +97,7 @@ global {
 				is_free <- false;
 				is_free_MCA <- true;
 				my_hogar <- myself;
+				neighbors <- predios where (each.is_free = false) closest_to (self, 5);
 			}
 
 			ask my_predio.cells_inside {
