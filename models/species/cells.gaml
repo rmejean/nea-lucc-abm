@@ -19,6 +19,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	bool is_deforest <- true;
 	bool is_free <- true;
 	string cult;
+	list<string> land_use_hist;//history: pasts land uses
 	int nb_months;
 	float rev;
 	predios predio;
@@ -105,11 +106,13 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		}
 		if cult = 'maniocmais' and nb_months = 24 {
 			cult <- 'friche';
+			add cult to: land_use_hist;
 			rev <- 0.0;
 			color <- rgb(81, 75, 0);
 		}
 		if cult = 'plantain' and nb_months = 17 {
 			cult  <- 'friche';
+			add cult to: land_use_hist;
 			rev <- 0.0;
 			color <- rgb(81, 75, 0);
 		}

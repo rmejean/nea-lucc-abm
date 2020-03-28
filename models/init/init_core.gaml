@@ -217,6 +217,7 @@ global {
 					location <- pxl_cible.location;
 					ask pxl_cible {
 						cult <- myself.type;
+						add cult to: land_use_hist;
 						do param_activities;
 						do update_yields;
 					}
@@ -248,6 +249,7 @@ global {
 					location <- pxl_cible.location;
 					ask pxl_cible {
 						cult <- myself.type;
+						add cult to: land_use_hist;
 						do param_activities;
 						do update_yields;
 					}
@@ -279,6 +281,7 @@ global {
 					location <- pxl_cible.location;
 					ask pxl_cible {
 						cult <- myself.type;
+						add cult to: land_use_hist;
 						do param_activities;
 						do update_yields;
 					}
@@ -310,6 +313,7 @@ global {
 					location <- pxl_cible.location;
 					ask pxl_cible {
 						cult <- myself.type;
+						add cult to: land_use_hist;
 						do param_activities;
 						do update_yields;
 					}
@@ -341,6 +345,7 @@ global {
 					location <- pxl_cible.location;
 					ask pxl_cible {
 						cult <- myself.type;
+						add cult to: land_use_hist;
 						do param_activities;
 						do update_yields;
 					}
