@@ -13,8 +13,8 @@ model init_species_def
 // DEFINITION OF SPECIES ATTRIBUTES & ACTIONS
 //
 //
-import "init_data_import.gaml"
-import "init_MCA_criteria.gaml"
+import "init/init_data_import.gaml"
+import "init/init_MCA_criteria.gaml"
 import "model_core.gaml"
 import "model_simulations.gaml"
 

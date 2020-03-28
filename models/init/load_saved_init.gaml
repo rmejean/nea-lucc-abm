@@ -9,7 +9,7 @@
 */
 model init_saved
 
-import "species_def.gaml"
+import "../species_def.gaml"
 import "init_data_import.gaml"
 
 global {

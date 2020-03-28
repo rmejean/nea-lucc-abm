@@ -9,8 +9,8 @@
 */
 model model_core
 
-import "init_core.gaml"
-import "load_saved_init.gaml"
+import "init/init_core.gaml"
+import "init/load_saved_init.gaml"
 import "model_simulations.gaml"
 
 global {

@@ -10,8 +10,8 @@
 model init_core
 
 import "init_data_import.gaml"
-import "species_def.gaml"
 import "init_MCA_criteria.gaml"
+import "../species_def.gaml"
 
 global {
 //Lists
