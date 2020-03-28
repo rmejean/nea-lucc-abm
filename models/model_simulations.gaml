@@ -33,11 +33,11 @@ global {
 	//Saving init------------------
 	//-----------------------------
 	bool init_end <- false;
-	string save_landscape <- ("../initGENfiles/agricultural_landscape.shp");
-	string save_vias <- ("../initGENfiles/vias.shp");
-	string save_predios <- ("../initGENfiles/predios.shp");
-	string save_hogares <- ("../initGENfiles/hogares.shp");
-	string save_personas <- ("../initGENfiles/personas.shp");
+	string save_landscape <- ("../../initGENfiles/agricultural_landscape.shp");
+	string save_vias <- ("../../initGENfiles/vias.shp");
+	string save_predios <- ("../../initGENfiles/predios.shp");
+	string save_hogares <- ("../../initGENfiles/hogares.shp");
+	string save_personas <- ("../../initGENfiles/personas.shp");
 }
 
 experiment Simulation type: gui until: stop_simulation = true {

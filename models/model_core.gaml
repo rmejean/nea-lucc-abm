@@ -93,7 +93,7 @@ global {
 		}
 	}
 
-	reflex LUC_decision_making {
+	reflex decision_making {
 		do NA_assessment;
 	}
 
@@ -107,6 +107,8 @@ global {
 		}
 
 		write "... done!";
+		write "Predios don't have their needs met:" + length(predios where (each.needs_alert = true));
+		write "Predios understaffed:" + length(predios where (each.MOF_alert = true));
 	}
 
 }
