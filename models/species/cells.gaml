@@ -15,6 +15,17 @@ model cells_def
 //
 import "../species_def.gaml"
 
+global {
+	int timeprod_maniocmais <- 6;
+	int timeprod_fruits <- 3;
+	int timeprod_s_livetock <- 3;
+	int timeprod_plantain <- 9;
+	int timeprod_coffee <- 24;
+	int timeprod_cacao <- 24;
+	int timeprod_livestock <- 24;
+	
+}
+
 grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
 	bool is_deforest <- true;
 	bool is_free <- true;
@@ -70,7 +81,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	}
 	
 	action update_yields {
-		if cult = 'maniocmais' {
+		if cult = 'maniocmais' and nb_months > timeprod_maniocmais {
 			rev <- rnd((405 / 12), (810 / 12));
 		}
 
@@ -82,7 +93,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- rnd((405 / 12), (1620 / 12));
 		}
 
-		if cult = 'plantain' {
+		if cult = 'plantain' and nb_months > timeprod_plantain {
 			rev <- rnd((225 / 12), (1989 / 12));
 		}
 
@@ -109,6 +120,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			add cult to: land_use_hist;
 			rev <- 0.0;
 			color <- rgb(81, 75, 0);
+			//do sow_maniocmais;
 		}
 		if cult = 'plantain' and nb_months = 17 {
 			cult  <- 'friche';
@@ -117,6 +129,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			color <- rgb(81, 75, 0);
 		}
 	}
+	
 
 	aspect land_use {
 		draw square(1) color: color;
