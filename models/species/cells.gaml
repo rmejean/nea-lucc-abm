@@ -120,7 +120,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			add cult to: land_use_hist;
 			rev <- 0.0;
 			color <- rgb(81, 75, 0);
-			//do sow_maniocmais;
+			//TODO: sow_maniocmais;
 		}
 		if cult = 'plantain' and nb_months = 17 {
 			cult  <- 'friche';

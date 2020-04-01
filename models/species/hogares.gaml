@@ -14,7 +14,6 @@ model hogares_def
 //
 //
 import "../species_def.gaml"
-
 species hogares {
 	string sec_id;
 	string hog_id;
@@ -31,6 +30,11 @@ species hogares {
 	float subcrops_needs;
 	float common_pot_inc;
 	string livelihood_strategy <- 'none';
+	bool needs_alert;
+	bool MOF_alert;
+	float MOF_total;
+	float MOF_occupied;
+	float MOF_available;
 
 	action values_calc {
 		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
@@ -50,6 +54,31 @@ species hogares {
 				indigena <- 0;
 			}
 
+		}
+
+	}
+
+	action update_needs {
+		common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
+		ask my_predio {
+			do crops_calc;
+		}
+
+		if (subcrops_needs > my_predio.subcrops_amount) or ($_ANFP > common_pot_inc * 12) {
+			needs_alert <- true;
+		}
+
+	}
+
+	action update_assets {
+		MOF_total <- labor_force;
+		MOF_occupied <- (length(my_predio.cells_deforest where (each.cult = "maniocmais")) * MOFcost_maniocmais) + (length(my_predio.cells_deforest where
+		(each.cult = "fruits")) * MOFcost_fruits) + (length(my_predio.cells_deforest where (each.cult = "s_livestock")) * MOFcost_s_livestock) + (length(my_predio.cells_deforest where
+		(each.cult = "plantain")) * MOFcost_plantain) + (length(my_predio.cells_deforest where (each.cult = "coffee")) * MOFcost_coffee) + (length(my_predio.cells_deforest where
+		(each.cult = "cacao")) * MOFcost_cacao) + (length(my_predio.cells_deforest where (each.cult = "livestock")) * MOFcost_livestock);
+		MOF_available <- MOF_total - MOF_occupied;
+		if MOF_available < 0 {
+			MOF_alert <- true;
 		}
 
 	}

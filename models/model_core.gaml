@@ -85,30 +85,43 @@ global {
 		}
 
 	}
-	
+
 	reflex agronomy {
 		ask cell {
 			do update_yields;
 			do crop_cycle;
 		}
+
 	}
 
 	reflex decision_making {
 		do NA_assessment;
+		
+		ask hogares {
+			if needs_alert = true {
+			}
+
+		}
+
 	}
 
 	action NA_assessment {
 		write "Needs & assets assessment...";
-		ask predios where (each.is_free = false) {
+		ask hogares {
 			do update_needs;
-			do map_needs_alert;
+			
 			do update_assets;
+			
+		}
+		ask predios where (each.is_free = false) {
+			do map_needs_alert;
 			do map_assets_alert;
+			
 		}
 
 		write "... done!";
-		write "Predios don't have their needs met:" + length(predios where (each.needs_alert = true));
-		write "Predios understaffed:" + length(predios where (each.MOF_alert = true));
+		write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
+		write "Households understaffed:" + length(hogares where (each.MOF_alert = true));
 	}
 
 }
