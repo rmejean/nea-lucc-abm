@@ -96,9 +96,9 @@ global {
 
 	reflex decision_making {
 		do NA_assessment;
-		
 		ask hogares {
 			if needs_alert = true {
+				do LUC;
 			}
 
 		}
@@ -109,14 +109,12 @@ global {
 		write "Needs & assets assessment...";
 		ask hogares {
 			do update_needs;
-			
 			do update_assets;
-			
 		}
+
 		ask predios where (each.is_free = false) {
 			do map_needs_alert;
 			do map_assets_alert;
-			
 		}
 
 		write "... done!";

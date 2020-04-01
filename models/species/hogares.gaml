@@ -64,7 +64,7 @@ species hogares {
 			do crops_calc;
 		}
 
-		if (subcrops_needs > my_predio.subcrops_amount) or ($_ANFP > common_pot_inc * 12) {
+		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > common_pot_inc * 12) {
 			needs_alert <- true;
 		}
 
@@ -81,6 +81,26 @@ species hogares {
 			MOF_alert <- true;
 		}
 
+	}
+	
+	action LUC {
+		if livelihood_strategy = "SP1.1" {
+			
+		}
+		if livelihood_strategy = "SP1.2" {
+			
+		}
+		if livelihood_strategy = "SP1.3" {
+			
+		}
+		if livelihood_strategy = "SP2" {
+			
+		}
+		if livelihood_strategy = "SP3" {
+			
+		}
+		
+		
 	}
 
 	aspect default {

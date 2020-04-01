@@ -15,11 +15,11 @@ import "init_data_import.gaml"
 global {
 
 	action init_saved_files {
-		saved_cells <- file("../initGENfiles/agricultural_landscape.shp");
-		saved_vias <- file("../initGENfiles/vias.shp");
-		saved_predios <- file("../initGENfiles/predios.shp");
-		saved_hogares <- file("../initGENfiles/hogares.shp");
-		saved_personas <- file("../initGENfiles/personas.shp");
+		saved_cells <- file("../../initGENfiles/agricultural_landscape.shp");
+		saved_vias <- file("../../initGENfiles/vias.shp");
+		saved_predios <- file("../../initGENfiles/predios.shp");
+		saved_hogares <- file("../../initGENfiles/hogares.shp");
+		saved_personas <- file("../../initGENfiles/personas.shp");
 	}
 
 	action load_saved_cells {
