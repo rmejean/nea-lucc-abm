@@ -77,7 +77,7 @@ global {
 	action load_saved_hogares {
 		write "---START OF INIT HOUSEHOLDS";
 		create hogares from: saved_hogares with:
-		[name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), viv_id::string(get("NAME")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")), my_predio::predios(get("PLOT")), my_house::cell(get("HOUSE")), membres_hogar::list<personas>(get("HOG_MEMBER")), chef_hogar::personas(get("HEAD")), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("labor_force")), common_pot_inc::float(get("COMMON_POT")), livelihood_strategy::string(get("LS")), MOF_total::float(get("MOF_total")), MOF_available::float(get("MOF_A")), MOF_occupied::float(get("MOF_O")), MOF_alert::bool(get("MOF_W")), needs_alert::bool(get("NEEDS_W"))];
+		[name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), viv_id::string(get("NAME")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")), my_predio::predios(get("PLOT")), my_house::cell(get("HOUSE")), membres_hogar::list<personas>(get("HOG_MEMBER")), chef_hogar::personas(get("HEAD")), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("labor_force")), common_pot_inc::float(get("COMMON_POT")), livelihood_strategy::string(get("LS")), available_workers::float(get("MOF_A")), occupied_workers::float(get("MOF_O")), employees_workers::float(get("MOF_E")), MOF_alert::bool(get("MOF_W")), needs_alert::bool(get("NEEDS_W"))];
 		write "---END OF INIT HOUSEHOLDS";
 	}
 

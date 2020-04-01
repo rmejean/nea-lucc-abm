@@ -108,13 +108,13 @@ global {
 	action NA_assessment {
 		write "Needs & assets assessment...";
 		ask hogares {
-			do update_needs;
 			do update_assets;
+			do update_needs;
 		}
 
 		ask predios where (each.is_free = false) {
-			do map_needs_alert;
 			do map_assets_alert;
+			do map_needs_alert;
 		}
 
 		write "... done!";

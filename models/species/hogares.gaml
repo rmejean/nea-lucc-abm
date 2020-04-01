@@ -27,14 +27,14 @@ species hogares {
 	personas chef_hogar;
 	string chef_auto_id;
 	float labor_force;
+	float occupied_workers;
+	float available_workers;
+	float employees_workers <- 0.0;
 	float subcrops_needs;
 	float common_pot_inc;
 	string livelihood_strategy <- 'none';
 	bool needs_alert;
 	bool MOF_alert;
-	float MOF_total;
-	float MOF_occupied;
-	float MOF_available;
 
 	action values_calc {
 		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
@@ -58,49 +58,54 @@ species hogares {
 
 	}
 
+	action update_assets {
+		occupied_workers <- (length(my_predio.cells_deforest where (each.cult = "maniocmais")) * MOFcost_maniocmais) + (length(my_predio.cells_deforest where
+		(each.cult = "fruits")) * MOFcost_fruits) + (length(my_predio.cells_deforest where (each.cult = "s_livestock")) * MOFcost_s_livestock) + (length(my_predio.cells_deforest where
+		(each.cult = "plantain")) * MOFcost_plantain) + (length(my_predio.cells_deforest where (each.cult = "coffee")) * MOFcost_coffee) + (length(my_predio.cells_deforest where
+		(each.cult = "cacao")) * MOFcost_cacao) + (length(my_predio.cells_deforest where (each.cult = "livestock")) * MOFcost_livestock);
+		available_workers <- labor_force - occupied_workers;
+		if available_workers < 0 {
+			if livelihood_strategy = "SP2" or "SP3" {
+				employees_workers <- ((0 - available_workers) / MOFcost_livestock) / 30;
+			}
+
+			if livelihood_strategy = "SP1.1" or "SP1.2" or "SP1.3" {
+				employees_workers <- ((0 - available_workers) / MOFcost_cacao) / 30;
+			}
+
+			//MOF_alert <- true;
+		}
+
+	}
+
 	action update_needs {
 		common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
 		ask my_predio {
 			do crops_calc;
 		}
 
-		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > common_pot_inc * 12) {
+		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > ((common_pot_inc * 12) - (employees_workers * cost_employees * 12))) {//TODO: à voir si on laisse la multiplication par 12... on pourrait faire au mois!
 			needs_alert <- true;
 		}
 
 	}
 
-	action update_assets {
-		MOF_total <- labor_force;
-		MOF_occupied <- (length(my_predio.cells_deforest where (each.cult = "maniocmais")) * MOFcost_maniocmais) + (length(my_predio.cells_deforest where
-		(each.cult = "fruits")) * MOFcost_fruits) + (length(my_predio.cells_deforest where (each.cult = "s_livestock")) * MOFcost_s_livestock) + (length(my_predio.cells_deforest where
-		(each.cult = "plantain")) * MOFcost_plantain) + (length(my_predio.cells_deforest where (each.cult = "coffee")) * MOFcost_coffee) + (length(my_predio.cells_deforest where
-		(each.cult = "cacao")) * MOFcost_cacao) + (length(my_predio.cells_deforest where (each.cult = "livestock")) * MOFcost_livestock);
-		MOF_available <- MOF_total - MOF_occupied;
-		if MOF_available < 0 {
-			MOF_alert <- true;
-		}
-
-	}
-	
 	action LUC {
 		if livelihood_strategy = "SP1.1" {
-			
 		}
+
 		if livelihood_strategy = "SP1.2" {
-			
 		}
+
 		if livelihood_strategy = "SP1.3" {
-			
 		}
+
 		if livelihood_strategy = "SP2" {
-			
 		}
+
 		if livelihood_strategy = "SP3" {
-			
 		}
-		
-		
+
 	}
 
 	aspect default {

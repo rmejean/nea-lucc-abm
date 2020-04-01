@@ -46,4 +46,5 @@ global {
 	float MOFcost_cacao <- 2.7;
 	float MOFcost_livestock <- 18.45;
 	float MOFcost_no_farming <- 0.0;
+	int cost_employees <- 350;
 }
