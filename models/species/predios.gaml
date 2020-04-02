@@ -84,7 +84,7 @@ species predios {
 	}
 
 	action map_assets_alert {
-		bool_color <- my_hogar.MOF_alert = true ? #red : #green;
+		bool_color <- my_hogar.labor_alert = true ? #red : #green;
 	}
 
 	aspect default {

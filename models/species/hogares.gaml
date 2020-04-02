@@ -29,12 +29,13 @@ species hogares {
 	float labor_force;
 	float occupied_workers;
 	float available_workers;
-	float employees_workers <- 0.0;
+	int employees_workers <- 0;
 	float subcrops_needs;
 	float common_pot_inc;
+	float income;
 	string livelihood_strategy <- 'none';
 	bool needs_alert;
-	bool MOF_alert;
+	bool labor_alert;
 
 	action values_calc {
 		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
@@ -65,13 +66,7 @@ species hogares {
 		(each.cult = "cacao")) * MOFcost_cacao) + (length(my_predio.cells_deforest where (each.cult = "livestock")) * MOFcost_livestock);
 		available_workers <- labor_force - occupied_workers;
 		if available_workers < 0 {
-			if livelihood_strategy = "SP2" or "SP3" {
-				employees_workers <- ((0 - available_workers) / MOFcost_livestock) / 30;
-			}
-
-			if livelihood_strategy = "SP1.1" or "SP1.2" or "SP1.3" {
-				employees_workers <- ((0 - available_workers) / MOFcost_cacao) / 30;
-			}
+			do init_employed_labour;
 
 			//MOF_alert <- true;
 		}
@@ -80,12 +75,24 @@ species hogares {
 
 	action update_needs {
 		common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
+		income <- common_pot_inc - (employees_workers * cost_employees);
 		ask my_predio {
 			do crops_calc;
 		}
 
-		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > ((common_pot_inc * 12) - (employees_workers * cost_employees * 12))) {//TODO: à voir si on laisse la multiplication par 12... on pourrait faire au mois!
+		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income * 12) { //TODO: à voir si on laisse la multiplication par 12... on pourrait faire au mois!
 			needs_alert <- true;
+		}
+
+	}
+
+	action init_employed_labour {
+		if livelihood_strategy = "SP2" or "SP3" {
+			employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
+		}
+
+		if livelihood_strategy = "SP1.1" or "SP1.2" or "SP1.3" {
+			labor_alert <- true; //TODO: mais à résoudre par la génération de csv pour l'ALG (les SP1 généreront leur landscape selon leur MOF)
 		}
 
 	}

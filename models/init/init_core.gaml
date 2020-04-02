@@ -51,7 +51,7 @@ global {
 
 			do deforestation_rate_calc;
 			do map_deforestation_rate;
-			do identify_house;//TODO : plutôt uniquement quand les predios sont occupés ?
+			do identify_house; //TODO : plutôt uniquement quand les predios sont occupés ?
 		}
 
 		write "---END OF INIT PLOTS";
@@ -361,3 +361,4 @@ global {
 	}
 
 }
+
