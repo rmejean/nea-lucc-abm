@@ -62,6 +62,12 @@ global {
 		create vias from: vias_shp with: [orden::int(get("orden"))];
 		write "---END OF INIT ROADS";
 	}
+	
+	action init_empresas { //Roads init
+		write "---START OF INIT OIL COMPANIES";
+		create empresas from: plataformas_shp;
+		write "---END OF INIT OIL COMPANIES";
+	}
 
 	action init_pop { //Population init with GENSTAR
 		write "---START OF INIT POPULATION";

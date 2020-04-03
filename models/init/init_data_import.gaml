@@ -33,6 +33,7 @@ global {
 	//file predios_sin_def_shp <- file("../../includes/predios_sin_def.shp");
 	file vias_shp <- shape_file("../../includes/routes_SIGTIERRAS_cut.shp");
 	file comunas_shp <- file("../../includes/comunas.shp");
+	file plataformas_shp <- file("../../includes/plataformas.shp");
 
 	//Importing Land Cover (MAE, 2008)
 	file MAE_2008 <- file("../../includes/MAE2008_90m.asc"); //spatial resolution: 90m

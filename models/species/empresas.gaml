@@ -13,9 +13,9 @@ model empresas_def
 //
 
 species empresas {
-	int nb_jobs;
+	int nb_jobs <- 50;
 	int nb_oc_jobs;
-	int job_wages;
+	int job_wages <- 350;
 	//
 	aspect default {
 		draw shape color: #black border: #black;

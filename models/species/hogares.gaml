@@ -81,7 +81,7 @@ species hogares {
 			do crops_calc;
 		}
 
-		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income * 12) { //TODO: à voir si on laisse la multiplication par 12... on pourrait faire au mois!
+		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income * 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à ovir si je le laisse ou non
 			needs_alert <- true;
 		}
 
