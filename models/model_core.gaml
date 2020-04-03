@@ -32,6 +32,7 @@ global {
 			write "START OF INITIALIZATION FROM SCRATCH";
 			do init_cells;
 			do init_vias;
+			do init_empresas;
 			do init_predios;
 			//do init_comunas;
 			do init_pop;

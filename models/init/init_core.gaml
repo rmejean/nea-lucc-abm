@@ -63,7 +63,7 @@ global {
 		write "---END OF INIT ROADS";
 	}
 	
-	action init_empresas { //Roads init
+	action init_empresas { //Oil companies init
 		write "---START OF INIT OIL COMPANIES";
 		create empresas from: plataformas_shp;
 		write "---END OF INIT OIL COMPANIES";
