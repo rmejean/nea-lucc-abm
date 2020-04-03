@@ -74,6 +74,9 @@ species hogares {
 	action update_needs {
 		common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
 		income <- common_pot_inc - (employees_workers * cost_employees);
+		if livelihood_strategy = "SP1.1" {
+			income <- income + 50;//50-dollar voucher from the authorities
+		}
 		ask my_predio {
 			do crops_calc;
 		}
