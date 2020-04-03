@@ -112,7 +112,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	}
 	
 	action crop_cycle {
-		if cult = 'maniocmais' or 'plantain' or 'friche' {
+		if (cult = 'maniocmais') or (cult = 'plantain') or (cult ='friche') {
 			nb_months <- nb_months + 1;
 		}
 		if cult = 'maniocmais' and nb_months = 24 {

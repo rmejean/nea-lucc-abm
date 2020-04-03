@@ -67,8 +67,6 @@ species hogares {
 		available_workers <- labor_force - occupied_workers;
 		if available_workers < 0 {
 			do init_employed_labour;
-
-			//MOF_alert <- true;
 		}
 
 	}
@@ -87,11 +85,11 @@ species hogares {
 	}
 
 	action init_employed_labour {
-		if livelihood_strategy = "SP2" or "SP3" {
+		if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
 			employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
 		}
 
-		if livelihood_strategy = "SP1.1" or "SP1.2" or "SP1.3" {
+		if (livelihood_strategy = "SP1.1") or (livelihood_strategy = "SP1.2") or (livelihood_strategy = "SP1.3") {
 			labor_alert <- true; //TODO: mais à résoudre par la génération de csv pour l'ALG (les SP1 généreront leur landscape selon leur MOF)
 		}
 
