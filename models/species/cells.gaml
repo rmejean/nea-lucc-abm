@@ -38,42 +38,57 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
 
 	action param_activities {
-		if cult = 'maniocmais' {
+		if cult = 'SC1.1' {
 			nb_months <- rnd (0,24);
 			color <- #yellow;
 		}
 
-		if cult = 'fruits' {
+		if cult = 'SC1.2' {
 			color <- #orange;
 		}
 
-		if cult = 's_livestock' {
+		if cult = 'SC2' {
 			color <- #palevioletred;
 		}
 
-		if cult = 'plantain' {
+		if cult = 'SC3' {
 			nb_months <- rnd (0,17);
 			color <- #springgreen;
 		}
 
-		if cult = 'coffee' {
+		if cult = 'SC4.1' {
 			color <- #brown;
 		}
 
-		if cult = 'cacao' {
+		if cult = 'SC4.2' {
 			color <- rgb(177, 107, 94);
 		}
 
-		if cult = 'livestock' {
+		if cult = 'SE1.1' {
 			color <- rgb(112, 141, 61);
 		}
 
-		if cult = 'friche' {
+		if cult = 'SE1.2' {
+			nb_months <- rnd(1,360);//fallow: maximum 30 years?
+			color <- rgb(81, 75, 0);
+		}
+		
+		if cult = 'SE2.1' {
+			nb_months <- rnd(1,360);//fallow: maximum 30 years?
+			color <- rgb(81, 75, 0);
+		}
+		
+		if cult = 'SE2.2' {
+			nb_months <- rnd(1,360);//fallow: maximum 30 years?
+			color <- rgb(81, 75, 0);
+		}
+		
+		if cult = 'SE2.3' {
 			nb_months <- rnd(1,360);//fallow: maximum 30 years?
 			color <- rgb(81, 75, 0);
 		}
 
-		if cult = 'house' {
+		if cult = 'SE3' {
 			rev <- 0.0;
 			color <- #red;
 		}

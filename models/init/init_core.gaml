@@ -269,6 +269,9 @@ global {
 		write "------END OF INIT ALG SP2";
 		write "------START OF INIT ALG SP1.1"; //
 		ask predios where (each.LS = 'SP1.1') {
+			
+			//TODO: save ("maniocmais") to: ("../ALGv2/" + self + "_ldsp.txt") rewrite: false;
+			
 			gen_population_generator AL_genSP1_1;
 			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "IS";
 			AL_genSP1_1 <- add_census_file(AL_genSP1_1, f_FREQ_SP1_1.path, "GlobalFrequencyTable", ",", 1, 1);
