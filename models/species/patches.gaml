@@ -19,7 +19,7 @@ species patches {
 	string id;
 	bool is_deforest;
 	bool is_free;
-	string cult;
+	string landuse;
 	float rev;
 	predios predio;
 	hogares my_hogar;

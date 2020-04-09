@@ -121,7 +121,7 @@ global {
 		write "... done!";
 		write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
 		write "Households understaffed:" + length(hogares where (each.labor_alert = true));
-		write "Number of workers employed:" sum(hogares collect each.employees_workers);
+		write 'Number of workers employed:' sum(hogares collect each.employees_workers);
 	}
 
 }

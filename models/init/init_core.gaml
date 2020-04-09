@@ -62,7 +62,7 @@ global {
 		create vias from: vias_shp with: [orden::int(get("orden"))];
 		write "---END OF INIT ROADS";
 	}
-	
+
 	action init_empresas { //Oil companies init
 		write "---START OF INIT OIL COMPANIES";
 		create empresas from: plataformas_shp;
@@ -97,7 +97,7 @@ global {
 		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
 			my_predio <- first(predios overlapping self);
-			my_house <- first(my_predio.cells_inside where (each.cult = "house"));
+			my_house <- first(my_predio.cells_inside where (each.landuse = "house"));
 			location <- my_house.location; //A AMELIORER : first est trop régulier, one_of trop hasardeux
 			ask my_predio {
 				is_free <- false;
@@ -202,167 +202,179 @@ global {
 
 	action init_ALG {
 		write "---START OF INIT ALG";
-		write "------START OF INIT ALG SP3";
-		list<string> list_farming_activities <- (["maniocmais", "fruits", "s_livestock", "plantain", "coffee", "cacao", "livestock", "friche"]);
-		ask predios where (each.LS = 'SP3') {
-			gen_population_generator AL_genSP3;
-			AL_genSP3 <- AL_genSP3 with_generation_algo "IS";
-			AL_genSP3 <- add_census_file(AL_genSP3, f_FREQ_SP3.path, "GlobalFrequencyTable", ",", 1, 1);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
-			AL_genSP3 <- AL_genSP3 add_attribute ("id", string, ["test"]);
-			create patches from: AL_genSP3 number: length(self.cells_deforest where (each.is_free = true)) {
-				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-					ask pxl_cible {
-						is_free <- false;
-					}
-
-					location <- pxl_cible.location;
-					ask pxl_cible {
-						cult <- myself.type;
-						add cult to: land_use_hist;
-						do param_activities;
-						do update_yields;
-					}
-
-				}
-
-				do die;
-			}
-
-		} //
-		write "------END OF INIT ALG SP3";
-		write "------START OF INIT ALG SP2"; //
-		ask predios where (each.LS = 'SP2') {
-			gen_population_generator AL_genSP2;
-			AL_genSP2 <- AL_genSP2 with_generation_algo "IS";
-			AL_genSP2 <- add_census_file(AL_genSP2, f_FREQ_SP2.path, "GlobalFrequencyTable", ",", 1, 1);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
-			AL_genSP2 <- AL_genSP2 add_attribute ("id", string, ["test"]);
-			create patches from: AL_genSP2 number: length(self.cells_deforest where (each.is_free = true)) {
-				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-					ask pxl_cible {
-						is_free <- false;
-					}
-
-					location <- pxl_cible.location;
-					ask pxl_cible {
-						cult <- myself.type;
-						add cult to: land_use_hist;
-						do param_activities;
-						do update_yields;
-					}
-
-				}
-
-				do die;
-			}
-
-		} //
-		write "------END OF INIT ALG SP2";
-		write "------START OF INIT ALG SP1.1"; //
+		write "------START OF INIT ALG SP1.1";
+		list<string> list_farming_activities <- (["SC1.1", "SC1.2", "SC2", "SC3.1", "SC4.1", "SC4.2", "SE1.1", "SE1.2", "SE2.1", "SE2.2", "SE2.3", "SE3"]);
+		
 		ask predios where (each.LS = 'SP1.1') {
-			
-			//TODO: save ("maniocmais") to: ("../ALGv2/" + self + "_ldsp.txt") rewrite: false;
-			
-			gen_population_generator AL_genSP1_1;
-			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "IS";
-			AL_genSP1_1 <- add_census_file(AL_genSP1_1, f_FREQ_SP1_1.path, "GlobalFrequencyTable", ",", 1, 1);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
-			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("id", string, ["test"]);
-			create patches from: AL_genSP1_1 number: length(self.cells_deforest where (each.is_free = true)) {
-				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-					ask pxl_cible {
-						is_free <- false;
-					}
-
-					location <- pxl_cible.location;
-					ask pxl_cible {
-						cult <- myself.type;
-						add cult to: land_use_hist;
-						do param_activities;
-						do update_yields;
-					}
-
+			let pxl_generated <- 0;
+			let pxl_subcrops <- 0;
+			loop while: pxl_generated != length(cells_deforest) {
+				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
+					pxl_subcrops <- pxl_subcrops + 1;
+					pxl_generated <- pxl_generated + 1;
+					save ("SC3.1") to: ("../../includes/ALGv2/" + self + "_ldsp.txt") rewrite: false;
+				} else {
+					pxl_generated <- pxl_generated + 1;
+					save ("fallow") to: ("../../includes/ALGv2/" + self + "_ldsp.txt") rewrite: false;
 				}
-
-				do die;
+	
 			}
 
-		} //
-		write "------END OF INIT ALG SP1.1";
-		write "------START OF INIT ALG SP1.2"; //
-		ask predios where (each.LS = 'SP1.2') {
-			gen_population_generator AL_genSP1_2;
-			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "IS";
-			AL_genSP1_2 <- add_census_file(AL_genSP1_2, f_FREQ_SP1_2.path, "GlobalFrequencyTable", ",", 1, 1);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
-			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("id", string, ["test"]);
-			create patches from: AL_genSP1_2 number: length(self.cells_deforest where (each.is_free = true)) {
-				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-					ask pxl_cible {
-						is_free <- false;
-					}
-
-					location <- pxl_cible.location;
-					ask pxl_cible {
-						cult <- myself.type;
-						add cult to: land_use_hist;
-						do param_activities;
-						do update_yields;
-					}
-
-				}
-
-				do die;
-			}
-
-		} //
-		write "------END OF INIT ALG SP1.2";
-		write "------START OF INIT ALG SP1.3"; //
-		ask predios where (each.LS = 'SP1.3') {
-			gen_population_generator AL_genSP1_3;
-			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "IS";
-			AL_genSP1_3 <- add_census_file(AL_genSP1_3, f_FREQ_SP1_3.path, "GlobalFrequencyTable", ",", 1, 1);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
-			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("id", string, ["test"]);
-			create patches from: AL_genSP1_3 number: length(self.cells_deforest where (each.is_free = true)) {
-				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-					ask pxl_cible {
-						is_free <- false;
-					}
-
-					location <- pxl_cible.location;
-					ask pxl_cible {
-						cult <- myself.type;
-						add cult to: land_use_hist;
-						do param_activities;
-						do update_yields;
-					}
-
-				}
-
-				do die;
-			}
+			//			gen_population_generator AL_genSP3;
+			//			AL_genSP3 <- AL_genSP3 with_generation_algo "IS";
+			//			AL_genSP3 <- add_census_file(AL_genSP3, f_FREQ_SP3.path, "GlobalFrequencyTable", ",", 1, 1);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP3 <- AL_genSP3 add_attribute ("id", string, ["test"]);
+			//			create patches from: AL_genSP3 number: length(self.cells_deforest where (each.is_free = true)) {
+			//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+			//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//					ask pxl_cible {
+			//						is_free <- false;
+			//					}
+			//
+			//					location <- pxl_cible.location;
+			//					ask pxl_cible {
+			//						landuse <- myself.type;
+			//						add landuse to: land_use_hist;
+			//						do param_activities;
+			//						do update_yields;
+			//					}
+			//
+			//				}
+			//
+			//				do die;
+			//			}
+			//
+			//		} //
+			//		write "------END OF INIT ALG SP3";
+			//		write "------START OF INIT ALG SP2"; //
+			//		ask predios where (each.LS = 'SP2') {
+			//			gen_population_generator AL_genSP2;
+			//			AL_genSP2 <- AL_genSP2 with_generation_algo "IS";
+			//			AL_genSP2 <- add_census_file(AL_genSP2, f_FREQ_SP2.path, "GlobalFrequencyTable", ",", 1, 1);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP2 <- AL_genSP2 add_attribute ("id", string, ["test"]);
+			//			create patches from: AL_genSP2 number: length(self.cells_deforest where (each.is_free = true)) {
+			//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+			//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//					ask pxl_cible {
+			//						is_free <- false;
+			//					}
+			//
+			//					location <- pxl_cible.location;
+			//					ask pxl_cible {
+			//						landuse <- myself.type;
+			//						add landuse to: land_use_hist;
+			//						do param_activities;
+			//						do update_yields;
+			//					}
+			//
+			//				}
+			//
+			//				do die;
+			//			}
+			//
+			//		} //
+			//		write "------END OF INIT ALG SP2";
+			//		write "------START OF INIT ALG SP1.1"; //
+			//		ask predios where (each.LS = 'SP3') {
+			//			gen_population_generator AL_genSP1_1;
+			//			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "IS";
+			//			AL_genSP1_1 <- add_census_file(AL_genSP1_1, f_FREQ_SP1_1.path, "GlobalFrequencyTable", ",", 1, 1);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("id", string, ["test"]);
+			//			create patches from: AL_genSP1_1 number: length(self.cells_deforest where (each.is_free = true)) {
+			//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+			//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//					ask pxl_cible {
+			//						is_free <- false;
+			//					}
+			//
+			//					location <- pxl_cible.location;
+			//					ask pxl_cible {
+			//						landuse <- myself.type;
+			//						add landuse to: land_use_hist;
+			//						do param_activities;
+			//						do update_yields;
+			//					}
+			//
+			//				}
+			//
+			//				do die;
+			//			}
+			//
+			//		} //
+			//		write "------END OF INIT ALG SP1.1";
+			//		write "------START OF INIT ALG SP1.2"; //
+			//		ask predios where (each.LS = 'SP1.2') {
+			//			gen_population_generator AL_genSP1_2;
+			//			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "IS";
+			//			AL_genSP1_2 <- add_census_file(AL_genSP1_2, f_FREQ_SP1_2.path, "GlobalFrequencyTable", ",", 1, 1);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("id", string, ["test"]);
+			//			create patches from: AL_genSP1_2 number: length(self.cells_deforest where (each.is_free = true)) {
+			//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+			//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//					ask pxl_cible {
+			//						is_free <- false;
+			//					}
+			//
+			//					location <- pxl_cible.location;
+			//					ask pxl_cible {
+			//						landuse <- myself.type;
+			//						add landuse to: land_use_hist;
+			//						do param_activities;
+			//						do update_yields;
+			//					}
+			//
+			//				}
+			//
+			//				do die;
+			//			}
+			//
+			//		} //
+			//		write "------END OF INIT ALG SP1.2";
+			//		write "------START OF INIT ALG SP1.3"; //
+			//		ask predios where (each.LS = 'SP1.3') {
+			//			gen_population_generator AL_genSP1_3;
+			//			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "IS";
+			//			AL_genSP1_3 <- add_census_file(AL_genSP1_3, f_FREQ_SP1_3.path, "GlobalFrequencyTable", ",", 1, 1);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("id", string, ["test"]);
+			//			create patches from: AL_genSP1_3 number: length(self.cells_deforest where (each.is_free = true)) {
+			//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
+			//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//					ask pxl_cible {
+			//						is_free <- false;
+			//					}
+			//
+			//					location <- pxl_cible.location;
+			//					ask pxl_cible {
+			//						landuse <- myself.type;
+			//						add landuse to: land_use_hist;
+			//						do param_activities;
+			//						do update_yields;
+			//					}
+			//
+			//				}
+			//
+			//				do die;
+			//			}
 
 		} //
 		write "------END OF INIT ALG 1.3";

@@ -58,15 +58,15 @@ species predios {
 
 	action identify_house {
 		ask (cells_deforest closest_to (vias closest_to self)) {
-			cult <- "house";
+			landuse <- "house";
 			is_free <- false;
 		}
 
 	}
 
 	action crops_calc {
-		subcrops_amount <- (length(cells_deforest where (each.cult = "maniocmais" or "fruits" or "s_livestock" or "plantain")));
-		cashcrops_amount <- (length(cells_deforest where (each.cult = "cacao" or "coffee" or "livestock")));
+		subcrops_amount <- (length(cells_deforest where (each.landuse = "maniocmais" or "fruits" or "s_livestock" or "plantain")));
+		cashcrops_amount <- (length(cells_deforest where (each.landuse = "cacao" or "coffee" or "livestock")));
 	}
 
 	action map_deforestation_rate {

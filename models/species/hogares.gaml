@@ -60,10 +60,10 @@ species hogares {
 	}
 
 	action update_assets {
-		occupied_workers <- (length(my_predio.cells_deforest where (each.cult = "maniocmais")) * MOFcost_maniocmais) + (length(my_predio.cells_deforest where
-		(each.cult = "fruits")) * MOFcost_fruits) + (length(my_predio.cells_deforest where (each.cult = "s_livestock")) * MOFcost_s_livestock) + (length(my_predio.cells_deforest where
-		(each.cult = "plantain")) * MOFcost_plantain) + (length(my_predio.cells_deforest where (each.cult = "coffee")) * MOFcost_coffee) + (length(my_predio.cells_deforest where
-		(each.cult = "cacao")) * MOFcost_cacao) + (length(my_predio.cells_deforest where (each.cult = "livestock")) * MOFcost_livestock);
+		occupied_workers <- (length(my_predio.cells_deforest where (each.landuse = "maniocmais")) * MOFcost_maniocmais) + (length(my_predio.cells_deforest where
+		(each.landuse = "fruits")) * MOFcost_fruits) + (length(my_predio.cells_deforest where (each.landuse = "s_livestock")) * MOFcost_s_livestock) + (length(my_predio.cells_deforest where
+		(each.landuse = "plantain")) * MOFcost_plantain) + (length(my_predio.cells_deforest where (each.landuse = "coffee")) * MOFcost_coffee) + (length(my_predio.cells_deforest where
+		(each.landuse = "cacao")) * MOFcost_cacao) + (length(my_predio.cells_deforest where (each.landuse = "livestock")) * MOFcost_livestock);
 		available_workers <- labor_force - occupied_workers;
 		if available_workers < 0 {
 			do init_employed_labour;

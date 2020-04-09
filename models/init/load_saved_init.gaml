@@ -38,11 +38,11 @@ global {
 		}
 
 		create patches from: saved_cells with:
-		[name:: string(get("NAME")), is_deforest::bool(get("DEF")), cult::string(get("CULT")), predio::predios(get("PREDIO")), my_hogar::hogares(get("HOUSEHOLD"))];
+		[name:: string(get("NAME")), is_deforest::bool(get("DEF")), landuse::string(get("landuse")), predio::predios(get("PREDIO")), my_hogar::hogares(get("HOUSEHOLD"))];
 		ask patches {
 			ask first(cell inside (self)) {
 				is_deforest <- myself.is_deforest;
-				cult <- myself.cult;
+				landuse <- myself.landuse;
 				predio <- myself.predio;
 				my_hogar <- myself.my_hogar;
 			}
