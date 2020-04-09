@@ -20,6 +20,7 @@ species patches {
 	bool is_deforest;
 	bool is_free;
 	string landuse;
+	int nb_months;
 	float rev;
 	predios predio;
 	hogares my_hogar;
