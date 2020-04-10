@@ -14,13 +14,12 @@ model patches_def
 import "../species_def.gaml"
 
 species patches {
-	string type;
 	predios my_predio;
 	string id;
 	bool is_deforest;
 	bool is_free;
-	string landuse;
-	int nb_months;
+	string type;
+	int months;
 	float rev;
 	predios predio;
 	hogares my_hogar;
