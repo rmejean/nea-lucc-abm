@@ -202,7 +202,6 @@ global {
 
 	action init_ALG {
 		write "---START OF INIT ALG";
-		write "------START OF INIT ALG SP1.1";
 		list<string> list_farming_activities <- (["SC1.1", "SC1.2", "SC2", "SC3.1", "SC4.1", "SC4.2", "SE1.1", "SE1.2", "SE2.1", "SE2.2", "SE2.3", "SE3", "fallow"]);
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -211,6 +210,7 @@ global {
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
+		write "------START OF INIT ALG SP1.1";
 		ask predios where (each.LS = 'SP1.1') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
@@ -286,7 +286,10 @@ global {
 		ask predios where (each.LS = 'SP1.2') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
-			let pxl_cash <- 0;
+			let pxl_cacao_max <- rnd(2);
+			let pxl_coffee_max <- rnd(1);
+			let pxl_cacao <- 0;
+			let pxl_coffee <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
@@ -309,40 +312,54 @@ global {
 					}
 
 				} else { //if food requirements are OK:
-					if (my_hogar.labor_force >= laborcost_SC1_1 + laborcost_SC2) {
-						save ("SC1.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
-						pxl_generated <- pxl_generated + 1;
-						pxl_cash <- pxl_cash + 1;
-						ask my_hogar {
-							labor_force <- labor_force - laborcost_SC1_1;
-						}
-
-						save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
-						pxl_generated <- pxl_generated + 1;
-						pxl_cash <- pxl_cash + 1;
-						ask my_hogar {
-							labor_force <- labor_force - laborcost_SC2;
-						}
-
-					} else {
-						if (my_hogar.labor_force >= laborcost_SC1_2 + laborcost_SC2) {
-							save ("SC1.2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+					if my_hogar.labor_force >= (pxl_cacao_max * laborcost_SC1_1) {//if I have enough labor to run the cocoa crop with inputs...
+						if (my_hogar.labor_force >= laborcost_SC1_1) and (pxl_cacao != pxl_cacao_max) {
+							save ("SC1.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 							pxl_generated <- pxl_generated + 1;
-							pxl_cash <- pxl_cash + 1;
+							pxl_cacao <- pxl_cacao + 1;
+							ask my_hogar {
+								labor_force <- labor_force - laborcost_SC1_1;
+							}
+
+						} else {
+							if (my_hogar.labor_force >= laborcost_SC2) and (pxl_coffee != pxl_coffee_max) {
+								save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+								pxl_generated <- pxl_generated + 1;
+								pxl_coffee <- pxl_coffee + 1;
+								ask my_hogar {
+									labor_force <- labor_force - laborcost_SC2;
+								}
+
+							} else {
+								save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+								pxl_generated <- pxl_generated + 1;
+							}
+
+						}
+
+					} else {//if I don't have enough labor to run the cocoa crop with inputs...
+						if (my_hogar.labor_force >= laborcost_SC1_2) and (pxl_cacao != pxl_cacao_max) {
+							save ("SC1.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+							pxl_generated <- pxl_generated + 1;
+							pxl_cacao <- pxl_cacao + 1;
 							ask my_hogar {
 								labor_force <- labor_force - laborcost_SC1_2;
 							}
 
-							save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
-							pxl_generated <- pxl_generated + 1;
-							pxl_cash <- pxl_cash + 1;
-							ask my_hogar {
-								labor_force <- labor_force - laborcost_SC2;
+						} else {
+							if (my_hogar.labor_force >= laborcost_SC2) and (pxl_coffee != pxl_coffee_max) {
+								save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+								pxl_generated <- pxl_generated + 1;
+								pxl_coffee <- pxl_coffee + 1;
+								ask my_hogar {
+									labor_force <- labor_force - laborcost_SC2;
+								}
+
+							} else {
+								save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+								pxl_generated <- pxl_generated + 1;
 							}
 
-						} else {
-							save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
-							pxl_generated <- pxl_generated + 1;
 						}
 
 					}
