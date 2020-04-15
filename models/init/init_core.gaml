@@ -275,7 +275,6 @@ global {
 			write "------END OF INIT ALG SP1.1";
 		}
 
-		write "------START OF INIT ALG SP1.2";
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -283,6 +282,7 @@ global {
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
+		write "------START OF INIT ALG SP1.2";
 		ask predios where (each.LS = 'SP1.2') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
@@ -312,7 +312,7 @@ global {
 					}
 
 				} else { //if food requirements are OK:
-					if my_hogar.labor_force >= (pxl_cacao_max * laborcost_SC1_1) {//if I have enough labor to run the cocoa crop with inputs...
+					if my_hogar.labor_force >= (pxl_cacao_max * laborcost_SC1_1) { //if I have enough labor to run the cocoa crop with inputs...
 						if (my_hogar.labor_force >= laborcost_SC1_1) and (pxl_cacao != pxl_cacao_max) {
 							save ("SC1.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 							pxl_generated <- pxl_generated + 1;
@@ -337,7 +337,7 @@ global {
 
 						}
 
-					} else {//if I don't have enough labor to run the cocoa crop with inputs...
+					} else { //if I don't have enough labor to run the cocoa crop with inputs...
 						if (my_hogar.labor_force >= laborcost_SC1_2) and (pxl_cacao != pxl_cacao_max) {
 							save ("SC1.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 							pxl_generated <- pxl_generated + 1;
@@ -400,7 +400,6 @@ global {
 			write "------END OF INIT ALG 1.2";
 		}
 
-		write "------START OF INIT ALG SP1.3";
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -408,6 +407,7 @@ global {
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
+		write "------START OF INIT ALG SP1.3";
 		ask predios where (each.LS = 'SP1.3') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
@@ -508,7 +508,6 @@ global {
 			write "------END OF INIT ALG 1.3";
 		}
 
-		write "------START OF INIT ALG SP2";
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -516,6 +515,7 @@ global {
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
+		write "------START OF INIT ALG SP2";
 		ask predios where (each.LS = 'SP2') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
@@ -569,7 +569,6 @@ global {
 			write "------END OF INIT ALG SP2";
 		}
 
-		write "------START OF INIT ALG SP2";
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -577,6 +576,7 @@ global {
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
+		write "------START OF INIT ALG SP3";
 		ask predios where (each.LS = 'SP3') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
