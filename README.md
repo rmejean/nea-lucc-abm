@@ -1,4 +1,4 @@
-# Northern Ecuadorian Amazon Land Use & Cover Change Agent-Based Model (NEA LUCC-ABM) <img src="logo.png" align="right" width="150" />
+# Northern Ecuadorian Amazon Land Use & Cover Change Agent-Based Model (NEA-LUCC-ABM) <img src="logo.png" align="right" width="150" />
 An agent-based model of deforestation dynamics in NEA for my thesis.
 This model is built in GAML ([GAMA-Platform](https://gama-platform.github.io/) Language).
 
