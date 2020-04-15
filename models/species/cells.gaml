@@ -101,7 +101,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		}
 
 		if landuse = 'SC4.2' {
-			color <- rgb(177, 107, 94);
+			color <- #yellow;
 		}
 
 		if landuse = 'SE1.1' {

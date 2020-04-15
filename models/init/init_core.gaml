@@ -204,9 +204,17 @@ global {
 		write "---START OF INIT ALG";
 		write "------START OF INIT ALG SP1.1";
 		list<string> list_farming_activities <- (["SC1.1", "SC1.2", "SC2", "SC3.1", "SC4.1", "SC4.2", "SE1.1", "SE1.2", "SE2.1", "SE2.2", "SE2.3", "SE3", "fallow"]);
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//---------------------------- SP 1.1 ------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
 		ask predios where (each.LS = 'SP1.1') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
+			let pxl_cash <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
@@ -217,10 +225,11 @@ global {
 						labor_force <- labor_force - laborcost_SC3_1;
 					}
 
-				} else {
+				} else { //if food requirements are OK:
 					if my_hogar.labor_force >= laborcost_SC2 {
-						save ("SC2"+ "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 						pxl_generated <- pxl_generated + 1;
+						pxl_cash <- pxl_cash + 1;
 						ask my_hogar {
 							labor_force <- labor_force - laborcost_SC2;
 						}
@@ -233,7 +242,7 @@ global {
 				}
 
 			}
-			
+			//generate the pixels from the written file
 			gen_population_generator AL_genSP1_1;
 			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
 			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
@@ -243,191 +252,367 @@ global {
 			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
 			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("months", int, []);
 			create patches from: AL_genSP1_1 {
-				write "on a créé un patch";
 				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
 					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-					write "on a un pixel cible";
 					ask pxl_cible {
 						is_free <- false;
 					}
 
 					location <- pxl_cible.location;
-					write "on est localisé sur le pixel cible";
 					ask pxl_cible {
 						landuse <- myself.type;
 						nb_months <- myself.months;
-						write "on a foutu le landuse du pixel cible";
 						add landuse to: land_use_hist;
 						do param_activities;
 						do update_yields;
 					}
 
-				} else {
-					write "pas de pixel déforesté libre dans la parcelle";
 				}
 
 				do die;
 			}
-			
 
+			write "------END OF INIT ALG SP1.1";
 		}
 
-//					gen_population_generator AL_genSP3;
-//					AL_genSP3 <- AL_genSP3 with_generation_algo "IS";
-//					AL_genSP3 <- add_census_file(AL_genSP3, f_FREQ_SP3.path, "GlobalFrequencyTable", ",", 1, 1);
-//					// --------------------------
-//					// Setup Attributs
-//					// --------------------------	
-//					AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
-//					AL_genSP3 <- AL_genSP3 add_attribute ("id", string, ["test"]);
-//					create patches from: AL_genSP3 number: length(self.cells_deforest where (each.is_free = true)) {
-//						if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-//							cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-//							ask pxl_cible {
-//								is_free <- false;
-//							}
-//		
-//							location <- pxl_cible.location;
-//							ask pxl_cible {
-//								landuse <- myself.type;
-//								add landuse to: land_use_hist;
-//								do param_activities;
-//								do update_yields;
-//							}
-//		
-//						}
-//		
-//						do die;
-		//			}
-		//
-		//		} //
-		//		write "------END OF INIT ALG SP3";
-		//		write "------START OF INIT ALG SP2"; //
-		//		ask predios where (each.LS = 'SP2') {
-		//			gen_population_generator AL_genSP2;
-		//			AL_genSP2 <- AL_genSP2 with_generation_algo "IS";
-		//			AL_genSP2 <- add_census_file(AL_genSP2, f_FREQ_SP2.path, "GlobalFrequencyTable", ",", 1, 1);
-		//			// --------------------------
-		//			// Setup Attributs
-		//			// --------------------------	
-		//			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
-		//			AL_genSP2 <- AL_genSP2 add_attribute ("id", string, ["test"]);
-		//			create patches from: AL_genSP2 number: length(self.cells_deforest where (each.is_free = true)) {
-		//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-		//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-		//					ask pxl_cible {
-		//						is_free <- false;
-		//					}
-		//
-		//					location <- pxl_cible.location;
-		//					ask pxl_cible {
-		//						landuse <- myself.type;
-		//						add landuse to: land_use_hist;
-		//						do param_activities;
-		//						do update_yields;
-		//					}
-		//
-		//				}
-		//
-		//				do die;
-		//			}
-		//
-		//		} //
-		//		write "------END OF INIT ALG SP2";
-		//		write "------START OF INIT ALG SP1.1"; //
-		//		ask predios where (each.LS = 'SP3') {
-		//			gen_population_generator AL_genSP1_1;
-		//			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "IS";
-		//			AL_genSP1_1 <- add_census_file(AL_genSP1_1, f_FREQ_SP1_1.path, "GlobalFrequencyTable", ",", 1, 1);
-		//			// --------------------------
-		//			// Setup Attributs
-		//			// --------------------------	
-		//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
-		//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("id", string, ["test"]);
-		//			create patches from: AL_genSP1_1 number: length(self.cells_deforest where (each.is_free = true)) {
-		//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-		//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-		//					ask pxl_cible {
-		//						is_free <- false;
-		//					}
-		//
-		//					location <- pxl_cible.location;
-		//					ask pxl_cible {
-		//						landuse <- myself.type;
-		//						add landuse to: land_use_hist;
-		//						do param_activities;
-		//						do update_yields;
-		//					}
-		//
-		//				}
-		//
-		//				do die;
-		//			}
-		//
-		//		} //
-		//		write "------END OF INIT ALG SP1.1";
-		//		write "------START OF INIT ALG SP1.2"; //
-		//		ask predios where (each.LS = 'SP1.2') {
-		//			gen_population_generator AL_genSP1_2;
-		//			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "IS";
-		//			AL_genSP1_2 <- add_census_file(AL_genSP1_2, f_FREQ_SP1_2.path, "GlobalFrequencyTable", ",", 1, 1);
-		//			// --------------------------
-		//			// Setup Attributs
-		//			// --------------------------	
-		//			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
-		//			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("id", string, ["test"]);
-		//			create patches from: AL_genSP1_2 number: length(self.cells_deforest where (each.is_free = true)) {
-		//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-		//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-		//					ask pxl_cible {
-		//						is_free <- false;
-		//					}
-		//
-		//					location <- pxl_cible.location;
-		//					ask pxl_cible {
-		//						landuse <- myself.type;
-		//						add landuse to: land_use_hist;
-		//						do param_activities;
-		//						do update_yields;
-		//					}
-		//
-		//				}
-		//
-		//				do die;
-		//			}
-		//
-		//		} //
-		//		write "------END OF INIT ALG SP1.2";
-		//		write "------START OF INIT ALG SP1.3"; //
-		//		ask predios where (each.LS = 'SP1.3') {
-		//			gen_population_generator AL_genSP1_3;
-		//			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "IS";
-		//			AL_genSP1_3 <- add_census_file(AL_genSP1_3, f_FREQ_SP1_3.path, "GlobalFrequencyTable", ",", 1, 1);
-		//			// --------------------------
-		//			// Setup Attributs
-		//			// --------------------------	
-		//			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
-		//			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("id", string, ["test"]);
-		//			create patches from: AL_genSP1_3 number: length(self.cells_deforest where (each.is_free = true)) {
-		//				if length(myself.cells_deforest where (each.is_free = true)) >= 1 {
-		//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-		//					ask pxl_cible {
-		//						is_free <- false;
-		//					}
-		//
-		//					location <- pxl_cible.location;
-		//					ask pxl_cible {
-		//						landuse <- myself.type;
-		//						add landuse to: land_use_hist;
-		//						do param_activities;
-		//						do update_yields;
-		//					}
-		//
-		//				}
-		//
-		//				do die;
-		//			}
-		write "------END OF INIT ALG 1.3";
+		write "------START OF INIT ALG SP1.2";
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//---------------------------- SP 1.2 ------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		ask predios where (each.LS = 'SP1.2') {
+			let pxl_generated <- 0;
+			let pxl_subcrops <- 0;
+			let pxl_cash <- 0;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			loop while: pxl_generated != length(cells_deforest) {
+				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
+					if flip(0.5) = true {
+						save ("SC4.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						pxl_subcrops <- pxl_subcrops + 1;
+						pxl_generated <- pxl_generated + 1;
+						ask my_hogar {
+							labor_force <- labor_force - laborcost_SC4_1;
+						}
+
+					} else {
+						save ("SC4.2" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						pxl_subcrops <- pxl_subcrops + 1;
+						pxl_generated <- pxl_generated + 1;
+						ask my_hogar {
+							labor_force <- labor_force - laborcost_SC4_2;
+						}
+
+					}
+
+				} else { //if food requirements are OK:
+					if (my_hogar.labor_force >= laborcost_SC1_1 + laborcost_SC2) {
+						save ("SC1.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						pxl_generated <- pxl_generated + 1;
+						pxl_cash <- pxl_cash + 1;
+						ask my_hogar {
+							labor_force <- labor_force - laborcost_SC1_1;
+						}
+
+						save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						pxl_generated <- pxl_generated + 1;
+						pxl_cash <- pxl_cash + 1;
+						ask my_hogar {
+							labor_force <- labor_force - laborcost_SC2;
+						}
+
+					} else {
+						if (my_hogar.labor_force >= laborcost_SC1_2 + laborcost_SC2) {
+							save ("SC1.2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+							pxl_generated <- pxl_generated + 1;
+							pxl_cash <- pxl_cash + 1;
+							ask my_hogar {
+								labor_force <- labor_force - laborcost_SC1_2;
+							}
+
+							save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+							pxl_generated <- pxl_generated + 1;
+							pxl_cash <- pxl_cash + 1;
+							ask my_hogar {
+								labor_force <- labor_force - laborcost_SC2;
+							}
+
+						} else {
+							save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+							pxl_generated <- pxl_generated + 1;
+						}
+
+					}
+
+				}
+
+			}
+			//generate the pixels from the written file
+			gen_population_generator AL_genSP1_2;
+			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "US";
+			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
+			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("months", int, []);
+			create patches from: AL_genSP1_2 {
+				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						landuse <- myself.type;
+						nb_months <- myself.months;
+						add landuse to: land_use_hist;
+						do param_activities;
+						do update_yields;
+					}
+
+				}
+
+				do die;
+			}
+
+			write "------END OF INIT ALG 1.2";
+		}
+
+		write "------START OF INIT ALG SP1.3";
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//---------------------------- SP 1.3 ------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		ask predios where (each.LS = 'SP1.3') {
+			let pxl_generated <- 0;
+			let pxl_subcrops <- 0;
+			let pxl_cacao_max <- rnd(3);
+			let pxl_coffee_max <- rnd(1);
+			let pxl_cacao <- 0;
+			let pxl_coffee <- 0;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			loop while: pxl_generated != length(cells_deforest) {
+				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
+					if flip(0.5) = true {
+						save ("SC4.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						pxl_subcrops <- pxl_subcrops + 1;
+						pxl_generated <- pxl_generated + 1;
+						ask my_hogar {
+							labor_force <- labor_force - laborcost_SC4_1;
+						}
+
+					} else {
+						save ("SC4.2" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						pxl_subcrops <- pxl_subcrops + 1;
+						pxl_generated <- pxl_generated + 1;
+						ask my_hogar {
+							labor_force <- labor_force - laborcost_SC4_2;
+						}
+
+					}
+
+				} else { //if food requirements are OK:
+					if (my_hogar.labor_force >= laborcost_SC1_2) and (pxl_cacao != pxl_cacao_max) {
+						save ("SC1.2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						pxl_generated <- pxl_generated + 1;
+						pxl_cacao <- pxl_cacao + 1;
+						ask my_hogar {
+							labor_force <- labor_force - laborcost_SC1_2;
+						}
+
+					} else {
+						if (my_hogar.labor_force >= laborcost_SC2) and (pxl_coffee != pxl_coffee_max) {
+							save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+							pxl_generated <- pxl_generated + 1;
+							pxl_coffee <- pxl_coffee + 1;
+							ask my_hogar {
+								labor_force <- labor_force - laborcost_SC2;
+							}
+
+						} else {
+							if (my_hogar.labor_force >= laborcost_SE1_2) {
+								save ("SE1.2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+								pxl_generated <- pxl_generated + 1;
+								ask my_hogar {
+									labor_force <- labor_force - laborcost_SE1_2;
+								}
+
+							} else {
+								save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+								pxl_generated <- pxl_generated + 1;
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+			//generate the pixels from the written file
+			gen_population_generator AL_genSP1_3;
+			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "US";
+			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
+			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("months", int, []);
+			create patches from: AL_genSP1_3 {
+				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						landuse <- myself.type;
+						nb_months <- myself.months;
+						add landuse to: land_use_hist;
+						do param_activities;
+						do update_yields;
+					}
+
+				}
+
+				do die;
+			}
+
+			write "------END OF INIT ALG 1.3";
+		}
+
+		write "------START OF INIT ALG SP2";
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//---------------------------- SP 2 --------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		ask predios where (each.LS = 'SP2') {
+			let pxl_generated <- 0;
+			let pxl_subcrops <- 0;
+			let pxl_cash <- 0;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			loop while: pxl_generated != length(cells_deforest) {
+				if (my_hogar.labor_force >= laborcost_SE1_2) {
+					save ("SE1.2" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+					pxl_generated <- pxl_generated + 1;
+					ask my_hogar {
+						labor_force <- labor_force - laborcost_SE1_2;
+					}
+
+				} else {
+					save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+					pxl_generated <- pxl_generated + 1;
+				}
+
+			}
+
+			//generate the pixels from the written file
+			gen_population_generator AL_genSP2;
+			AL_genSP2 <- AL_genSP2 with_generation_algo "US";
+			AL_genSP2 <- add_census_file(AL_genSP2, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
+			AL_genSP2 <- AL_genSP2 add_attribute ("months", int, []);
+			create patches from: AL_genSP2 {
+				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						landuse <- myself.type;
+						nb_months <- myself.months;
+						add landuse to: land_use_hist;
+						do param_activities;
+						do update_yields;
+					}
+
+				}
+
+				do die;
+			}
+
+			write "------END OF INIT ALG SP2";
+		}
+
+		write "------START OF INIT ALG SP2";
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//---------------------------- SP 3 --------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		ask predios where (each.LS = 'SP3') {
+			let pxl_generated <- 0;
+			let pxl_subcrops <- 0;
+			let pxl_cash <- 0;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			loop while: pxl_generated != length(cells_deforest) {
+				if (my_hogar.labor_force >= laborcost_SE1_2) {
+					save ("SE1.2" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+					pxl_generated <- pxl_generated + 1;
+					ask my_hogar {
+						labor_force <- labor_force - laborcost_SE1_2;
+					}
+
+				} else {
+					save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+					pxl_generated <- pxl_generated + 1;
+				}
+
+			}
+
+			//generate the pixels from the written file
+			gen_population_generator AL_genSP3;
+			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
+			AL_genSP3 <- add_census_file(AL_genSP3, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			// --------------------------
+			// Setup Attributs
+			// --------------------------	
+			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
+			AL_genSP3 <- AL_genSP3 add_attribute ("months", int, []);
+			create patches from: AL_genSP3 {
+				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						landuse <- myself.type;
+						nb_months <- myself.months;
+						add landuse to: land_use_hist;
+						do param_activities;
+						do update_yields;
+					}
+
+				}
+
+				do die;
+			}
+
+			write "------END OF INIT ALG SP2";
+		}
+
 		write "---END OF INIT ALG";
 	}
 

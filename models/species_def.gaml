@@ -49,18 +49,18 @@ global {
 	float MOFcost_no_farming <- 0.0;
 	int cost_employees <- 250;
 	
-	float laborcost_SC1_1 <- 3.7;//rapporté à 90m²
-	float laborcost_SC1_2 <- 1.575;//rapporté à 90m²
-	float laborcost_SC2 <- 2.55;//rapporté à 90m²
-	float laborcost_SC3_1 <- 15.64;//rapporté à 90m²
-	float laborcost_SC4_1 <- 2.32;//rapporté à 90m²
-	float laborcost_SC4_2 <- 1.87;//rapporté à 90m²
-	float laborcost_SE1_1 <- 56.79;//rapporté à 90m²
-	float laborcost_SE1_2 <- 9.417;//rapporté à 90m²
-	float laborcost_SE2_1 <- 1.51;//rapporté à 90m²
-	float laborcost_SE2_2 <- 3.63;//rapporté à 90m²
-	float laborcost_SE2_3 <- 6.56;//rapporté à 90m²
-	float laborcost_SE3 <- 2.33;//rapporté à 90m²
+	float laborcost_SC1_1 <- 3.7;//rapporté à 90m*90m
+	float laborcost_SC1_2 <- 1.575;
+	float laborcost_SC2 <- 2.55;
+	float laborcost_SC3_1 <- 15.64;
+	float laborcost_SC4_1 <- 2.32;
+	float laborcost_SC4_2 <- 1.87;
+	float laborcost_SE1_1 <- 56.79;
+	float laborcost_SE1_2 <- 9.417;
+	float laborcost_SE2_1 <- 1.51;
+	float laborcost_SE2_2 <- 3.63;
+	float laborcost_SE2_3 <- 6.56;
+	float laborcost_SE3 <- 2.33;
 	
 	
 }
