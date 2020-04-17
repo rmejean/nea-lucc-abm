@@ -272,8 +272,9 @@ global {
 				do die;
 			}
 
-			write "------END OF INIT ALG SP1.1";
 		}
+
+		write "------END OF INIT ALG SP1.1";
 
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -524,7 +525,7 @@ global {
 			let pxl_cash <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
-				if flip(0.05) = true {
+				if flip(0.05) = false {
 					save ("SE1.2" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 					ask my_hogar {
@@ -586,7 +587,7 @@ global {
 			let pxl_cash <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
-				if flip(0.05) = true {
+				if flip(0.05) = false {
 					save ("SE1.2" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 					ask my_hogar {
