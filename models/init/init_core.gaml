@@ -397,8 +397,9 @@ global {
 				do die;
 			}
 
-			write "------END OF INIT ALG 1.2";
 		}
+
+		write "------END OF INIT ALG 1.2";
 
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -505,8 +506,9 @@ global {
 				do die;
 			}
 
-			write "------END OF INIT ALG 1.3";
 		}
+
+		write "------END OF INIT ALG 1.3";
 
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -522,7 +524,7 @@ global {
 			let pxl_cash <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
-				if (my_hogar.labor_force >= laborcost_SE1_2) {
+				if flip(0.05) = true {
 					save ("SE1.2" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 					ask my_hogar {
@@ -566,8 +568,9 @@ global {
 				do die;
 			}
 
-			write "------END OF INIT ALG SP2";
 		}
+
+		write "------END OF INIT ALG SP2";
 
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -583,7 +586,7 @@ global {
 			let pxl_cash <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
-				if (my_hogar.labor_force >= laborcost_SE1_2) {
+				if flip(0.05) = true {
 					save ("SE1.2" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 					ask my_hogar {
@@ -627,9 +630,9 @@ global {
 				do die;
 			}
 
-			write "------END OF INIT ALG SP2";
 		}
 
+		write "------END OF INIT ALG SP3";
 		write "---END OF INIT ALG";
 	}
 

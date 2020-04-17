@@ -65,8 +65,8 @@ species predios {
 	}
 
 	action crops_calc {
-		subcrops_amount <- (length(cells_deforest where (each.landuse = "maniocmais" or "fruits" or "s_livestock" or "plantain")));
-		cashcrops_amount <- (length(cells_deforest where (each.landuse = "cacao" or "coffee" or "livestock")));
+		subcrops_amount <- (length(cells_deforest where (each.landuse = "SC3.1" or "SC4.1" or "SC4.2" or "SE3")));
+		//cashcrops_amount <- (length(cells_deforest where (each.landuse = "cacao" or "coffee" or "livestock")));
 	}
 
 	action map_deforestation_rate {

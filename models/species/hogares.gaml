@@ -76,14 +76,14 @@ species hogares {
 	action update_needs {
 		common_pot_inc <- sum(my_predio.cells_inside collect each.rev);
 		income <- common_pot_inc - (employees_workers * cost_employees);
-		if livelihood_strategy = "SP1.1" {
-			income <- income + 50;//50-dollar voucher from the authorities
-		}
+//		if livelihood_strategy = "SP1.1" {
+//			income <- income + 50;//50-dollar voucher from the authorities
+//		}
 		ask my_predio {
 			do crops_calc;
 		}
 
-		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income * 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à ovir si je le laisse ou non
+		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income) {//* 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à ovir si je le laisse ou non
 			needs_alert <- true;
 		}
 
