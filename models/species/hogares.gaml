@@ -83,7 +83,7 @@ species hogares {
 			do crops_calc;
 		}
 
-		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income) {//* 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à ovir si je le laisse ou non
+		if (subcrops_needs > my_predio.subcrops_amount) and (($_ANFP * Total_Personas) > income) {//* 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à ovir si je le laisse ou non
 			needs_alert <- true;
 		}
 
@@ -92,6 +92,7 @@ species hogares {
 	action init_employed_labour {
 		if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
 			employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
+			labor_force <- labor_force + (employees_workers * 30);
 		}
 
 		if (livelihood_strategy = "SP1.1") or (livelihood_strategy = "SP1.2") or (livelihood_strategy = "SP1.3") {

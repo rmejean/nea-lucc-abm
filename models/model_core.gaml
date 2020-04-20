@@ -22,7 +22,7 @@ global {
 	string current_month;
 	float step <- 1 #month update: step + 1;
 	//Other variables
-	float $_ANFP <- 3900.0; //AMOUNT NEEDED TO FEED A PERSON - à établir
+	float $_ANFP <- 325.0;//AMOUNT NEEDED TO FEED A PERSON = 3900 / 12
 
 	//
 	//INIT

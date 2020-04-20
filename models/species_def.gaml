@@ -39,14 +39,6 @@ global {
 //-----------------------------
 
 //MOF -------------------------
-	float MOFcost_maniocmais <- 8.1;
-	float MOFcost_fruits <- 11.34;
-	float MOFcost_s_livestock <- 5.76;
-	float MOFcost_plantain <- 3.24;
-	float MOFcost_coffee <- 2.79;
-	float MOFcost_cacao <- 2.7;
-	float MOFcost_livestock <- 18.45;
-	float MOFcost_no_farming <- 0.0;
 	int cost_employees <- 250;
 	
 	float laborcost_SC1_1 <- 3.7;//rapporté à 90m*90m
@@ -55,8 +47,8 @@ global {
 	float laborcost_SC3_1 <- 15.64;
 	float laborcost_SC4_1 <- 2.32;
 	float laborcost_SC4_2 <- 1.87;
-	float laborcost_SE1_1 <- 56.79;
-	float laborcost_SE1_2 <- 9.417;
+	float laborcost_SE1_1 <- 0.8113;//pour 70 px= 56.79;
+	float laborcost_SE1_2 <- 0.6278;//pour 15px = 9.417;
 	float laborcost_SE2_1 <- 1.51;
 	float laborcost_SE2_2 <- 3.63;
 	float laborcost_SE2_3 <- 6.56;
