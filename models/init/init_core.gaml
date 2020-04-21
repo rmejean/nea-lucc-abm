@@ -214,7 +214,8 @@ global {
 		ask predios where (each.LS = 'SP1.1') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
-			let pxl_cash <- 0;
+			let pxl_coffee_max <- rnd(1);
+			let pxl_coffee <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
@@ -226,10 +227,10 @@ global {
 					}
 
 				} else { //if food requirements are OK:
-					if my_hogar.labor_force >= laborcost_SC2 {
+					if my_hogar.labor_force >= laborcost_SC2 and (pxl_coffee != pxl_coffee_max) {
 						save ("SC2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 						pxl_generated <- pxl_generated + 1;
-						pxl_cash <- pxl_cash + 1;
+						pxl_coffee <- pxl_coffee + 1;
 						ask my_hogar {
 							labor_force <- labor_force - laborcost_SC2;
 						}
@@ -635,6 +636,24 @@ global {
 
 		write "------END OF INIT ALG SP3";
 		write "---END OF INIT ALG";
+	}
+
+	action init_NA {//NA = needs & assets
+		write "---Initialize needs & assets...";
+		ask hogares {
+			do init_assets;
+			do init_needs;
+		}
+
+		ask predios where (each.is_free = false) {
+			do map_assets_alert;
+			do map_needs_alert;
+		}
+
+		write "--- done!";
+		write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
+		write "Households understaffed:" + length(hogares where (each.labor_alert = true));
+		write 'Number of workers employed:' sum (hogares collect each.employees_workers);
 	}
 
 }

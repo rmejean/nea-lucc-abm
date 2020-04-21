@@ -38,7 +38,7 @@ global {
 			do init_pop;
 			do init_LS_EMC;
 			do init_ALG;
-			do NA_assessment;
+			do init_NA;
 			init_end <- true;
 			write "END OF INITIALIZATION";
 		} else {
@@ -49,7 +49,7 @@ global {
 			do load_saved_predios;
 			do load_saved_hogares;
 			do load_saved_personas;
-			do NA_assessment;
+			do init_NA;
 			write "END OF INITIALIZATION";
 		}
 
@@ -109,8 +109,8 @@ global {
 	action NA_assessment {
 		write "Needs & assets assessment...";
 		ask hogares {
-			do update_assets;
-			do update_needs;
+			do init_assets;
+			do init_needs;
 		}
 
 		ask predios where (each.is_free = false) {
