@@ -216,7 +216,7 @@ global {
 			let pxl_subcrops <- 0;
 			let pxl_coffee_max <- rnd(1);
 			let pxl_coffee <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
 					save ("SC3.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
@@ -292,7 +292,7 @@ global {
 			let pxl_coffee_max <- rnd(1);
 			let pxl_cacao <- 0;
 			let pxl_coffee <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
 					if flip(0.5) = true {
@@ -418,7 +418,7 @@ global {
 			let pxl_coffee_max <- rnd(1);
 			let pxl_cacao <- 0;
 			let pxl_coffee <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
 					if flip(0.5) = true {
@@ -524,7 +524,7 @@ global {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
 			let pxl_cash <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if flip(0.05) = false {
 					save ("SE1.2" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
@@ -586,7 +586,7 @@ global {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
 			let pxl_cash <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if flip(0.05) = false {
 					save ("SE1.2" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
