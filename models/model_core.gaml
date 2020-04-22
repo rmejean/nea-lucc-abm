@@ -44,6 +44,7 @@ global {
 		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
+			do init_cells;
 			do init_vias;
 			do init_empresas;
 			do load_saved_predios;
