@@ -44,12 +44,12 @@ global {
 		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
-			do load_saved_cells;
-			do load_saved_vias;
+			do init_vias;
+			do init_empresas;
 			do load_saved_predios;
 			do load_saved_hogares;
 			do load_saved_personas;
-			do init_NA;
+			do load_saved_landscape;
 			write "END OF INITIALIZATION";
 		}
 

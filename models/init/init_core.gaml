@@ -341,7 +341,7 @@ global {
 
 					} else { //if I don't have enough labor to run the cocoa crop with inputs...
 						if (my_hogar.labor_force >= laborcost_SC1_2) and (pxl_cacao != pxl_cacao_max) {
-							save ("SC1.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+							save ("SC1.2" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 							pxl_generated <- pxl_generated + 1;
 							pxl_cacao <- pxl_cacao + 1;
 							ask my_hogar {
