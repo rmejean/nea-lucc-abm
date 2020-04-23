@@ -107,7 +107,7 @@ species hogares {
 			do crops_calc;
 		}
 
-		if (subcrops_needs > my_predio.subcrops_amount) and (($_ANFP * Total_Personas) > income) { //* 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à ovir si je le laisse ou non
+		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income) { //* 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à ovir si je le laisse ou non
 			needs_alert <- true;
 		}
 

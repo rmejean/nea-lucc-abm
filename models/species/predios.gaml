@@ -45,7 +45,7 @@ species predios {
 	list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
 	list<predios> neighbors;
-	//TODO	file test_file <- file("A DEFINIR");
+	
 	action deforestation_rate_calc {
 		if area_total > 0 {
 			def_rate <- (area_deforest / area_total) * 100;
@@ -65,8 +65,7 @@ species predios {
 	}
 
 	action crops_calc {
-		subcrops_amount <- (length(cells_deforest where (each.landuse = "SC3.1" or "SC4.1" or "SC4.2" or "SE3")));
-		//cashcrops_amount <- (length(cells_deforest where (each.landuse = "cacao" or "coffee" or "livestock")));
+		subcrops_amount <- (length(cells_deforest where (each.landuse = "SC3.1" or each.landuse = "SC4.1" or each.landuse = "SC4.2" or each.landuse = "SE3")));
 	}
 
 	action map_deforestation_rate {

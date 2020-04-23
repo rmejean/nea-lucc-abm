@@ -12,7 +12,6 @@ model LS_def
 // DEFINITION OF LS AGENTS
 //
 import "../species_def.gaml"
-
 species LS_agents {
 	string code_LS;
 	list<list> predios_eval {
@@ -167,38 +166,37 @@ species LS_agents {
 		ask predios {
 			if index_of(rankings_LS_EMC, min(rankings_LS_EMC)) = 0 {
 				LS <- "SP1.1";
-				my_hogar.livelihood_strategy <- "SP1.1";
 				write "---------LS 1.1 assigned to a plot.";
 			}
 
 			if index_of(rankings_LS_EMC, min(rankings_LS_EMC)) = 1 {
 				LS <- "SP1.2";
-				my_hogar.livelihood_strategy <- "SP1.2";
 				write "---------LS 1.2 assigned to a plot.";
 			}
 
 			if index_of(rankings_LS_EMC, min(rankings_LS_EMC)) = 2 {
 				LS <- "SP1.3";
-				my_hogar.livelihood_strategy <- "SP1.3";
 				write "---------LS 1.3 assigned to a plot.";
 			}
 
 			if index_of(rankings_LS_EMC, min(rankings_LS_EMC)) = 3 {
 				LS <- "SP2";
-				my_hogar.livelihood_strategy <- "SP2";
 				write "---------LS 2 assigned to a plot.";
 			}
 
 			if index_of(rankings_LS_EMC, min(rankings_LS_EMC)) = 4 {
 				LS <- "SP3";
-				my_hogar.livelihood_strategy <- "SP3";
 				write "---------LS 3 assigned to a plot.";
 			}
-			
-			if is_free = true {//TODO: pourquoi j'ai besoin de forcer en rajoutant cette instruction ??
+
+			if is_free = true { //TODO: pourquoi j'ai besoin de forcer en rajoutant cette instruction ??
 				LS <- "none";
 			}
 
+		}
+
+		ask hogares {
+			livelihood_strategy <- my_predio.LS;
 		}
 
 	}
