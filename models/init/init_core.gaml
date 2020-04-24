@@ -218,7 +218,7 @@ global {
 			let pxl_coffee <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
-				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
+				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.labor_force >= laborcost_SC3_1 {
 					save ("SC3.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 					pxl_subcrops <- pxl_subcrops + 1;
 					pxl_generated <- pxl_generated + 1;
@@ -294,7 +294,7 @@ global {
 			let pxl_coffee <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
-				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
+				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.labor_force >= laborcost_SC4_1 {
 					if flip(0.5) = true {
 						save ("SC4.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 						pxl_subcrops <- pxl_subcrops + 1;
@@ -420,7 +420,7 @@ global {
 			let pxl_coffee <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
-				if my_hogar.subcrops_needs + 0.5 > pxl_subcrops {
+				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.labor_force >= laborcost_SC4_1 {
 					if flip(0.5) = true {
 						save ("SC4.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 						pxl_subcrops <- pxl_subcrops + 1;
