@@ -60,7 +60,7 @@ species hogares {
 
 	}
 
-	action init_assets {
+	action init_employees {
 //		occupied_workers <- (length(my_predio.cells_deforest where (each.landuse = "SC1.1")) * laborcost_SC1_1) + (length(my_predio.cells_deforest where
 //		(each.landuse = "SC1.2")) * laborcost_SC1_2) + (length(my_predio.cells_deforest where (each.landuse = "SC2")) * laborcost_SC2) + (length(my_predio.cells_deforest where
 //		(each.landuse = "SC3.1")) * laborcost_SC3_1) + (length(my_predio.cells_deforest where (each.landuse = "SC4.1")) * laborcost_SC4_1) + (length(my_predio.cells_deforest where

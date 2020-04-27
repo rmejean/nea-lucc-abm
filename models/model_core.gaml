@@ -110,7 +110,7 @@ global {
 	action NA_assessment {
 		write "Needs & assets assessment...";
 		ask hogares {
-			do init_assets;
+			do init_employees;
 			do init_needs;
 		}
 

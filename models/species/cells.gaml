@@ -67,6 +67,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	bool is_deforest <- true;
 	bool is_free <- true;
 	string landuse;
+	string landuse2;
 	list<string> land_use_hist; //history: pasts land uses
 	int nb_months;
 	float rev;
@@ -225,9 +226,9 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		}
 
 		if landuse = 'SE3' {
-			let yld_oldchicken <- 0.41;
-			let yld_chicken <- 5.83;
-			let yld_eggs <- 93.33;
+			let yld_oldchicken <- 6.375;
+			let yld_chicken <- 78.75;
+			let yld_eggs <- 21.0;
 			rev <- (yld_oldchicken * price_oldchicken) + (yld_chicken * price_chicken) + (yld_eggs * price_eggs);
 		}
 
