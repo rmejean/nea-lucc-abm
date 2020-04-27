@@ -74,7 +74,9 @@ species hogares {
 			if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
 				employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
 				labor_force <- labor_force + (employees_workers * 30);
-				occupied_workers <- occupied_workers + (employees_workers * 30);
+				occupied_workers <- occupied_workers + (0 - available_workers);
+				available_workers <- labor_force - occupied_workers;
+				
 			}
 			if (livelihood_strategy = "SP1.1") or (livelihood_strategy = "SP1.2") or (livelihood_strategy = "SP1.3"){
 				labor_alert <- true;
