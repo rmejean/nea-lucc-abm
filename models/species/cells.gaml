@@ -41,7 +41,8 @@ global {
 	int price_chicken <- 15;
 	float price_eggs <- 0.25;
 	float costmaint_cacaoinputs <- 13.375;
-	float costmaint_cattle <- 11.9; //TODO: à revoir : plus il y a d'hectares en pâture, plus c'est cher
+	float costmaint_cattle_1 <- 11.48; //TODO: à revoir : plus il y a d'hectares en pâture, plus c'est cher
+	float costmaint_cattle_2 <- 1.61635;
 	float buy_pig <- 13.33;
 	float costmaint_pigbreeding <- 5.375;
 	float costmaint_pigbreeding2 <- 21.1;
@@ -195,14 +196,14 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			let yld_veaux <- 0.079875;
 			let yld_vachereforme <- 0.027;
 			let yld_cheese <- 11.43;
-			rev <- (yld_veaux * price_veaux) + (yld_vachereforme * price_vachereforme) + (yld_cheese * price_cheese) - costmaint_cattle;
+			rev <- (yld_veaux * price_veaux) + (yld_vachereforme * price_vachereforme) + (yld_cheese * price_cheese) - costmaint_cattle_1;
 		}
 
 		if landuse = 'SE1.2' { // cattle breeding with cheese marketing (30 mothers and 70ha of pastures)
 			let yld_veaux <- 0.040;
 			let yld_vachereforme <- 0.022;
 			let yld_cheese <- 1.2;
-			rev <- (yld_veaux * price_veaux) + (yld_vachereforme * price_vachereforme) + (yld_cheese * price_cheese) - costmaint_cattle;
+			rev <- (yld_veaux * price_veaux) + (yld_vachereforme * price_vachereforme) + (yld_cheese * price_cheese) - costmaint_cattle_2;
 		}
 
 		if landuse = 'SE2.1' {
