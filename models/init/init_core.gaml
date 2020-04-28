@@ -295,6 +295,7 @@ global {
 			let pxl_cacao <- 0;
 			let pxl_coffee <- 0;
 			let pxl_chicken <- 0;
+			let pxl_pig <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC4_1 {
@@ -325,6 +326,16 @@ global {
 						ask my_hogar {
 							available_workers <- available_workers - laborcost_SE3;
 							occupied_workers <- occupied_workers + laborcost_SE3;
+						}
+
+					}
+
+					if my_hogar.labor_force >= laborcost_SE2_1 and pxl_pig < 1 { //pig farming
+						save ("SE2.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						pxl_pig <- pxl_pig + 1;
+						ask my_hogar {
+							available_workers <- available_workers - laborcost_SE2_1;
+							occupied_workers <- occupied_workers + laborcost_SE2_1;
 						}
 
 					}
@@ -398,7 +409,7 @@ global {
 			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
 			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("months", int, []);
 			create patches from: AL_genSP1_2 {
-				if type != "SE3" {
+				if type != "SE3" and type != "SE2.1" {
 					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
 						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
 						ask pxl_cible {
@@ -417,20 +428,39 @@ global {
 					}
 
 					do die;
-				} else { //chicken farming on the house pixel
-					if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
-						cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
-						location <- pxl_cible.location;
-						ask pxl_cible {
-							landuse2 <- myself.type;
-							add landuse2 to: land_use_hist;
-							do param_activities;
-							do update_yields;
+				} else {
+					if type = "SE3" { //chicken farming on the house pixel
+						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
+							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
+							location <- pxl_cible.location;
+							ask pxl_cible {
+								landuse2 <- myself.type;
+								add landuse2 to: land_use_hist;
+								do param_activities;
+								do update_yields;
+							}
+
 						}
 
+						do die;
 					}
 
-					do die;
+					if type = "SE2.1" { //chicken farming on the house pixel
+						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
+							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
+							location <- pxl_cible.location;
+							ask pxl_cible {
+								landuse3 <- myself.type;
+								add landuse3 to: land_use_hist;
+								do param_activities;
+								do update_yields;
+							}
+
+						}
+
+						do die;
+					}
+
 				}
 
 			}
@@ -455,7 +485,6 @@ global {
 			let pxl_cacao <- 0;
 			let pxl_coffee <- 0;
 			let pxl_chicken <- 0;
-			let pxl_pig <- 0;
 			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC4_1 {
@@ -486,16 +515,6 @@ global {
 						ask my_hogar {
 							available_workers <- available_workers - laborcost_SE3;
 							occupied_workers <- occupied_workers + laborcost_SE3;
-						}
-
-					}
-
-					if my_hogar.labor_force >= laborcost_SE2_1 and pxl_pig < 1 { //pig farming
-						save ("SE2.1" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
-						pxl_pig <- pxl_pig + 1;
-						ask my_hogar {
-							available_workers <- available_workers - laborcost_SE2_1;
-							occupied_workers <- occupied_workers + laborcost_SE2_1;
 						}
 
 					}
@@ -571,38 +590,19 @@ global {
 
 					do die;
 				} else {
-					if type = "SE3" { //chicken farming on the house pixel
-						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
-							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
-							location <- pxl_cible.location;
-							ask pxl_cible {
-								landuse2 <- myself.type;
-								add landuse2 to: land_use_hist;
-								do param_activities;
-								do update_yields;
-							}
-
+					if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
+						cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
+						location <- pxl_cible.location;
+						ask pxl_cible {
+							landuse2 <- myself.type;
+							add landuse2 to: land_use_hist;
+							do param_activities;
+							do update_yields;
 						}
 
-						do die;
 					}
 
-					if type = "SE2.1" { //chicken farming on the house pixel
-						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
-							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
-							location <- pxl_cible.location;
-							ask pxl_cible {
-								landuse3 <- myself.type;
-								add landuse3 to: land_use_hist;
-								do param_activities;
-								do update_yields;
-							}
-
-						}
-
-						do die;
-					}
-
+					do die;
 				}
 
 			}
