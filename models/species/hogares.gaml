@@ -97,7 +97,7 @@ species hogares {
 		}
 
 		if livelihood_strategy = "SP1.3" {
-			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2") collect each.rev);
+			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect each.rev);
 			income <- gross_monthly_inc - (employees_workers * cost_employees);
 		}
 

@@ -214,7 +214,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		}
 
 		if landuse = 'SE2.2' {
-			let yld_porcelets <- 1.11;
+			let yld_porcelets <- 1.116;
 			let yld_truie <- 0.041;
 			rev <- (yld_porcelets * price_porcelet) + (yld_truie * price_truie) - costmaint_pigbreeding;
 		}
@@ -227,9 +227,9 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		}
 
 		if landuse = 'SE3' {
-			let yld_oldchicken <- 6.375;
-			let yld_chicken <- 78.75;
-			let yld_eggs <- 21.0;
+			let yld_oldchicken <- 0.41;
+			let yld_chicken <- 5.83;
+			let yld_eggs <- 93.33;
 			rev <- (yld_oldchicken * price_oldchicken) + (yld_chicken * price_chicken) + (yld_eggs * price_eggs);
 		}
 

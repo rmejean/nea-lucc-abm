@@ -49,10 +49,10 @@ global {
 	float laborcost_SC4_2 <- 1.87;
 	float laborcost_SE1_1 <- 0.8113;//pour 70 px= 56.79;
 	float laborcost_SE1_2 <- 0.6278;//pour 15px = 9.417;
-	float laborcost_SE2_1 <- 1.51;
-	float laborcost_SE2_2 <- 3.63;
-	float laborcost_SE2_3 <- 6.56;
-	float laborcost_SE3 <- 2.33;
+	float laborcost_SE2_1 <- 1.6875;
+	float laborcost_SE2_2 <- 4.03;
+	float laborcost_SE2_3 <- 7.28;
+	float laborcost_SE3 <- 2.589;
 	
 	
 }

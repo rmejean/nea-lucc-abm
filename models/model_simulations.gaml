@@ -49,7 +49,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 
 //TODO : il faut ajouter des messages avant et après enregistrement en utilisant file_exists
 	user_command "Save Agricultural Landscape" category: "Saving init" when: init_end = true color: #darkblue {
-		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
+		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 	}
 	//Saving roads
 	user_command "Save Roads" category: "Saving init" when: init_end = true color: #darkblue {
@@ -72,7 +72,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 	}
 	//Saving all
 	user_command "Save all init files" category: "Saving init" when: init_end = true color: #darkred {
-		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
+		save cell to: save_landscape type: "shp" attributes: ["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: save_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "CASH_C"::cashcrops_amount, "SUB_C"::subcrops_amount, "NEIGH"::neighbors,  "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];
