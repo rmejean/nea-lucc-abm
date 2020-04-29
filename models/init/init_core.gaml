@@ -65,7 +65,10 @@ global {
 
 	action init_empresas { //Oil companies init
 		write "---START OF INIT OIL COMPANIES";
-		create empresas from: plataformas_shp;
+		create empresas from: plataformas_shp {
+			nb_jobs <- rnd(10, 50);
+		}
+
 		write "---END OF INIT OIL COMPANIES";
 	}
 
@@ -797,22 +800,103 @@ global {
 		write "---END OF INIT ALG";
 	}
 
-	action init_NA { //NA = needs & assets
-		write "---Initialize needs & assets...";
+	action init_farm_jobs {
+		write "---START OF INIT FARM JOBS";
 		ask hogares {
-			do init_employees;
-			do init_needs;
+			if available_workers < 0 { //manage the employed labor force
+				if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
+					employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
+					labor_force <- labor_force + (employees_workers * 30);
+					available_workers <- labor_force - occupied_workers;
+				}
+
+				if (livelihood_strategy = "SP1.1") or (livelihood_strategy = "SP1.2") or (livelihood_strategy = "SP1.3") {
+					labor_alert <- true;
+				}
+
+			}
+
 		}
 
-		ask predios where (each.is_free = false) {
-			do map_assets_alert;
-			do map_needs_alert;
+		write "---END OF INIT FARM JOBS";
+	}
+
+	action init_oil_jobs {
+		write "---START OF INIT OIL JOBS";
+		ask hogares where (each.available_workers > 14.0) {
+			loop while: available_workers > 14.0 {
+				if membres_hogar contains_any (personas where (each.Age < 40)) { //if a member of the household is under 40 years old
+					ask first(membres_hogar, personas where (each.Age < 40)) {
+						if empresas contains_any (empresas where (each.nb_jobs > 0)) = true {
+							oil_worker <- true;
+							empresa <- empresas where (each.nb_jobs > 0) closest_to self;
+							inc <- empresa.job_wages;
+							working_month <- rnd(6);
+							ask empresa {
+								nb_jobs <- nb_jobs - 1;
+								add myself to: workers;
+							}
+
+							ask myself {
+								available_workers <- available_workers - 14.0;
+								oil_workers <- oil_workers + 1;
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
 		}
 
-		write "--- done!";
-		write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-		write "Households understaffed:" + length(hogares where (each.labor_alert = true));
-		write 'Number of workers employed:' sum (hogares collect each.employees_workers);
+		write "---END OF INIT OIL JOBS";
+	}
+
+	action init_income_needs { //calculation of cash income (does not include food crops)
+		write "---START OF INIT INCOMES";
+		ask hogares {
+			if livelihood_strategy = "SP1.1" {
+				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.inc);
+				income <- gross_monthly_inc - (employees_workers * cost_employees);
+			} //TODO: penser aux chèques des autorités pour le SP1
+			if livelihood_strategy = "SP1.2" {
+				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev + sum(membres_hogar collect
+				each.inc));
+				income <- gross_monthly_inc - (employees_workers * cost_employees);
+			}
+
+			if livelihood_strategy = "SP1.3" {
+				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
+				each.rev + sum(membres_hogar collect each.inc));
+				income <- gross_monthly_inc - (employees_workers * cost_employees);
+			}
+
+			if livelihood_strategy = "SP2" {
+				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.inc);
+				income <- gross_monthly_inc - (employees_workers * cost_employees);
+			}
+
+			if livelihood_strategy = "SP3" {
+				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.inc);
+				income <- gross_monthly_inc - (employees_workers * cost_employees);
+			}
+
+			write "---END OF INIT INCOMES";
+			write "---START OF ASSESS NEEDS SATIFACTION";
+			ask my_predio {
+				do crops_calc;
+			}
+
+			if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income * 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à voir si je le laisse ou non
+				needs_alert <- true;
+			}
+
+			write "---END OF ASSESS NEEDS SATIFACTION";
+		}
+
 	}
 
 }

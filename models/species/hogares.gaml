@@ -36,6 +36,7 @@ species hogares {
 	string livelihood_strategy <- 'none';
 	bool needs_alert;
 	bool labor_alert;
+	int oil_workers <- 0;
 
 	action values_calc {
 		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
@@ -60,70 +61,16 @@ species hogares {
 
 	}
 
-	action init_employees {
-//		occupied_workers <- (length(my_predio.cells_deforest where (each.landuse = "SC1.1")) * laborcost_SC1_1) + (length(my_predio.cells_deforest where
-//		(each.landuse = "SC1.2")) * laborcost_SC1_2) + (length(my_predio.cells_deforest where (each.landuse = "SC2")) * laborcost_SC2) + (length(my_predio.cells_deforest where
-//		(each.landuse = "SC3.1")) * laborcost_SC3_1) + (length(my_predio.cells_deforest where (each.landuse = "SC4.1")) * laborcost_SC4_1) + (length(my_predio.cells_deforest where
-//		(each.landuse = "SC4.2")) * laborcost_SC4_2) + (length(my_predio.cells_deforest where (each.landuse = "SE1.1")) * laborcost_SE1_1) + (length(my_predio.cells_deforest where
-//		(each.landuse = "SE1.2")) * laborcost_SE1_2) + (length(my_predio.cells_deforest where (each.landuse = "SE2.1")) * laborcost_SE2_1) + (length(my_predio.cells_deforest where
-//		(each.landuse = "SE2.2")) * laborcost_SE2_2) + (length(my_predio.cells_deforest where (each.landuse = "SE2.3")) * laborcost_SE2_3) + (length(my_predio.cells_deforest where
-//		(each.landuse = "SE3")) * laborcost_SE3);
-//		available_workers <- labor_force - occupied_workers;
-
-		if available_workers < 0 { //manage the employed labor force
-			if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
-				employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
-				labor_force <- labor_force + (employees_workers * 30);
-				available_workers <- labor_force - occupied_workers;
-				
-			}
-			if (livelihood_strategy = "SP1.1") or (livelihood_strategy = "SP1.2") or (livelihood_strategy = "SP1.3"){
-				labor_alert <- true;
-			}
-
-		}
-
-	}
-
-	action init_needs { //calculation of cash income (does not include food crops)
-		if livelihood_strategy = "SP1.1" {
-			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev);
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-		}
-
-		if livelihood_strategy = "SP1.2" {
-			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev);
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-		}
-
-		if livelihood_strategy = "SP1.3" {
-			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect each.rev);
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-		}
-
-		if livelihood_strategy = "SP2" {
-			gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev);
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-		}
-
-		if livelihood_strategy = "SP3" {
-			gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev);
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-		}
-
-		//		if livelihood_strategy = "SP1.1" {
-		//			income <- income + 50;//50-dollar voucher from the authorities
-		//		}
-		ask my_predio {
-			do crops_calc;
-		}
-
-		if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income * 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à voir si je le laisse ou non
-			needs_alert <- true;
-		}
-
-	}
-
+	//	action init_employees {
+	//		occupied_workers <- (length(my_predio.cells_deforest where (each.landuse = "SC1.1")) * laborcost_SC1_1) + (length(my_predio.cells_deforest where
+	//		(each.landuse = "SC1.2")) * laborcost_SC1_2) + (length(my_predio.cells_deforest where (each.landuse = "SC2")) * laborcost_SC2) + (length(my_predio.cells_deforest where
+	//		(each.landuse = "SC3.1")) * laborcost_SC3_1) + (length(my_predio.cells_deforest where (each.landuse = "SC4.1")) * laborcost_SC4_1) + (length(my_predio.cells_deforest where
+	//		(each.landuse = "SC4.2")) * laborcost_SC4_2) + (length(my_predio.cells_deforest where (each.landuse = "SE1.1")) * laborcost_SE1_1) + (length(my_predio.cells_deforest where
+	//		(each.landuse = "SE1.2")) * laborcost_SE1_2) + (length(my_predio.cells_deforest where (each.landuse = "SE2.1")) * laborcost_SE2_1) + (length(my_predio.cells_deforest where
+	//		(each.landuse = "SE2.2")) * laborcost_SE2_2) + (length(my_predio.cells_deforest where (each.landuse = "SE2.3")) * laborcost_SE2_3) + (length(my_predio.cells_deforest where
+	//		(each.landuse = "SE3")) * laborcost_SE3);
+	//		available_workers <- labor_force - occupied_workers;
+	//	}
 	action LUC {
 		if livelihood_strategy = "SP1.1" {
 		}

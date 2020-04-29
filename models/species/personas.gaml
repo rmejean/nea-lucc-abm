@@ -14,7 +14,6 @@ model personas_def
 //
 //
 import "../species_def.gaml"
-
 species personas parent: hogares {
 	hogares my_hogar;
 	int Age;
@@ -26,6 +25,9 @@ species personas parent: hogares {
 	float inc;
 	string auto_id;
 	bool chef;
+	bool oil_worker <- false;
+	empresas empresa;
+	int working_month;
 
 	action labour_value_and_needs {
 		if Age < 11 {
@@ -59,7 +61,7 @@ species personas parent: hogares {
 		food_needs <- 0.5;
 	}
 
-	action aging {
+	action update {
 		if current_month = self.mes_nac { //when it's my birthday!
 			Age <- Age + 1;
 			do labour_value_and_needs;
@@ -84,6 +86,25 @@ species personas parent: hogares {
 					}
 
 					do die;
+				}
+
+			}
+
+			if oil_worker = true {
+				working_month <- working_month + 1;
+				if working_month > 6 {
+					oil_worker <- false;
+					inc <- 0.0;
+					ask empresa {
+						remove myself from: workers;
+					}
+
+					empresa <- nil;
+					ask my_hogar {
+						available_workers <- available_workers + 14.0;
+						oil_workers <- oil_workers - 1;
+					}
+
 				}
 
 			}

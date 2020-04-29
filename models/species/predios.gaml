@@ -45,7 +45,7 @@ species predios {
 	list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
 	list<predios> neighbors;
-	
+
 	action deforestation_rate_calc {
 		if area_total > 0 {
 			def_rate <- (area_deforest / area_total) * 100;

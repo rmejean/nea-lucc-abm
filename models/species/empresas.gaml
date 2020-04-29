@@ -11,12 +11,12 @@ model empresas_def
 //
 // DEFINITION OF OIL COMPAGNIES
 //
-
+import "../species_def.gaml"
 species empresas {
-	int nb_jobs <- 50;
-	int nb_oc_jobs;
-	int job_wages <- 350;
-	//
+	int nb_jobs;
+	float job_wages <- 350.0;
+	list<personas> workers;
+
 	aspect default {
 		draw shape color: #black border: #black;
 	}

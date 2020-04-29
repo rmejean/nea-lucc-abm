@@ -22,7 +22,7 @@ global {
 	string current_month;
 	float step <- 1 #month update: step + 1;
 	//Other variables
-	float $_ANFP <- 3900.0;//AMOUNT NEEDED TO FEED A PERSON = 3900 / 12
+	float $_ANFP <- 3900.0; //AMOUNT NEEDED TO FEED A PERSON = 3900 / 12
 
 	//
 	//INIT
@@ -38,9 +38,14 @@ global {
 			do init_pop;
 			do init_LS_EMC;
 			do init_ALG;
-			do init_NA;
+			do init_farm_jobs;
+			do init_oil_jobs;
+			do init_income_needs;
 			init_end <- true;
 			write "END OF INITIALIZATION";
+			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
+			write "Households understaffed:" + length(hogares where (each.labor_alert = true));
+			write 'Number of workers employed:' sum (hogares collect each.employees_workers);
 		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
@@ -51,7 +56,11 @@ global {
 			do load_saved_hogares;
 			do load_saved_personas;
 			do load_saved_landscape;
+			init_end <- true;
 			write "END OF INITIALIZATION";
+			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
+			write "Households understaffed:" + length(hogares where (each.labor_alert = true));
+			write 'Number of workers employed:' sum (hogares collect each.employees_workers);
 		}
 
 	}
@@ -78,7 +87,7 @@ global {
 
 	reflex demography {
 		ask personas {
-			do aging;
+			do update;
 			do labour_value_and_needs;
 		}
 
@@ -97,7 +106,7 @@ global {
 	}
 
 	reflex decision_making {
-		do NA_assessment;
+	//do NA_assessment;
 		ask hogares {
 			if needs_alert = true {
 				do LUC;
@@ -107,22 +116,8 @@ global {
 
 	}
 
-	action NA_assessment {
-		write "Needs & assets assessment...";
-		ask hogares {
-			do init_employees;
-			do init_needs;
-		}
-
-		ask predios where (each.is_free = false) {
-			do map_assets_alert;
-			do map_needs_alert;
-		}
-
-		write "... done!";
-		write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-		write "Households understaffed:" + length(hogares where (each.labor_alert = true));
-		write 'Number of workers employed:' sum(hogares collect each.employees_workers);
-	}
+	//	action NA_assessment {
+	//
+	//	}
 
 }
