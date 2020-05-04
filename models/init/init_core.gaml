@@ -16,7 +16,8 @@ global { //Lists
 	list<string> echelle_pop <- (list<string>(range(95)));
 	list<string> echelle_ages <- (list<string>(range(105)));
 	list<string> echelle_GLOBALE <- (list<string>(range(150)));
-	list<string> list_id <- ([]); //-----------------------------------------------------------------------------------------------
+	list<string> list_id <- ([]);
+	//-----------------------------------------------------------------------------------------------
 	//--------------------------------------INITIALIZATION-------------------------------------------
 	//-----------------------------------------------------------------------------------------------
 	action init_cells { //Cells init
@@ -70,14 +71,14 @@ global { //Lists
 
 	action init_pop { //Population init with GENSTAR
 		write "---START OF INIT POPULATION";
-		write "------START OF SETUP HOUSEHOLDS"; //
+		write "------START OF SETUP HOUSEHOLDS";
 		// --------------------------
 		// Setup HOGARES
 		// --------------------------
-		//
 		gen_population_generator hog_gen;
 		hog_gen <- hog_gen with_generation_algo "US";
-		hog_gen <- add_census_file(hog_gen, f_HOGARES_predios.path, "Sample", ",", 1, 1); // --------------------------
+		hog_gen <- add_census_file(hog_gen, f_HOGARES_predios.path, "Sample", ",", 1, 1);
+		// --------------------------
 		// Setup Attributs
 		// --------------------------	
 		hog_gen <- hog_gen add_attribute ("sec_id", string, list_id);
@@ -85,7 +86,8 @@ global { //Lists
 		hog_gen <- hog_gen add_attribute ("viv_id", string, list_id);
 		hog_gen <- hog_gen add_attribute ("Total_Personas", int, echelle_pop);
 		hog_gen <- hog_gen add_attribute ("Total_Hombres", int, echelle_pop);
-		hog_gen <- hog_gen add_attribute ("Total_Mujeres", int, echelle_pop); // -------------------------
+		hog_gen <- hog_gen add_attribute ("Total_Mujeres", int, echelle_pop);
+		// -------------------------
 		// Spatialization 
 		// -------------------------
 		hog_gen <- hog_gen localize_on_geometries (predios_con_def_shp.path);
@@ -114,10 +116,10 @@ global { //Lists
 		// --------------------------
 		// Setup PERSONAS
 		// --------------------------
-		//
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "US";
-		pop_gen <- add_census_file(pop_gen, f_PERSONAS_predios.path, "Sample", ",", 1, 1); // --------------------------
+		pop_gen <- add_census_file(pop_gen, f_PERSONAS_predios.path, "Sample", ",", 1, 1);
+		// --------------------------
 		// Setup Attributs
 		// --------------------------	
 		pop_gen <- pop_gen add_attribute ("sec_id", string, list_id);
@@ -127,7 +129,8 @@ global { //Lists
 		pop_gen <- pop_gen add_attribute ("Age", int, echelle_ages);
 		pop_gen <- pop_gen add_attribute ("mes_nac", string, []);
 		pop_gen <- pop_gen add_attribute ("orden_en_hogar", int, echelle_GLOBALE);
-		pop_gen <- pop_gen add_attribute ("auto_id", string, []); // --------------------------
+		pop_gen <- pop_gen add_attribute ("auto_id", string, []);
+		// --------------------------
 		create personas from: pop_gen {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
 			if my_hogar != nil {
@@ -140,7 +143,8 @@ global { //Lists
 
 		}
 
-		write "------END OF SETUP PEOPLE"; // --------------------------
+		write "------END OF SETUP PEOPLE";
+		// --------------------------
 		// Instructions post-génération
 		// --------------------------
 		ask hogares {
@@ -240,7 +244,8 @@ global { //Lists
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP1_1;
 			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
-			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
+			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			// --------------------------
 			// Setup Attributs
 			// --------------------------	
 			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
@@ -268,7 +273,8 @@ global { //Lists
 
 		}
 
-		write "------END OF INIT ALG SP1.1"; //------------------------------------------------------------------
+		write "------END OF INIT ALG SP1.1";
+		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//---------------------------- SP 1.2 ------------------------------
@@ -390,7 +396,8 @@ global { //Lists
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP1_2;
 			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "US";
-			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
+			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			// --------------------------
 			// Setup Attributs
 			// --------------------------	
 			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
@@ -454,7 +461,8 @@ global { //Lists
 
 		}
 
-		write "------END OF INIT ALG 1.2"; //------------------------------------------------------------------
+		write "------END OF INIT ALG 1.2";
+		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//---------------------------- SP 1.3 ------------------------------
@@ -557,7 +565,8 @@ global { //Lists
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP1_3;
 			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "US";
-			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
+			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			// --------------------------
 			// Setup Attributs
 			// --------------------------	
 			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
@@ -621,7 +630,8 @@ global { //Lists
 
 		}
 
-		write "------END OF INIT ALG 1.3"; //------------------------------------------------------------------
+		write "------END OF INIT ALG 1.3";
+		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//---------------------------- SP 2 --------------------------------
@@ -662,7 +672,8 @@ global { //Lists
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP2;
 			AL_genSP2 <- AL_genSP2 with_generation_algo "US";
-			AL_genSP2 <- add_census_file(AL_genSP2, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
+			AL_genSP2 <- add_census_file(AL_genSP2, ("../../includes/ALGv2/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			// --------------------------
 			// Setup Attributs
 			// --------------------------	
 			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
@@ -707,7 +718,8 @@ global { //Lists
 
 		}
 
-		write "------END OF INIT ALG SP2"; //------------------------------------------------------------------
+		write "------END OF INIT ALG SP2";
+		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//---------------------------- SP 3 --------------------------------

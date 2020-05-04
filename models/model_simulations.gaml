@@ -35,6 +35,7 @@ global {
 	bool init_end <- false;
 	string save_landscape <- ("../../includes/initGENfiles/agricultural_landscape.shp");
 	string save_vias <- ("../../includes/initGENfiles/vias.shp");
+	string save_empresas <- ("../../includes/initGENfiles/empresas.shp");
 	string save_predios <- ("../../includes/initGENfiles/predios.shp");
 	string save_hogares <- ("../../includes/initGENfiles/hogares.shp");
 	string save_personas <- ("../../includes/initGENfiles/personas.shp");
@@ -54,6 +55,10 @@ experiment Simulation type: gui until: stop_simulation = true {
 	//Saving roads
 	user_command "Save Roads" category: "Saving init" when: init_end = true color: #darkblue {
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
+	}
+	//Saving oil ompagnies
+	user_command "Save oil compagnies" category: "Saving init" when: init_end = true color: #darkblue {
+		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs];
 	}
 	//Saving plots
 	user_command "Save Plots" category: "Saving init" when: init_end = true color: #darkblue {
@@ -80,6 +85,7 @@ experiment Simulation type: gui until: stop_simulation = true {
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers];
 		save personas to: save_personas type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa,"WORK_M"::working_month];
+		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs];
 	}
 
 	parameter "Generate a new init?" category:"Parameters" var: new_init;
