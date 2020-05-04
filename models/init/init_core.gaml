@@ -805,30 +805,27 @@ global { //Lists
 	action init_oil_jobs {
 		write "---START OF INIT OIL JOBS";
 		ask hogares {
-			let no_jobs <- false;
-			if (membres_hogar contains_any (personas where (each.Age < 40 and each.oil_worker = false))) {
-				loop while: (available_workers >= 14.0) and (no_jobs = false) {
-					ask first(membres_hogar, personas where (each.Age < 40 and each.oil_worker = false)) {
-						if length(empresas where (each.nb_jobs > 0)) != 0 {
-							empresa <- empresas where (each.nb_jobs > 0) closest_to self;
-							write "" + empresa.name + "found a worker";
-							oil_worker <- true;
-							inc <- empresa.job_wages;
-							working_month <- rnd(6);
-							ask empresa {
-								nb_jobs <- nb_jobs - 1;
-								add myself to: workers;
-							}
-
-							ask my_hogar {
-								available_workers <- available_workers - 14.0;
-								oil_workers <- oil_workers + 1;
-							}
-
-						} else {
-							no_jobs <- true;
+			let no_more_jobs <- false;
+			loop while: (available_workers >= 14.0) and (membres_hogar contains_any (personas where (each.Age < 40 and each.oil_worker = false))) and (no_more_jobs = false) {
+				ask first(membres_hogar, personas where (each.Age < 40 and each.oil_worker = false)) {
+					if length(empresas where (each.nb_jobs > 0)) != 0 {
+						empresa <- empresas where (each.nb_jobs > 0) closest_to self;
+						write "" + empresa.name + "found a worker";
+						oil_worker <- true;
+						inc <- empresa.job_wages;
+						working_month <- rnd(6);
+						ask empresa {
+							nb_jobs <- nb_jobs - 1;
+							add myself to: workers;
 						}
 
+						ask my_hogar {
+							available_workers <- available_workers - 14.0;
+							oil_workers <- oil_workers + 1;
+						}
+
+					} else {
+						no_more_jobs <- true;
 					}
 
 				}
@@ -841,7 +838,7 @@ global { //Lists
 	}
 
 	action init_income_needs { //calculation of cash income (does not include food crops)
-		write "---START OF INIT INCOMES";
+		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 		ask hogares {
 			if livelihood_strategy = "SP1.1" {
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.inc);
@@ -870,8 +867,6 @@ global { //Lists
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
 			}
 
-			write "---END OF INIT INCOMES";
-			write "---START OF ASSESS NEEDS SATIFACTION";
 			ask my_predio {
 				do crops_calc;
 			}
@@ -880,7 +875,7 @@ global { //Lists
 				needs_alert <- true;
 			}
 
-			write "---END OF ASSESS NEEDS SATIFACTION";
+			write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 		}
 
 	}
