@@ -806,11 +806,12 @@ global { //Lists
 		write "---START OF INIT OIL JOBS";
 		ask hogares {
 			let no_more_jobs <- false;
-			loop while: (available_workers >= 14.0) and (membres_hogar contains_any (personas where (each.Age < 40 and each.oil_worker = false))) and (no_more_jobs = false) {
-				ask first(membres_hogar, personas where (each.Age < 40 and each.oil_worker = false)) {
-					if length(empresas where (each.nb_jobs > 0)) != 0 {
+			let wasnt_drawn <- false;
+			loop while: (available_workers >= 14.0) and (one_matches (membres_hogar, each.Age < 40 and each.oil_worker = false)) and (no_more_jobs = false) {
+				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
+					if one_matches (empresas, each.nb_jobs > 0) {
 						empresa <- empresas where (each.nb_jobs > 0) closest_to self;
-						write "" + empresa.name + "found a worker";
+						write "" + empresa.name + " found a worker";
 						oil_worker <- true;
 						inc <- empresa.job_wages;
 						working_month <- rnd(6);
@@ -820,7 +821,8 @@ global { //Lists
 						}
 
 						ask my_hogar {
-							available_workers <- available_workers - 14.0;
+							occupied_workers <- occupied_workers + 14.0;
+							available_workers <- labor_force - occupied_workers;
 							oil_workers <- oil_workers + 1;
 						}
 
@@ -875,8 +877,9 @@ global { //Lists
 				needs_alert <- true;
 			}
 
-			write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 		}
+		
+		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 
 	}
 
