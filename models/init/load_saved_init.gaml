@@ -18,6 +18,14 @@ global {
 		saved_predios <- file("../../includes/initGENfiles/predios.shp");
 		saved_hogares <- file("../../includes/initGENfiles/hogares.shp");
 		saved_personas <- file("../../includes/initGENfiles/personas.shp");
+		saved_empresas <- file("../../includes/initGENfiles/empresas.shp");
+	}
+	
+	action load_saved_empresas {
+		write "---START OF INIT OIL COMPANIES";
+		create empresas from: saved_empresas with:
+		[name:: string(get("NAME")), nb_jobs::int(get("NB_JOBS")), workers::list<personas>(get("WORKERS"))];
+		write "---END OF INIT OIL COMPANIES";
 	}
 
 	action load_saved_predios {

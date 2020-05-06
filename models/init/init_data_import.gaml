@@ -52,5 +52,6 @@ global {
 	file saved_predios;
 	file saved_hogares;
 	file saved_personas;
+	file saved_empresas;
 	
 }

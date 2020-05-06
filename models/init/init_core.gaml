@@ -213,7 +213,7 @@ global { //Lists
 			let pxl_subcrops <- 0;
 			let pxl_coffee_max <- rnd(1);
 			let pxl_coffee <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC3_1 {
 					save ("SC3.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
@@ -291,7 +291,7 @@ global { //Lists
 			let pxl_coffee <- 0;
 			let pxl_chicken <- 0;
 			let pxl_pig <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC4_1 {
 					if flip(0.5) = true {
@@ -479,7 +479,7 @@ global { //Lists
 			let pxl_coffee <- 0;
 			let pxl_chicken <- 0;
 			let pxl_pig <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC4_1 {
 					if flip(0.5) = true {
@@ -644,7 +644,7 @@ global { //Lists
 			let pxl_subcrops <- 0;
 			let pxl_cash <- 0;
 			let pxl_chicken <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.labor_force >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
 					save ("SE3" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
@@ -731,7 +731,7 @@ global { //Lists
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
 			let pxl_cash <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if flip(0.05) = false {
 					save ("SE1.1" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
