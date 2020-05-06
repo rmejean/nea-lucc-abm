@@ -44,8 +44,6 @@ global {
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-			write "Households understaffed:" + length(hogares where (each.labor_alert = true));
-			write 'Number of workers employed:' sum (hogares collect each.employees_workers);
 		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
@@ -59,8 +57,6 @@ global {
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-			write "Households understaffed:" + length(hogares where (each.labor_alert = true));
-			write 'Number of workers employed:' sum (hogares collect each.employees_workers);
 		}
 
 	}
@@ -91,9 +87,9 @@ global {
 			do labour_value_and_needs;
 		}
 
-		ask hogares {
-			do values_calc;
-		}
+//		ask hogares {
+//			do init_values;
+//		}
 
 	}
 

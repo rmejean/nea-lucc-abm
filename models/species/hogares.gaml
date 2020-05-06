@@ -38,10 +38,14 @@ species hogares {
 	bool labor_alert;
 	int oil_workers <- 0;
 
-	action values_calc {
+	action init_values {
 		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
 		available_workers <- labor_force;
 		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
+	}
+	
+	action update_values {
+		//labor_force <- (sum(membres_hogar collect each.labor_value) * 30) + (employees_workers * 30) - (oil_workers * 14.0);
 	}
 
 	action head_and_ethnicity {

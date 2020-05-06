@@ -26,8 +26,10 @@ species personas parent: hogares {
 	string auto_id;
 	bool chef;
 	bool oil_worker <- false;
+	int work_pace;
+	int contract_term;
+	int working_months;
 	empresas empresa;
-	int working_month;
 
 	action labour_value_and_needs {
 		if Age < 11 {
@@ -70,7 +72,12 @@ species personas parent: hogares {
 				if flip(0.1) {
 					remove self from: my_hogar.membres_hogar;
 					ask my_hogar {
-						do values_calc;
+						labor_force <- labor_force - 30;
+						if occupied_workers > labor_force {
+							write "there's a problem: the death disrupted the balance of the workforce";
+							//TODO: à régler (réorganisation du travail après décès)
+						}
+
 					}
 
 					do die;
@@ -82,27 +89,35 @@ species personas parent: hogares {
 				if flip(0.33) {
 					remove self from: my_hogar.membres_hogar;
 					ask my_hogar {
-						do values_calc;
+						labor_force <- labor_force - 30;
+						if occupied_workers > labor_force {
+							write "there's a problem: the death disrupted the balance of the workforce";
+							//TODO: à régler (réorganisation du travail après décès)
+						}
+
+						do die;
 					}
 
-					do die;
 				}
 
-			}
+				if oil_worker = true {
+					working_months <- working_months + 1;
+					if working_months > contract_term {//if my employment contract is over...
+						oil_worker <- false;
+						contract_term <- nil;
+						working_months <- nil;
+						inc <- 0.0;
+						ask empresa {
+							remove myself from: workers;
+						}
 
-			if oil_worker = true {
-				working_month <- working_month + 1;
-				if working_month > 6 {
-					oil_worker <- false;
-					inc <- 0.0;
-					ask empresa {
-						remove myself from: workers;
-					}
+						ask my_hogar {
+							available_workers <- available_workers + myself.work_pace;
+							oil_workers <- oil_workers - 1;
+						}
+						work_pace <- nil;
+						empresa <- nil;
 
-					empresa <- nil;
-					ask my_hogar {
-						available_workers <- available_workers + 14.0;
-						oil_workers <- oil_workers - 1;
 					}
 
 				}

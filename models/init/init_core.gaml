@@ -150,7 +150,7 @@ global { //Lists
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
 			do head_and_ethnicity;
-			do values_calc;
+			do init_values;
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
 			}
@@ -213,7 +213,7 @@ global { //Lists
 			let pxl_subcrops <- 0;
 			let pxl_coffee_max <- rnd(1);
 			let pxl_coffee <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC3_1 {
 					save ("SC3.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
@@ -291,7 +291,7 @@ global { //Lists
 			let pxl_coffee <- 0;
 			let pxl_chicken <- 0;
 			let pxl_pig <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC4_1 {
 					if flip(0.5) = true {
@@ -479,7 +479,7 @@ global { //Lists
 			let pxl_coffee <- 0;
 			let pxl_chicken <- 0;
 			let pxl_pig <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC4_1 {
 					if flip(0.5) = true {
@@ -644,7 +644,7 @@ global { //Lists
 			let pxl_subcrops <- 0;
 			let pxl_cash <- 0;
 			let pxl_chicken <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.labor_force >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
 					save ("SE3" + "," + "0") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
@@ -731,7 +731,7 @@ global { //Lists
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
 			let pxl_cash <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 			loop while: pxl_generated != length(cells_deforest) {
 				if flip(0.05) = false {
 					save ("SE1.1" + "," + 0) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
@@ -813,15 +813,17 @@ global { //Lists
 						empresa <- empresas where (each.nb_jobs > 0) closest_to self;
 						write "" + empresa.name + " found a worker";
 						oil_worker <- true;
+						work_pace <- 14;
 						inc <- empresa.job_wages;
-						working_month <- rnd(6);
+						contract_term <- rnd(5,7);
+						working_months <- rnd(0,contract_term);
 						ask empresa {
 							nb_jobs <- nb_jobs - 1;
 							add myself to: workers;
 						}
 
 						ask my_hogar {
-							occupied_workers <- occupied_workers + 14.0;
+							occupied_workers <- occupied_workers + myself.work_pace;
 							available_workers <- labor_force - occupied_workers;
 							oil_workers <- oil_workers + 1;
 						}
