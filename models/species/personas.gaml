@@ -29,6 +29,8 @@ species personas parent: hogares {
 	int work_pace;
 	int contract_term;
 	int working_months;
+	int job_wages;
+	int annual_inc;
 	empresas empresa;
 
 	action labour_value_and_needs {
@@ -106,7 +108,7 @@ species personas parent: hogares {
 						oil_worker <- false;
 						contract_term <- nil;
 						working_months <- nil;
-						inc <- 0.0;
+						job_wages <- 0;
 						ask empresa {
 							remove myself from: workers;
 						}

@@ -814,9 +814,10 @@ global { //Lists
 						write "" + empresa.name + " found a worker";
 						oil_worker <- true;
 						work_pace <- 14;
-						inc <- empresa.job_wages;
+						job_wages <- 350;
 						contract_term <- rnd(5,7);
 						working_months <- rnd(0,contract_term);
+						annual_inc <- contract_term * job_wages;
 						ask empresa {
 							nb_jobs <- nb_jobs - 1;
 							add myself to: workers;
@@ -845,37 +846,42 @@ global { //Lists
 		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 		ask hogares {
 			if livelihood_strategy = "SP1.1" {
-				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.inc);
+				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
+				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
 			}
 			//TODO: penser aux chèques des autorités pour le SP1
 			if livelihood_strategy = "SP1.2" {
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev + sum(membres_hogar collect
-				each.inc));
+				each.job_wages));
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
+				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
 			}
 
 			if livelihood_strategy = "SP1.3" {
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-				each.rev + sum(membres_hogar collect each.inc));
+				each.rev + sum(membres_hogar collect each.job_wages));
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
+				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
 			}
 
 			if livelihood_strategy = "SP2" {
-				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.inc);
+				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
+				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
 			}
 
 			if livelihood_strategy = "SP3" {
-				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.inc);
+				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
+				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
 			}
 
 			ask my_predio {
 				do crops_calc;
 			}
 
-			if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > income * 12) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à voir si je le laisse ou non
+			if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > estimated_annual_inc) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à voir si je le laisse ou non
 				needs_alert <- true;
 			}
 

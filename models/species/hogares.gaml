@@ -33,6 +33,7 @@ species hogares {
 	float subcrops_needs;
 	float gross_monthly_inc;
 	float income;
+	float estimated_annual_inc;
 	string livelihood_strategy <- 'none';
 	bool needs_alert;
 	bool labor_alert;
