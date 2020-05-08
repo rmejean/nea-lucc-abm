@@ -78,60 +78,59 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
 
 	action param_activities {
-		if landuse = 'SC1.1' {
-			nb_months <- rnd(0, 24);
-			color <- #brown;
-		}
+		switch landuse {
+			match 'SC1.1' {
+				color <- #brown;
+			}
 
-		if landuse = 'SC1.2' {
-			color <- #brown;
-		}
+			match 'SC1.2' {
+				color <- #brown;
+			}
 
-		if landuse = 'SC2' {
-			color <- rgb(149, 110, 110);
-		}
+			match 'SC2' {
+				color <- #brown;
+			}
 
-		if landuse = 'SC3.1' {
-			nb_months <- rnd(0, 17);
-			color <- #springgreen;
-		}
+			match 'SC3.1' {
+				color <- #brown;
+			}
 
-		if landuse = 'SC4.1' {
-			color <- rgb(149, 110, 110);
-		}
+			match 'SC4.1' {
+				color <- #brown;
+			}
 
-		if landuse = 'SC4.2' {
-			color <- #yellow;
-		}
+			match 'SC4.2' {
+				color <- #brown;
+			}
 
-		if landuse = 'SE1.1' {
-			color <- rgb(112, 141, 61);
-		}
+			match 'SE1.1' {
+				color <- #brown;
+			}
 
-		if landuse = 'SE1.2' {
-			color <- rgb(81, 75, 0);
-		}
+			match 'SE1.2' {
+				color <- #brown;
+			}
 
-		if landuse = 'SE2.1' {
-			color <- rgb(81, 75, 0);
-		}
+			match 'SE2.1' {
+				color <- #brown;
+			}
 
-		if landuse = 'SE2.2' {
-			color <- rgb(81, 75, 0);
-		}
+			match 'SE2.2' {
+				color <- #brown;
+			}
 
-		if landuse = 'SE2.3' {
-			color <- rgb(81, 75, 0);
-		}
+			match 'SE2.3' {
+				color <- #brown;
+			}
 
-		if landuse = 'SE3' {
-			rev <- 0.0;
-			color <- #red;
-		}
+			match 'SE3' {
+				color <- #brown;
+			}
 
-		if landuse = 'fallow' {
-			nb_months <- rnd(1, 360); //fallow: maximum 30 years?
-			color <- rgb(81, 75, 0);
+			match 'fallow' {
+				color <- #brown;
+			}
+
 		}
 
 	}
@@ -175,22 +174,22 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 		if landuse = 'SC4.1' { //food crops for self-consumption in simple association and short-term fallow land
 			if nb_months <= 12 {
-				let yld_manioc <- 3.33;
-				let yld_plantain <- 29.16;
+				let yld_manioc <- 3.0;
+				let yld_plantain <- 26.25;
 				rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain);
 			}
 
 			if nb_months > 12 {
-				let yld_manioc <- 1.66;
-				let yld_plantain <- 29.16;
+				let yld_manioc <- 1.5;
+				let yld_plantain <- 26.25;
 				rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain);
 			}
 
 		}
 
 		if landuse = 'SC4.2' { //food crops for self-consumption in simple plantain/corn and short-term fallow land combinations
-			let yld_mais <- 0.33;
-			let yld_plantain <- 33.33;
+			let yld_mais <- 0.3;
+			let yld_plantain <- 30.0;
 			rev <- (yld_mais * price_mais) + (yld_plantain * price_plantain);
 		}
 
@@ -237,20 +236,91 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	action crop_cycle {
 		nb_months <- nb_months + 1;
-		
-		if landuse = 'maniocmais' and nb_months = 24 {
+		if landuse = 'SC3.1' or landuse = 'SC4.1' or landuse = 'SC4.2' and nb_months >= 24 {
+			let previous_landuse <- landuse;
 			landuse <- 'fallow';
+			nb_months <- 0;
 			add landuse to: land_use_hist;
 			rev <- 0.0;
 			color <- rgb(81, 75, 0);
-			//TODO: sow_maniocmais;
-		}
+			switch previous_landuse {
+				match 'SC3.1' {
+					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 120) {
+						ask first(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 120)) { //TODO: closest_to house ?
+							landuse <- 'SC3.1';
+							nb_months <- 0;
+							add landuse to: land_use_hist;
+						}
 
-		if landuse = 'plantain' and nb_months = 17 {
-			landuse <- 'fallow';
-			add landuse to: land_use_hist;
-			rev <- 0.0;
-			color <- rgb(81, 75, 0);
+					} else {
+						if one_matches(predio.cells_inside, each.is_deforest = false) {
+							ask first(predio.cells_inside where (each.is_deforest = false)) {
+								is_deforest <- true;
+								landuse <- 'SC3.1';
+								nb_months <- 0;
+								add landuse to: land_use_hist;
+							}
+
+						} else {
+							write "" + my_hogar.name + " cannot re-sow SC3.1";
+						}
+
+					}
+
+				}
+
+				match 'SC4.1' {
+					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
+						ask first(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
+							landuse <- 'SC4.1';
+							nb_months <- 0;
+							add landuse to: land_use_hist;
+						}
+
+					} else {
+						if one_matches(predio.cells_inside, each.is_deforest = false) {
+							ask first(predio.cells_inside where (each.is_deforest = false)) {
+								is_deforest <- true;
+								landuse <- 'SC4.1';
+								nb_months <- 0;
+								add landuse to: land_use_hist;
+							}
+
+						} else {
+							write "" + my_hogar.name + " cannot re-sow SC4.1";
+						}
+
+					}
+
+				}
+
+				match 'SC4.2' {
+					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
+						ask first(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
+							landuse <- 'SC4.2';
+							nb_months <- 0;
+							add landuse to: land_use_hist;
+						}
+
+					} else {
+						if one_matches(predio.cells_inside, each.is_deforest = false) {
+							ask first(predio.cells_inside where (each.is_deforest = false)) {
+								is_deforest <- true;
+								landuse <- 'SC4.2';
+								nb_months <- 0;
+								add landuse to: land_use_hist;
+							}
+
+						} else {
+							write "" + my_hogar.name + " cannot re-sow SC4.2";
+						}
+
+					}
+
+				}
+
+			}
+
 		}
 
 	}

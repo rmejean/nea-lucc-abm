@@ -14,6 +14,7 @@ model empresas_def
 import "../species_def.gaml"
 species empresas {
 	int nb_jobs;
+	int free_jobs;
 	float job_wages <- 350.0;
 	list<personas> workers;
 

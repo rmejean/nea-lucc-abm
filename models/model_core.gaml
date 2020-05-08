@@ -6,24 +6,20 @@
 * Contact : romain.mejean@univ-tlse2.fr
 * Description: a LUCC model in Northern Ecuadorian Amazon (parroquia de Dayuma)
 * Tags: LUCC, deforestation dynamics, livelihood strategies
-*/
-model model_core
+*/ model model_core
 
 import "init/init_core.gaml"
 import "init/load_saved_init.gaml"
 import "model_simulations.gaml"
 
-global {
-//Time aspects
+global { //Time aspects
 	bool stop_simulation <- false;
 	bool new_init <- true;
 	date starting_date <- date("2008-01-01");
 	date current_date <- starting_date;
 	string current_month;
-	float step <- 1 #month update: step + 1;
-	//Other variables
+	float step <- 1 #month update: step + 1; //Other variables
 	float $_ANFP <- 3900.0; //AMOUNT NEEDED TO FEED A PERSON = 3900 / 12
-
 	//
 	//INIT
 	//
@@ -33,14 +29,13 @@ global {
 			do init_cells;
 			do init_vias;
 			do init_empresas;
-			do init_predios;
-			//do init_comunas;
+			do init_predios; //do init_comunas;
 			do init_pop;
 			do init_LS_EMC;
 			do init_ALG;
 			do init_farm_jobs;
 			do init_oil_jobs;
-			do init_income_needs;
+			do assess_income_needs;
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
@@ -59,8 +54,7 @@ global {
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
 		}
 
-	}
-	//
+	} //
 	//MODEL DYNAMICS
 	//
 	reflex time when: (stop_simulation = false) {
@@ -81,28 +75,21 @@ global {
 
 	}
 
-	reflex demography {
+	reflex update {
 		ask personas {
 			do update;
 			do labour_value_and_needs;
 		}
 
-//		ask hogares {
-//			do init_values;
-//		}
-
-	}
-
-	reflex agronomy {
 		ask cell {
 			do update_yields;
 			do crop_cycle;
 		}
 
+		do assess_income_needs;
 	}
 
 	reflex decision_making {
-	//do NA_assessment;
 		ask hogares {
 			if needs_alert = true {
 				do LUC;
@@ -111,9 +98,5 @@ global {
 		}
 
 	}
-
-	//	action NA_assessment {
-	//
-	//	}
 
 }

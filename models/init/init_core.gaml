@@ -31,6 +31,7 @@ global { //Lists
 				is_deforest <- true;
 			} else {
 				is_deforest <- false;
+				add 'forest' to: land_use_hist;
 			}
 
 		}
@@ -64,6 +65,7 @@ global { //Lists
 		write "---START OF INIT OIL COMPANIES";
 		create empresas from: plataformas_shp {
 			nb_jobs <- rnd(10, 50);
+			free_jobs <- nb_jobs;
 		}
 
 		write "---END OF INIT OIL COMPANIES";
@@ -213,7 +215,7 @@ global { //Lists
 			let pxl_subcrops <- 0;
 			let pxl_coffee_max <- rnd(1);
 			let pxl_coffee <- 0;
-			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC3_1 {
 					save ("SC3.1" + "," + rnd(24)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
@@ -235,7 +237,7 @@ global { //Lists
 						}
 
 					} else {
-						save ("fallow" + "," + rnd(120)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+						save ("fallow" + "," + rnd(125)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 						pxl_generated <- pxl_generated + 1;
 					}
 
@@ -356,7 +358,7 @@ global { //Lists
 								}
 
 							} else {
-								save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+								save ("fallow" + "," + rnd(65)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 								pxl_generated <- pxl_generated + 1;
 							}
 
@@ -383,7 +385,7 @@ global { //Lists
 								}
 
 							} else {
-								save ("fallow" + "," + rnd(60)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
+								save ("fallow" + "," + rnd(65)) to: ("../../includes/ALGv2/" + name + "_ldsp.csv") rewrite: false;
 								pxl_generated <- pxl_generated + 1;
 							}
 
@@ -809,8 +811,8 @@ global { //Lists
 			let wasnt_drawn <- false;
 			loop while: (available_workers >= 14.0) and (one_matches (membres_hogar, each.Age < 40 and each.oil_worker = false)) and (no_more_jobs = false) {
 				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
-					if one_matches (empresas, each.nb_jobs > 0) {
-						empresa <- empresas where (each.nb_jobs > 0) closest_to self;
+					if one_matches (empresas, each.free_jobs > 0) {
+						empresa <- empresas where (each.free_jobs > 0) closest_to self;
 						write "" + empresa.name + " found a worker";
 						oil_worker <- true;
 						work_pace <- 14;
@@ -819,7 +821,7 @@ global { //Lists
 						working_months <- rnd(0,contract_term);
 						annual_inc <- contract_term * job_wages;
 						ask empresa {
-							nb_jobs <- nb_jobs - 1;
+							free_jobs <- free_jobs - 1;
 							add myself to: workers;
 						}
 
@@ -842,7 +844,7 @@ global { //Lists
 		write "---END OF INIT OIL JOBS";
 	}
 
-	action init_income_needs { //calculation of cash income (does not include food crops)
+	action assess_income_needs { //calculation of cash income (does not include food crops)
 		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 		ask hogares {
 			if livelihood_strategy = "SP1.1" {

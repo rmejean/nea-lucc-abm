@@ -24,7 +24,7 @@ global {
 	action load_saved_empresas {
 		write "---START OF INIT OIL COMPANIES";
 		create empresas from: saved_empresas with:
-		[name:: string(get("NAME")), nb_jobs::int(get("NB_JOBS")), workers::list<personas>(get("WORKERS"))];
+		[name:: string(get("NAME")), nb_jobs::int(get("NB_JOBS")), free_jobs::int(get("FR_JOBS")), workers::list<personas>(get("WORKERS"))];
 		write "---END OF INIT OIL COMPANIES";
 	}
 
@@ -49,7 +49,7 @@ global {
 	action load_saved_personas {
 		write "---START OF INIT PEOPLE";
 		create personas from: saved_personas with:
-		[name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")), my_predio::predios(get("PLOT")), my_house::cell(get("HOUSE")), membres_hogar::list<personas>(get("HOG_MEMBER")), chef_hogar::personas(get("HEAD")), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")), gross_monthly_inc::float(get("BRUT_INC")), income::float(get("INC")), livelihood_strategy::string(get("LS")), my_hogar::hogares(get("HOUSEHOLD")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")), oil_worker::bool(get("WORK")), empresa::empresas(get("EMPRESA")), contract_term::int(get("CONTRACT")), working_months::int(get("WORK_M")), work_pace::int(get("WORKPACE")), annual_inc::int(get("ANNUAL_INC"))];
+		[name::string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")), my_predio::predios(get("PLOT")), my_house::cell(get("HOUSE")), my_hogar::hogares(get("HOGAR")), membres_hogar::list<personas>(get("HOG_MEMBER")), chef_hogar::personas(get("HEAD")), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")), gross_monthly_inc::float(get("BRUT_INC")), income::float(get("INC")), livelihood_strategy::string(get("LS")), my_hogar::hogares(get("HOUSEHOLD")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")), oil_worker::bool(get("WORK")), empresa::empresas(get("EMPRESA")), contract_term::int(get("CONTRACT")), working_months::int(get("WORK_M")), work_pace::int(get("WORKPACE")), annual_inc::int(get("ANNUAL_INC"))];
 		write "---END OF INIT PEOPLE";
 	}
 

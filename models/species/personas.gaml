@@ -109,6 +109,7 @@ species personas parent: hogares {
 						contract_term <- nil;
 						working_months <- nil;
 						job_wages <- 0;
+						annual_inc <- 0;
 						ask empresa {
 							remove myself from: workers;
 						}
