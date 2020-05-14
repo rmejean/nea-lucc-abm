@@ -16,6 +16,7 @@ model personas_def
 import "../species_def.gaml"
 species personas parent: hogares {
 	hogares my_hogar;
+	string my_hogar2;
 	int Age;
 	string mes_nac;
 	string Sexo;
@@ -32,6 +33,7 @@ species personas parent: hogares {
 	int job_wages;
 	int annual_inc;
 	empresas empresa;
+	string empresa2;
 
 	action labour_value_and_needs {
 		if Age < 11 {
@@ -97,14 +99,14 @@ species personas parent: hogares {
 							//TODO: à régler (réorganisation du travail après décès)
 						}
 
-						do die;
 					}
 
+					do die;
 				}
 
 				if oil_worker = true {
 					working_months <- working_months + 1;
-					if working_months > contract_term {//if my employment contract is over...
+					if working_months > contract_term { //if my employment contract is over...
 						oil_worker <- false;
 						contract_term <- nil;
 						working_months <- nil;
@@ -118,9 +120,9 @@ species personas parent: hogares {
 							available_workers <- available_workers + myself.work_pace;
 							oil_workers <- oil_workers - 1;
 						}
+
 						work_pace <- nil;
 						empresa <- nil;
-
 					}
 
 				}

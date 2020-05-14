@@ -22,9 +22,11 @@ species hogares {
 	int Total_Hombres;
 	int Total_Mujeres;
 	predios my_predio;
+	string my_predio2;
 	cell my_house;
 	list<personas> membres_hogar;
 	personas chef_hogar;
+	string chef_hogar2;
 	string chef_auto_id;
 	float labor_force;
 	float occupied_workers;
