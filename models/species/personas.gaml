@@ -16,7 +16,6 @@ model personas_def
 import "../species_def.gaml"
 species personas parent: hogares {
 	hogares my_hogar;
-	string my_hogar2;
 	int Age;
 	string mes_nac;
 	string Sexo;
@@ -33,7 +32,6 @@ species personas parent: hogares {
 	int job_wages;
 	int annual_inc;
 	empresas empresa;
-	string empresa2;
 
 	action labour_value_and_needs {
 		if Age < 11 {

@@ -78,7 +78,7 @@ experiment save_init type: gui until: stop_simulation = true {
 	}
 	//Saving cells
 	user_command "Save cells" category: "Save files" when: init_end = true color: #darkblue {
-		save cell to: ("../../includes/initGENfiles/cells.csv") type: "csv" rewrite: true;
+		ask cell {save (cell where (grid_value != 0.0)) to: ("../../includes/initGENfiles/cells.csv") type: "csv" rewrite: true;}	
 	}
 
 	//Saving all
@@ -95,20 +95,16 @@ experiment save_init type: gui until: stop_simulation = true {
 		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "WORKERS"::workers];
 	}
 
-	user_command "Save init" category: "Init Generator"  color: #darkgreen {
+	user_command "Save init (serialization)" category: "Init Generator"  color: #darkgreen {
 		save saved_simulation_file('init.gsim', [simulation]);
 	}
 
-	user_command "Save init2" category: "Init Generator" color: #darkgreen {
+	user_command "Save init - 2 (serialization)" category: "Init Generator" color: #darkgreen {
 		write "Save of simulation : " + save_simulation('simpleSimuList.gsim');
 	}
 
 	parameter "Generate a new init?" category: "Parameters" var: new_init;
-	parameter "File chooser landscape" category: "Saving init" var: save_landscape;
-	parameter "File chooser roads" category: "Saving init" var: save_vias;
-	parameter "File chooser plots" category: "Saving init" var: save_predios;
-	parameter "File chooser households" category: "Saving init" var: save_hogares;
-	parameter "File chooser people" category: "Saving init" var: save_personas;
+	
 	output {
 		display map_ALG type: opengl {
 			grid cell;

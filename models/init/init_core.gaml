@@ -23,7 +23,7 @@ global { //Lists
 	action init_cells { //Cells init
 		write "---START OF INIT CELLS";
 		ask cell {
-			if grid_value = 0.0 {
+			if grid_value = 0 {
 				do die;
 			}
 
