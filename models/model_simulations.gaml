@@ -49,7 +49,6 @@ experiment save_init type: gui until: stop_simulation = true {
 
 //TODO : il faut ajouter des messages avant et après enregistrement en utilisant file_exists
 	user_command "Save Agricultural Landscape" category: "Saving init" when: init_end = true color: #darkblue {
-	//save cell to: ("../../includes/initGENfiles/cells.csv") type:"csv" rewrite: true;
 		save cell to: save_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 	}
