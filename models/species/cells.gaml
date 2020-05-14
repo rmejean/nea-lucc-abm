@@ -80,55 +80,58 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	action param_activities {
 		switch landuse {
 			match 'SC1.1' {
-				color <- #brown;
+				color <- rgb(96, 30, 29);
 			}
 
 			match 'SC1.2' {
-				color <- #brown;
+				color <- rgb(103, 7, 4);
 			}
 
 			match 'SC2' {
-				color <- #brown;
+				color <- rgb(164, 113, 88);
 			}
 
 			match 'SC3.1' {
-				color <- #brown;
+				color <- rgb(206, 211, 62);
 			}
 
 			match 'SC4.1' {
-				color <- #brown;
+				color <- rgb(49, 219, 103);
 			}
 
 			match 'SC4.2' {
-				color <- #brown;
+				color <- rgb(255, 252, 23);
 			}
 
 			match 'SE1.1' {
-				color <- #brown;
+				color <- rgb(113, 173, 44);
 			}
 
 			match 'SE1.2' {
-				color <- #brown;
+				color <- rgb(140, 181, 82);
 			}
 
 			match 'SE2.1' {
-				color <- #brown;
+				color <- rgb(96, 30, 29);
 			}
 
 			match 'SE2.2' {
-				color <- #brown;
+				color <- rgb(96, 30, 29);
 			}
 
 			match 'SE2.3' {
-				color <- #brown;
+				color <- rgb(96, 30, 29);
 			}
 
 			match 'SE3' {
-				color <- #brown;
+				color <- rgb(96, 30, 29);
 			}
 
 			match 'fallow' {
-				color <- #brown;
+				color <- rgb(195, 195, 145);
+			}
+			match 'house' {
+				color <- #red;
 			}
 
 		}
@@ -320,6 +323,8 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 				}
 
 			}
+			
+			do param_activities;
 
 		}
 

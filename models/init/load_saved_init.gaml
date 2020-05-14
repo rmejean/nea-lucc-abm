@@ -37,8 +37,7 @@ global {
 			area_deforest::int(get("AREA_DEF")), area_forest::int(get("AREA_F")),
 			def_rate::float(get("DEF_RATE")), forest_rate::float(get("FOREST_R")),
 			dist_via_auca::float(get("D_VIAAUCA")), prox_via_auca::float(get("PROX_VIAA")),
-			indigena::int(get("INDIGENA")), LS::string(get("LS")), cashcrops_amount::int(get("CASH_C")),
-			subcrops_amount::int(get("SUB_C"))]{
+			indigena::int(get("INDIGENA")), LS::string(get("LS"))]{
 			ask cells_inside {
 				predio <- myself;
 			}
@@ -55,12 +54,9 @@ global {
 			Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")),
 			//my_predio::(first(predios where(each.name = get("PLOT")))), my_house::(first(cell where (each.name =get("HOUSE")))),
 			chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")),
-			gross_monthly_inc::float(get("BRUT_INC")), income::float(get("INC")),
 			livelihood_strategy::string(get("LS")), available_workers::float(get("MOF_A")),
 			occupied_workers::float(get("MOF_O")), employees_workers::float(get("MOF_E")),
-			labor_alert::bool(get("MOF_W")), needs_alert::bool(get("NEEDS_W")),
-			subcrops_needs::(float(get("SUB_NEED"))), oil_workers::(int(get("NB_OIL_W"))),
-			estimated_annual_inc::(int(get("ESTIM_ANINC")))];
+			labor_alert::bool(get("MOF_W")), subcrops_needs::(float(get("SUB_NEED"))), oil_workers::(int(get("NB_OIL_W")))];
 		write "---END OF INIT HOUSEHOLDS";
 	}
 
@@ -108,7 +104,7 @@ global {
 		ask predios where (each.LS = 'SP1.1') {
 			gen_population_generator AL_genSP1_1;
 			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
-			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("../init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
@@ -142,7 +138,7 @@ global {
 		ask predios where (each.LS = 'SP1.2') {
 			gen_population_generator AL_genSP1_2;
 			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "US";
-			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("../init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
@@ -212,7 +208,7 @@ global {
 		ask predios where (each.LS = 'SP1.3') {
 			gen_population_generator AL_genSP1_3;
 			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "US";
-			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("../init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
@@ -282,7 +278,7 @@ global {
 		ask predios where (each.LS = 'SP2') {
 			gen_population_generator AL_genSP2;
 			AL_genSP2 <- AL_genSP2 with_generation_algo "US";
-			AL_genSP2 <- add_census_file(AL_genSP2, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			AL_genSP2 <- add_census_file(AL_genSP2, ("../init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
@@ -333,7 +329,7 @@ global {
 		ask predios where (each.LS = 'SP3') {
 			gen_population_generator AL_genSP3;
 			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
-			AL_genSP3 <- add_census_file(AL_genSP3, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
+			AL_genSP3 <- add_census_file(AL_genSP3, ("../init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
 			// Setup Attributs
 			// --------------------------	
 			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);

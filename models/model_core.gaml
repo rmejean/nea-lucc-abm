@@ -50,6 +50,7 @@ global { //Time aspects
 			do load_saved_hogares;
 			do load_saved_personas;
 			do load_saved_landscape;
+			do assess_income_needs;
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));

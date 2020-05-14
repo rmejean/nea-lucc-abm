@@ -38,7 +38,6 @@ species predios {
 	rgb bool_color;
 	hogares my_hogar;
 	int subcrops_amount;
-	int cashcrops_amount;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
 	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
