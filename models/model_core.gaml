@@ -95,10 +95,15 @@ global { //Time aspects
 	reflex decision_making {
 		ask hogares {
 			if needs_alert = true {
-				do LUC;
+				do subsistence_LUC;
 			}
 
 		}
+		ask cell {
+			do param_activities;
+			do update_yields;
+		}
+		do assess_income_needs;
 
 	}
 
