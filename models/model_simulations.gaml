@@ -162,20 +162,23 @@ experiment save_init type: gui until: stop_simulation = true {
 		}
 		
 
-		display "deforestation" type: java2D synchronized: true {
-			chart "Long series values" type: series x_label: "months" y_range: 500 x_tick_unit: 1.0 {
+		display "Deforestation" type: java2D synchronized: true {
+			chart "deforested pxl in fincass" type: series x_label: "months" y_range: 1000 x_tick_unit: 1.0 {
 				
 				data "deforested pxl in fincas" value: [deforestation] color: #red marker: false style: line;
-				
-				//data "" value: sum(predios collect (each.area_deforest)) color: #blue marker: false style: line;
-				//data "fallow" value: cell count (each.landuse = 'fallow') color: #red marker: false style: line;
+
 			}
 
 		}
+		
+		display "Needs" type: java2D synchronized: true {
+			chart "Households don't have their needs met" type: series x_label: "months" x_tick_unit: 1.0 {
+				
+				data "Households don't have their needs met" value: [length(hogares where (each.needs_alert = true))] color: #red marker: false style: line;
+
+			}
+		}
 
 	}
-	
-	reflex update_charts {
-		
-	}
+
 }
