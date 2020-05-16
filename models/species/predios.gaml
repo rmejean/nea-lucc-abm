@@ -24,7 +24,7 @@ species predios {
 	int id_EMC_LS2 <- 0;
 	int id_EMC_LS3 <- 0;
 	int area_total <- length(cells_inside);
-	int area_deforest <- length(cells_deforest);
+	int area_deforest <- length(cells_deforest) update: length(cells_deforest);
 	int area_forest <- length(cells_forest);
 	float def_rate;
 	float forest_rate;
@@ -39,8 +39,8 @@ species predios {
 	hogares my_hogar;
 	int subcrops_amount;
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
-	list<cell> cells_deforest -> cells_inside where (each.grid_value = 3);
-	list<cell> cells_forest -> cells_inside where (each.grid_value = 2);
+	list<cell> cells_deforest -> cells_inside where (each.is_deforest = true);
+	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
 	list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
 	list<predios> neighbors;

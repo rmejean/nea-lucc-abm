@@ -6,9 +6,7 @@
 * Contact : romain.mejean@univ-tlse2.fr
 * Description: a LUCC model in Northern Ecuadorian Amazon (parroquia de Dayuma)
 * Tags: LUCC, deforestation dynamics, livelihood strategies
-*/
-model hogares_def
-//
+*/ model hogares_def //
 //
 // DEFINITION OF HOGARES (households)
 //
@@ -44,10 +42,10 @@ species hogares {
 		available_workers <- labor_force;
 		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
 	}
-	
-	action update_values {
-		//labor_force <- (sum(membres_hogar collect each.labor_value) * 30) + (employees_workers * 30) - (oil_workers * 14.0);
-	}
+
+	//action update_values {
+	//labor_force <- (sum(membres_hogar collect each.labor_value) * 30) + (employees_workers * 30) - (oil_workers * 14.0);
+	//}
 
 	action head_and_ethnicity {
 		chef_hogar <- membres_hogar with_min_of each.orden_en_hogar;
@@ -66,30 +64,23 @@ species hogares {
 
 	}
 
-	//	action init_employees {
-	//		occupied_workers <- (length(my_predio.cells_deforest where (each.landuse = "SC1.1")) * laborcost_SC1_1) + (length(my_predio.cells_deforest where
-	//		(each.landuse = "SC1.2")) * laborcost_SC1_2) + (length(my_predio.cells_deforest where (each.landuse = "SC2")) * laborcost_SC2) + (length(my_predio.cells_deforest where
-	//		(each.landuse = "SC3.1")) * laborcost_SC3_1) + (length(my_predio.cells_deforest where (each.landuse = "SC4.1")) * laborcost_SC4_1) + (length(my_predio.cells_deforest where
-	//		(each.landuse = "SC4.2")) * laborcost_SC4_2) + (length(my_predio.cells_deforest where (each.landuse = "SE1.1")) * laborcost_SE1_1) + (length(my_predio.cells_deforest where
-	//		(each.landuse = "SE1.2")) * laborcost_SE1_2) + (length(my_predio.cells_deforest where (each.landuse = "SE2.1")) * laborcost_SE2_1) + (length(my_predio.cells_deforest where
-	//		(each.landuse = "SE2.2")) * laborcost_SE2_2) + (length(my_predio.cells_deforest where (each.landuse = "SE2.3")) * laborcost_SE2_3) + (length(my_predio.cells_deforest where
-	//		(each.landuse = "SE3")) * laborcost_SE3);
-	//		available_workers <- labor_force - occupied_workers;
-	//	}
 	action LUC {
-		if livelihood_strategy = "SP1.1" {
-		}
+		switch livelihood_strategy {
+			match "SP1.1" {
+			}
 
-		if livelihood_strategy = "SP1.2" {
-		}
+			match "SP1.2" {
+			}
 
-		if livelihood_strategy = "SP1.3" {
-		}
+			match "SP1.3" {
+			}
 
-		if livelihood_strategy = "SP2" {
-		}
+			match "SP2" {
+			}
 
-		if livelihood_strategy = "SP3" {
+			match "SP3" {
+			}
+
 		}
 
 	}

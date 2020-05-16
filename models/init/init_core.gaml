@@ -215,10 +215,10 @@ global { //Lists
 			let pxl_subcrops <- 0;
 			let pxl_coffee_max <- rnd(1);
 			let pxl_coffee <- 0;
-			save ("type,months") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC3_1 {
-					save ("SC3.1" + "," + rnd(24)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+					save ("SC3.1" + "," + rnd(30)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_subcrops <- pxl_subcrops + 1;
 					pxl_generated <- pxl_generated + 1;
 					ask my_hogar {
@@ -228,7 +228,7 @@ global { //Lists
 
 				} else { //if food requirements are OK:
 					if my_hogar.available_workers >= laborcost_SC2 and (pxl_coffee != pxl_coffee_max) {
-						save ("SC2" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SC2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_generated <- pxl_generated + 1;
 						pxl_coffee <- pxl_coffee + 1;
 						ask my_hogar {
@@ -237,7 +237,7 @@ global { //Lists
 						}
 
 					} else {
-						save ("fallow" + "," + rnd(125)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("fallow" + "," + rnd(125)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_generated <- pxl_generated + 1;
 					}
 
@@ -246,7 +246,7 @@ global { //Lists
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP1_1;
 			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
-			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
@@ -293,11 +293,11 @@ global { //Lists
 			let pxl_coffee <- 0;
 			let pxl_chicken <- 0;
 			let pxl_pig <- 0;
-			save ("type,months") to: ("/ALG/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC4_1 {
 					if flip(0.5) = true {
-						save ("SC4.1" + "," + rnd(24)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SC4.1" + "," + rnd(30)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_subcrops <- pxl_subcrops + 1;
 						pxl_generated <- pxl_generated + 1;
 						ask my_hogar {
@@ -306,7 +306,7 @@ global { //Lists
 						}
 
 					} else {
-						save ("SC4.2" + "," + rnd(24)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SC4.2" + "," + rnd(30)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_subcrops <- pxl_subcrops + 1;
 						pxl_generated <- pxl_generated + 1;
 						ask my_hogar {
@@ -318,7 +318,7 @@ global { //Lists
 
 				} else { //if food requirements are OK:
 					if my_hogar.labor_force >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
-						save ("SE3" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SE3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_chicken <- pxl_chicken + 1;
 						ask my_hogar {
 							available_workers <- available_workers - laborcost_SE3;
@@ -328,7 +328,7 @@ global { //Lists
 					}
 
 					if my_hogar.labor_force >= laborcost_SE2_1 and pxl_pig < 1 { //pig farming
-						save ("SE2.1" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SE2.1" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_pig <- pxl_pig + 1;
 						ask my_hogar {
 							available_workers <- available_workers - laborcost_SE2_1;
@@ -339,7 +339,7 @@ global { //Lists
 
 					if my_hogar.labor_force >= (pxl_cacao_max * laborcost_SC1_1) { //if I have enough labor to run the cocoa crop with inputs...
 						if (my_hogar.available_workers >= laborcost_SC1_1) and (pxl_cacao != pxl_cacao_max) {
-							save ("SC1.1" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+							save ("SC1.1" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 							pxl_generated <- pxl_generated + 1;
 							pxl_cacao <- pxl_cacao + 1;
 							ask my_hogar {
@@ -349,7 +349,7 @@ global { //Lists
 
 						} else {
 							if (my_hogar.available_workers >= laborcost_SC2) and (pxl_coffee != pxl_coffee_max) {
-								save ("SC2" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+								save ("SC2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 								pxl_generated <- pxl_generated + 1;
 								pxl_coffee <- pxl_coffee + 1;
 								ask my_hogar {
@@ -358,7 +358,7 @@ global { //Lists
 								}
 
 							} else {
-								save ("fallow" + "," + rnd(65)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+								save ("fallow" + "," + rnd(65)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 								pxl_generated <- pxl_generated + 1;
 							}
 
@@ -366,7 +366,7 @@ global { //Lists
 
 					} else { //if I don't have enough labor to run the cocoa crop with inputs...
 						if (my_hogar.available_workers >= laborcost_SC1_2) and (pxl_cacao != pxl_cacao_max) {
-							save ("SC1.2" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+							save ("SC1.2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 							pxl_generated <- pxl_generated + 1;
 							pxl_cacao <- pxl_cacao + 1;
 							ask my_hogar {
@@ -376,7 +376,7 @@ global { //Lists
 
 						} else {
 							if (my_hogar.available_workers >= laborcost_SC2) and (pxl_coffee != pxl_coffee_max) {
-								save ("SC2" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+								save ("SC2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 								pxl_generated <- pxl_generated + 1;
 								pxl_coffee <- pxl_coffee + 1;
 								ask my_hogar {
@@ -385,7 +385,7 @@ global { //Lists
 								}
 
 							} else {
-								save ("fallow" + "," + rnd(65)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+								save ("fallow" + "," + rnd(65)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 								pxl_generated <- pxl_generated + 1;
 							}
 
@@ -398,7 +398,7 @@ global { //Lists
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP1_2;
 			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "US";
-			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
@@ -481,11 +481,11 @@ global { //Lists
 			let pxl_coffee <- 0;
 			let pxl_chicken <- 0;
 			let pxl_pig <- 0;
-			save ("type,months") to: ("/ALG/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.subcrops_needs > pxl_subcrops and my_hogar.available_workers >= laborcost_SC4_1 {
 					if flip(0.5) = true {
-						save ("SC4.1" + "," + rnd(24)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SC4.1" + "," + rnd(30)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_subcrops <- pxl_subcrops + 1;
 						pxl_generated <- pxl_generated + 1;
 						ask my_hogar {
@@ -494,7 +494,7 @@ global { //Lists
 						}
 
 					} else {
-						save ("SC4.2" + "," + rnd(24)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SC4.2" + "," + rnd(30)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_subcrops <- pxl_subcrops + 1;
 						pxl_generated <- pxl_generated + 1;
 						ask my_hogar {
@@ -506,7 +506,7 @@ global { //Lists
 
 				} else { //if food requirements are OK:
 					if my_hogar.labor_force >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
-						save ("SE3" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SE3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_chicken <- pxl_chicken + 1;
 						ask my_hogar {
 							available_workers <- available_workers - laborcost_SE3;
@@ -516,7 +516,7 @@ global { //Lists
 					}
 
 					if my_hogar.labor_force >= laborcost_SE2_3 and pxl_pig < 1 { //pigs farming TODO: attribution à revoir (pas frocément prioritaire sur café/cacao et/ou gros élevage
-						save ("SE2.3" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SE2.3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_pig <- pxl_pig + 1;
 						ask my_hogar {
 							available_workers <- available_workers - laborcost_SE2_3;
@@ -526,7 +526,7 @@ global { //Lists
 					}
 
 					if (my_hogar.available_workers >= laborcost_SC1_2) and (pxl_cacao != pxl_cacao_max) {
-						save ("SC1.2" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+						save ("SC1.2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_generated <- pxl_generated + 1;
 						pxl_cacao <- pxl_cacao + 1;
 						ask my_hogar {
@@ -536,7 +536,7 @@ global { //Lists
 
 					} else {
 						if (my_hogar.available_workers >= laborcost_SC2) and (pxl_coffee != pxl_coffee_max) {
-							save ("SC2" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+							save ("SC2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 							pxl_generated <- pxl_generated + 1;
 							pxl_coffee <- pxl_coffee + 1;
 							ask my_hogar {
@@ -546,7 +546,7 @@ global { //Lists
 
 						} else {
 							if (my_hogar.available_workers >= laborcost_SE1_2) {
-								save ("SE1.2" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+								save ("SE1.2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 								pxl_generated <- pxl_generated + 1;
 								ask my_hogar {
 									available_workers <- available_workers - laborcost_SE1_2;
@@ -554,7 +554,7 @@ global { //Lists
 								}
 
 							} else {
-								save ("fallow" + "," + rnd(60)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+								save ("fallow" + "," + rnd(60)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 								pxl_generated <- pxl_generated + 1;
 							}
 
@@ -567,7 +567,7 @@ global { //Lists
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP1_3;
 			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "US";
-			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
@@ -646,10 +646,10 @@ global { //Lists
 			let pxl_subcrops <- 0;
 			let pxl_cash <- 0;
 			let pxl_chicken <- 0;
-			save ("type,months") to: ("/ALG/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if my_hogar.labor_force >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
-					save ("SE3" + "," + "0") to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+					save ("SE3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_chicken <- pxl_chicken + 1;
 					ask my_hogar {
 						available_workers <- available_workers - laborcost_SE3;
@@ -659,7 +659,7 @@ global { //Lists
 				}
 
 				if flip(0.05) = false {
-					save ("SE1.2" + "," + 0) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+					save ("SE1.2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 					ask my_hogar {
 						available_workers <- available_workers - laborcost_SE1_2;
@@ -667,14 +667,14 @@ global { //Lists
 					}
 
 				} else {
-					save ("fallow" + "," + rnd(60)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+					save ("fallow" + "," + rnd(60)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 				}
 
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP2;
 			AL_genSP2 <- AL_genSP2 with_generation_algo "US";
-			AL_genSP2 <- add_census_file(AL_genSP2, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			AL_genSP2 <- add_census_file(AL_genSP2, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
 			// --------------------------
 			// Setup Attributs
 			// --------------------------	
@@ -733,10 +733,10 @@ global { //Lists
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
 			let pxl_cash <- 0;
-			save ("type,months") to: ("/ALG/" + name + "_ldsp.csv") rewrite: true;
+			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if flip(0.05) = false {
-					save ("SE1.1" + "," + 0) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+					save ("SE1.1" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 					ask my_hogar {
 						available_workers <- available_workers - laborcost_SE1_2;
@@ -744,14 +744,14 @@ global { //Lists
 					}
 
 				} else {
-					save ("fallow" + "," + rnd(60)) to: ("/ALG/" + name + "_ldsp.csv") rewrite: false;
+					save ("fallow" + "," + rnd(60)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 				}
 
 			} //generate the pixels from the written file
 			gen_population_generator AL_genSP3;
 			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
-			AL_genSP3 <- add_census_file(AL_genSP3, ("/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
+			AL_genSP3 <- add_census_file(AL_genSP3, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
 			// Setup Attributs
 			// --------------------------	
 			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
@@ -851,6 +851,7 @@ global { //Lists
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
 				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
+			//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production
 			}
 			//TODO: penser aux chèques des autorités pour le SP1
 			if livelihood_strategy = "SP1.2" {

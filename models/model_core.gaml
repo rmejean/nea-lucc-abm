@@ -56,7 +56,8 @@ global { //Time aspects
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
 		}
 
-	} //
+	}
+	//
 	//MODEL DYNAMICS
 	//
 	reflex time when: (stop_simulation = false) {
@@ -84,8 +85,8 @@ global { //Time aspects
 		}
 
 		ask cell {
-			do update_yields;
 			do crop_cycle;
+			do update_yields;
 		}
 
 		do assess_income_needs;

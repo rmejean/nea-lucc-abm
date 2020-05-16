@@ -6,18 +6,16 @@
 * Contact : romain.mejean@univ-tlse2.fr
 * Description: a LUCC model in Northern Ecuadorian Amazon (parroquia de Dayuma)
 * Tags: LUCC, deforestation dynamics, livelihood strategies
-*/
-model simulations
+*/ model simulations
 
 import "model_core.gaml"
-import "species_def.gaml"
-
-//Global variables for monitors
+import "species_def.gaml" //Global variables for monitors
 global {
 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
 	int nb_predios -> length(predios);
 	int nb_patches -> length(patches);
+	int deforestation -> sum(predios collect (each.area_deforest));
 	float ratio_deforest_min -> predios min_of (each.def_rate);
 	float ratio_deforest_max -> predios max_of (each.def_rate);
 	float ratio_deforest_mean -> predios mean_of (each.def_rate);
@@ -26,19 +24,18 @@ global {
 	float area_mean -> predios mean_of (each.area_total);
 	int area_deforest_min -> predios min_of (each.area_deforest);
 	int area_deforest_max -> predios max_of (each.area_deforest);
-	float area_deforest_mean -> predios mean_of (each.area_deforest);
+	float area_deforest_mean <- predios mean_of (each.area_deforest) update: predios mean_of (each.area_deforest);
 	float labor_mean <- hogares mean_of (each.labor_force) update: hogares mean_of (each.labor_force);
-
 	//-----------------------------
 	//Saving init------------------
 	//-----------------------------
 	bool init_end <- false;
-	string save_landscape <- ("../../includes/initGENfiles/agricultural_landscape.shp");
-	string save_vias <- ("../../includes/initGENfiles/vias.shp");
-	string save_empresas <- ("../../includes/initGENfiles/empresas.shp");
-	string save_predios <- ("../../includes/initGENfiles/predios.shp");
-	string save_hogares <- ("../../includes/initGENfiles/hogares.shp");
-	string save_personas <- ("../../includes/initGENfiles/personas.shp");
+	string save_landscape <- ("../includes/initGENfiles/agricultural_landscape.shp");
+	string save_vias <- ("../includes/initGENfiles/vias.shp");
+	string save_empresas <- ("../includes/initGENfiles/empresas.shp");
+	string save_predios <- ("../includes/initGENfiles/predios.shp");
+	string save_hogares <- ("../includes/initGENfiles/hogares.shp");
+	string save_personas <- ("../includes/initGENfiles/personas.shp");
 }
 
 experiment save_init type: gui until: stop_simulation = true {
@@ -46,41 +43,35 @@ experiment save_init type: gui until: stop_simulation = true {
 //DATA EXPORT
 //
 //Saving pixels
-
 //TODO : il faut ajouter des messages avant et après enregistrement en utilisant file_exists
 	user_command "Save Agricultural Landscape" category: "Saving init" when: init_end = true color: #darkblue {
 		save cell to: save_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
-	}
-	//Saving roads
+	} //Saving roads
 	user_command "Save Roads" category: "Save files" when: init_end = true color: #darkblue {
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
-	}
-	//Saving oil ompagnies
+	} //Saving oil ompagnies
 	user_command "Save oil compagnies" category: "Save files" when: init_end = true color: #darkblue {
 		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
-	}
-	//Saving plots
+	} //Saving plots
 	user_command "Save Plots" category: "Save files" when: init_end = true color: #darkblue {
 		save predios to: save_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "SUB_C"::subcrops_amount, "NEIGH"::neighbors];
-	}
-	//Saving households
+	} //Saving households
 	user_command "Save Households" category: "Save files" when: init_end = true color: #darkblue {
 		save hogares to: save_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc];
-	}
-	//Saving people
+	} //Saving people
 	user_command "Save People" category: "Save files" when: init_end = true color: #darkblue {
 		save personas to: save_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
-	}
-	//Saving cells
+	} //Saving cells
 	user_command "Save cells" category: "Save files" when: init_end = true color: #darkblue {
-		ask cell {save (cell where (grid_value != 0.0)) to: ("../../includes/initGENfiles/cells.csv") type: "csv" rewrite: true;}	
-	}
+		ask cell {
+			save (cell where (grid_value != 0.0)) to: ("../../includes/initGENfiles/cells.csv") type: "csv" rewrite: true;
+		}
 
-	//Saving all
+	} //Saving all
 	user_command "Save all files" category: "Save files" when: init_end = true color: #darkred {
 		save cell to: save_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
@@ -94,7 +85,7 @@ experiment save_init type: gui until: stop_simulation = true {
 		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "WORKERS"::workers];
 	}
 
-	user_command "Save init (serialization)" category: "Init Generator"  color: #darkgreen {
+	user_command "Save init (serialization)" category: "Init Generator" color: #darkgreen {
 		save saved_simulation_file('init.gsim', [simulation]);
 	}
 
@@ -103,15 +94,18 @@ experiment save_init type: gui until: stop_simulation = true {
 	}
 
 	parameter "Generate a new init?" category: "Parameters" var: new_init;
+	parameter "File chooser landscape" category: "Saving init" var: save_landscape;
+	parameter "File chooser roads" category: "Saving init" var: save_vias;
+	parameter "File chooser plots" category: "Saving init" var: save_predios;
+	parameter "File chooser households" category: "Saving init" var: save_hogares;
+	parameter "File chooser people" category: "Saving init" var: save_personas;
 	
 	output {
 		display map_ALG type: opengl {
 			grid cell;
 			species predios aspect: default;
 			species hogares;
-		}
-
-		//		display map_LS type: opengl {
+		} //		display map_LS type: opengl {
 		//			grid cell;
 		//			species predios aspect: map_LS;
 		//			species hogares;
@@ -139,15 +133,14 @@ experiment save_init type: gui until: stop_simulation = true {
 		monitor "Moy. sup." value: area_mean;
 		monitor "Sup. déforest. min" value: area_deforest_min;
 		monitor "Sup. déforest. max" value: area_deforest_max;
-		monitor "Moy. déforest." value: area_deforest_mean;
-		monitor "Moy. labor_force" value: labor_mean;
+		monitor "Moy. déforest." value: area_deforest_mean refresh: true;
+		monitor "Moy. labor_force" value: labor_mean refresh: true;
 		//-------------------------------------
 		browse "suivi hogares" value: hogares refresh: true attributes:
 		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "labor_force", "my_predio", "my_house", "common_pot_inc", "subcrops_needs", "needs_alert"];
 		browse "suivi personas" value: personas refresh: true attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "labor_value", "my_hogar", "orden_en_hogar", "my_predio"];
 		browse "suivi predios" value: predios refresh: true attributes:
-		["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside", "subcrops_amount", "cashcrops_amount"];
-		//-------------------------------------
+		["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside", "subcrops_amount", "cashcrops_amount"]; //-------------------------------------
 		display Ages synchronized: true {
 			chart "Ages" type: histogram {
 				loop i from: 0 to: 110 {
@@ -158,7 +151,7 @@ experiment save_init type: gui until: stop_simulation = true {
 
 		}
 
-		display area_def {
+		display area_def synchronized: true {
 			chart "Ages" type: histogram {
 				loop i from: 0 to: 170 {
 					data "" + i value: predios count (each.area_deforest = i);
@@ -167,7 +160,22 @@ experiment save_init type: gui until: stop_simulation = true {
 			}
 
 		}
+		
+
+		display "deforestation" type: java2D synchronized: true {
+			chart "Long series values" type: series x_label: "months" y_range: 500 x_tick_unit: 1.0 {
+				
+				data "deforested pxl in fincas" value: [deforestation] color: #red marker: false style: line;
+				
+				//data "" value: sum(predios collect (each.area_deforest)) color: #blue marker: false style: line;
+				//data "fallow" value: cell count (each.landuse = 'fallow') color: #red marker: false style: line;
+			}
+
+		}
 
 	}
-
+	
+	reflex update_charts {
+		
+	}
 }
