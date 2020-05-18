@@ -18,7 +18,8 @@ global { //Time aspects
 	date starting_date <- date("2008-01-01");
 	date current_date <- starting_date;
 	string current_month;
-	float step <- 1 #month update: step + 1; //Other variables
+	float step <- 1 #month update: step + 1;
+	//Other variables
 	float $_ANFP <- 3900.0; //AMOUNT NEEDED TO FEED A PERSON = 3900 / 12
 	//
 	//INIT
@@ -39,7 +40,6 @@ global { //Time aspects
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-		
 		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
@@ -99,12 +99,13 @@ global { //Time aspects
 			}
 
 		}
+
 		ask cell {
 			do param_activities;
 			do update_yields;
 		}
-		do assess_income_needs;
 
+		do assess_income_needs;
 	}
 
 }

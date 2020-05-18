@@ -33,8 +33,10 @@ species hogares {
 	float income;
 	float estimated_annual_inc;
 	string livelihood_strategy <- 'none';
-	bool needs_alert;
-	bool labor_alert;
+	bool needs_alert <- false;
+	bool hunger_alert <- false;
+	bool money_alert <- false;
+	bool labor_alert <- false;
 	int oil_workers <- 0;
 
 	action init_values {
@@ -62,17 +64,36 @@ species hogares {
 		}
 
 	}
-	
+
 	action calcutility {
-		
 	}
 
 	action subsistence_LUC {
-		if one_matches(my_predio.cells_inside, each.is_deforest = false) {//s'il y a au moins un pixel à déforester...
+		if one_matches(my_predio.cells_inside, each.is_deforest = false) { //s'il y a au moins un pixel à déforester...
 			switch livelihood_strategy {
 				match "SP1.1" {
+					if hunger_alert {
+						let needs <- subcrops_needs - my_predio.subcrops_amount;
+						if available_workers > (laborcost_install_SC3 * needs) {
+							ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
+									is_deforest <- true;
+									landuse <- 'SC3.1';
+									write "new deforestation for subsistence at " + location;
+									//TODO: penser à gérer le cout en MOF
+									nb_months <- 0;
+									add landuse to: land_use_hist;
+								}
+							
+						}
+						
+						//TODO: chantier en cours
+						
+					}
+					
+					
 					let possibility_SC2 <- false;
 					let possibility_SC3_1 <- false;
+					//let correspondence <- create_map ([possibility_SC2, possibility_SC3_1], ['yld_SC2', 'yld_SC3_1']);
 					let possibilities <- [];
 					//step 1: possibilities are identified
 					if available_workers > laborcost_install_SC2 {
@@ -85,15 +106,17 @@ species hogares {
 						add possibility_SC3_1 to: possibilities;
 					}
 					//step 2: determining the best possibility
-					if length(possibilities) = 0 {
-						write "no possibility...";
-					} else {
-						if length(possibilities) = 1 {
+					switch length(possibilities) {
+						match 0 {
+							write "no possibility...";
+						}
+
+						match 1 {
 							if possibilities contains possibility_SC2 {
 								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
 									is_deforest <- true;
 									landuse <- 'SC2';
-									write "new deforestation for subsistence at" + location;
+									write "new deforestation for subsistence at " + location;
 									//TODO: penser à gérer le cout en MOF
 									nb_months <- 0;
 									add landuse to: land_use_hist;
@@ -105,7 +128,7 @@ species hogares {
 								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
 									is_deforest <- true;
 									landuse <- 'SC3.1';
-									write "new deforestation for subsistence at" + location;
+									write "new deforestation for subsistence at " + location;
 									//TODO: penser à gérer le cout en MOF
 									nb_months <- 0;
 									add landuse to: land_use_hist;
@@ -113,15 +136,13 @@ species hogares {
 
 							}
 
-						} else { //car café rapporte plus
-							ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-								is_deforest <- true;
-								landuse <- 'SC2';
-								write "new deforestation for subsistence at" + location;
-								//TODO: penser à gérer le cout en MOF
-								nb_months <- 0;
-								add landuse to: land_use_hist;
-							}
+						}
+
+						match 2 {
+							//let test1 <- possibilities at 0;
+							//let test2 <- possibilities at 1;
+							
+							
 
 						}
 
@@ -130,239 +151,15 @@ species hogares {
 				}
 
 				match "SP1.2" {
-					let possibility_SC2 <- false;
-					let possibility_SC3_1 <- false;
-					let possibilities <- [];
-					//step 1: possibilities are identified
-					if available_workers > laborcost_install_SC2 {
-						possibility_SC2 <- true;
-						add possibility_SC2 to: possibilities;
-					}
-
-					if available_workers > laborcost_install_SC3 {
-						possibility_SC3_1 <- true;
-						add possibility_SC3_1 to: possibilities;
-					}
-					//step 2: determining the best possibility
-					if length(possibilities) = 0 {
-						write "no possibility...";
-					} else {
-						if length(possibilities) = 1 {
-							if possibilities contains possibility_SC2 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC2';
-									write "new deforestation for subsistence at" + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-							if possibilities contains possibility_SC3_1 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC3.1';
-									write "new deforestation for subsistence at" + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-						} else { //car café rapporte plus
-							ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-								is_deforest <- true;
-								landuse <- 'SC2';
-								write "new deforestation for subsistence at" + location;
-								//TODO: penser à gérer le cout en MOF
-								nb_months <- 0;
-								add landuse to: land_use_hist;
-							}
-
-						}
-
-					}
-
 				}
 
 				match "SP1.3" {
-					let possibility_SC2 <- false;
-					let possibility_SC3_1 <- false;
-					let possibilities <- [];
-					//step 1: possibilities are identified
-					if available_workers > laborcost_install_SC2 {
-						possibility_SC2 <- true;
-						add possibility_SC2 to: possibilities;
-					}
-
-					if available_workers > laborcost_install_SC3 {
-						possibility_SC3_1 <- true;
-						add possibility_SC3_1 to: possibilities;
-					}
-					//step 2: determining the best possibility
-					if length(possibilities) = 0 {
-						write "no possibility...";
-					} else {
-						if length(possibilities) = 1 {
-							if possibilities contains possibility_SC2 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC2';
-									write "new deforestation for subsistence at" + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-							if possibilities contains possibility_SC3_1 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC3.1';
-									write "new deforestation for subsistence at" + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-						} else { //car café rapporte plus
-							ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-								is_deforest <- true;
-								landuse <- 'SC2';
-								write "new deforestation for subsistence at" + location;
-								//TODO: penser à gérer le cout en MOF
-								nb_months <- 0;
-								add landuse to: land_use_hist;
-							}
-
-						}
-
-					}
-
 				}
 
 				match "SP2" {
-					let possibility_SC2 <- false;
-					let possibility_SC3_1 <- false;
-					let possibilities <- [];
-					//step 1: possibilities are identified
-					if available_workers > laborcost_install_SC2 {
-						possibility_SC2 <- true;
-						add possibility_SC2 to: possibilities;
-					}
-
-					if available_workers > laborcost_install_SC3 {
-						possibility_SC3_1 <- true;
-						add possibility_SC3_1 to: possibilities;
-					}
-					//step 2: determining the best possibility
-					if length(possibilities) = 0 {
-						write "no possibility...";
-					} else {
-						if length(possibilities) = 1 {
-							if possibilities contains possibility_SC2 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC2';
-									write "new deforestation for subsistence at" + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-							if possibilities contains possibility_SC3_1 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC3.1';
-									write "new deforestation for subsistence at" + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-						} else { //car café rapporte plus
-							ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-								is_deforest <- true;
-								landuse <- 'SC2';
-								write "new deforestation for subsistence at" + location;
-								//TODO: penser à gérer le cout en MOF
-								nb_months <- 0;
-								add landuse to: land_use_hist;
-							}
-
-						}
-
-					}
-
 				}
 
 				match "SP3" {
-					let possibility_SC2 <- false;
-					let possibility_SC3_1 <- false;
-					let possibilities <- [];
-					//step 1: possibilities are identified
-					if available_workers > laborcost_install_SC2 {
-						possibility_SC2 <- true;
-						add possibility_SC2 to: possibilities;
-					}
-
-					if available_workers > laborcost_install_SC3 {
-						possibility_SC3_1 <- true;
-						add possibility_SC3_1 to: possibilities;
-					}
-					//step 2: determining the best possibility
-					if length(possibilities) = 0 {
-						write "no possibility...";
-					} else {
-						if length(possibilities) = 1 {
-							if possibilities contains possibility_SC2 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC2';
-									write "new deforestation for subsistence at" + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-							if possibilities contains possibility_SC3_1 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC3.1';
-									write "new deforestation for subsistence at" + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-						} else { //car café rapporte plus
-							ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-								is_deforest <- true;
-								landuse <- 'SC2';
-								write "new deforestation for subsistence at" + location;
-								//TODO: penser à gérer le cout en MOF
-								nb_months <- 0;
-								add landuse to: land_use_hist;
-							}
-
-						}
-
-					}
-
 				}
 
 			}

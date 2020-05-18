@@ -24,7 +24,7 @@ global { //Lists
 		write "---START OF INIT CELLS";
 		ask cell {
 			if grid_value = 0.0 {
-				do die;//TODO: peut-être pas utile, ça a l'air de perturber les charts
+				do die; //TODO: peut-être pas utile, ça a l'air de perturber les charts
 			}
 
 			if grid_value >= 3 {
@@ -264,7 +264,7 @@ global { //Lists
 						landuse <- myself.type;
 						nb_months <- myself.months;
 						add landuse to: land_use_hist;
-						do param_activities;//TODO: pas à répéter à chaque fois!
+						do param_activities; //TODO: pas à répéter à chaque fois!
 						do update_yields;
 					}
 
@@ -809,16 +809,16 @@ global { //Lists
 		ask hogares {
 			let no_more_jobs <- false;
 			let wasnt_drawn <- false;
-			loop while: (available_workers >= 14.0) and (one_matches (membres_hogar, each.Age < 40 and each.oil_worker = false)) and (no_more_jobs = false) {
+			loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (no_more_jobs = false) {
 				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
-					if one_matches (empresas, each.free_jobs > 0) {
+					if one_matches(empresas, each.free_jobs > 0) {
 						empresa <- empresas where (each.free_jobs > 0) closest_to self;
 						write "" + empresa.name + " found a worker";
 						oil_worker <- true;
 						work_pace <- 14;
 						job_wages <- 350;
-						contract_term <- rnd(5,7);
-						working_months <- rnd(0,contract_term);
+						contract_term <- rnd(5, 7);
+						working_months <- rnd(0, contract_term);
 						annual_inc <- contract_term * job_wages;
 						ask empresa {
 							free_jobs <- free_jobs - 1;
@@ -851,21 +851,23 @@ global { //Lists
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
 				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
-			//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production
+				//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production
 			}
 			//TODO: penser aux chèques des autorités pour le SP1
 			if livelihood_strategy = "SP1.2" {
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev + sum(membres_hogar collect
 				each.job_wages));
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
+				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect
+				each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
 			}
 
 			if livelihood_strategy = "SP1.3" {
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
 				each.rev + sum(membres_hogar collect each.job_wages));
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
+				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
+				each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
 			}
 
 			if livelihood_strategy = "SP2" {
@@ -884,14 +886,21 @@ global { //Lists
 				do crops_calc;
 			}
 
-			if (subcrops_needs > my_predio.subcrops_amount) and ($_ANFP > estimated_annual_inc) { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à voir si je le laisse ou non
+			if (subcrops_needs > my_predio.subcrops_amount) {
+				hunger_alert <- true;
+			}
+
+			if ($_ANFP > estimated_annual_inc) {
+				money_alert <- true;
+			}
+
+			if hunger_alert and money_alert { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à voir si je le laisse ou non
 				needs_alert <- true;
 			}
 
 		}
-		
-		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 
+		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 	}
 
 }
