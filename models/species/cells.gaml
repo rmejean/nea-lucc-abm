@@ -136,6 +136,10 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			}
 
 		}
+		
+		if is_deforest = false {
+			color <- rgb(35, 75, 0);
+		}
 
 	}
 
@@ -262,6 +266,12 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	action crop_cycle {
 		nb_months <- nb_months + 1;
+		do reforestation;
+		do fallow_and_resow;
+		do param_activities;
+	}
+
+	action fallow_and_resow {
 		if (landuse = 'SC3.1' or 'SC4.1' or 'SC4.2') and (nb_months >= 24) {
 			write "fallow & resow!";
 			let previous_landuse <- landuse;
@@ -271,28 +281,17 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- 0.0;
 			switch previous_landuse {
 				match 'SC3.1' {
-					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 120) {
-						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 120)) { //TODO: closest_to house ?
+					if one_matches(predio.cells_inside, each.is_deforest = false) {
+						ask one_of(predio.cells_inside where (each.is_deforest = false)) {
+							is_deforest <- true;
 							landuse <- previous_landuse;
-							write "resow at" + location;
+							write "deforest to resow at " + location;
 							nb_months <- 0;
 							add landuse to: land_use_hist;
 						}
 
 					} else {
-						if one_matches(predio.cells_inside, each.is_deforest = false) {
-							ask one_of(predio.cells_inside where (each.is_deforest = false)) {
-								is_deforest <- true;
-								landuse <- previous_landuse;
-								write "resow and deforest at" + location;
-								nb_months <- 0;
-								add landuse to: land_use_hist;
-							}
-
-						} else {
-							write "" + my_hogar.name + " cannot re-sow SC3.1";
-						}
-
+						write "" + my_hogar.name + " cannot re-sow SC3.1";
 					}
 
 				}
@@ -301,7 +300,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
 						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
 							landuse <- previous_landuse;
-							write "resow at" + location;
+							write "resow at " + location;
 							nb_months <- 0;
 							add landuse to: land_use_hist;
 						}
@@ -311,7 +310,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 							ask one_of(predio.cells_inside where (each.is_deforest = false)) {
 								is_deforest <- true;
 								landuse <- previous_landuse;
-								write "resow and deforest at" + location;
+								write "deforest to resow at " + location;
 								nb_months <- 0;
 								add landuse to: land_use_hist;
 							}
@@ -328,7 +327,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
 						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
 							landuse <- previous_landuse;
-							write "resow at" + location;
+							write "resow at " + location;
 							nb_months <- 0;
 							add landuse to: land_use_hist;
 						}
@@ -338,7 +337,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 							ask one_of(predio.cells_inside where (each.is_deforest = false)) {
 								is_deforest <- true;
 								landuse <- previous_landuse;
-								write "resow and deforest at" + location;
+								write "deforest to resow at " + location;
 								nb_months <- 0;
 								add landuse to: land_use_hist;
 							}
@@ -355,7 +354,16 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 		}
 
-		do param_activities;
+	}
+
+	action reforestation {
+		if (landuse = 'fallow') and (nb_months >= 120) {
+			write "reforestation at " + location;
+			is_deforest <- false;
+			landuse <- nil;
+			nb_months <- nil;
+		}
+
 	}
 
 	aspect land_use {

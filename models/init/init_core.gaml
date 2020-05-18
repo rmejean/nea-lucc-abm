@@ -23,8 +23,8 @@ global { //Lists
 	action init_cells { //Cells init
 		write "---START OF INIT CELLS";
 		ask cell {
-			if grid_value = 0 {
-				do die;
+			if grid_value = 0.0 {
+				do die;//TODO: peut-être pas utile, ça a l'air de perturber les charts
 			}
 
 			if grid_value >= 3 {

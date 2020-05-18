@@ -62,6 +62,10 @@ species hogares {
 		}
 
 	}
+	
+	action calcutility {
+		
+	}
 
 	action subsistence_LUC {
 		if one_matches(my_predio.cells_inside, each.is_deforest = false) {//s'il y a au moins un pixel à déforester...
