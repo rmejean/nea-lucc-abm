@@ -74,12 +74,12 @@ species hogares {
 				match "SP1.1" {
 					if hunger_alert {
 						let needs <- subcrops_needs - my_predio.subcrops_amount;
-						if available_workers > (laborcost_install_SC3 * needs) {
-							ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
+						if available_workers > (laborcost_SC3_1 * round(needs)) {
+							ask round(needs) among (my_predio.cells_inside where (each.is_deforest = false)) {
 									is_deforest <- true;
 									landuse <- 'SC3.1';
 									write "new deforestation for subsistence at " + location;
-									//TODO: penser à gérer le cout en MOF
+									myself.available_workers <- (myself.available_workers - laborcost_SC3_1 * round(needs));
 									nb_months <- 0;
 									add landuse to: land_use_hist;
 								}
@@ -91,62 +91,62 @@ species hogares {
 					}
 					
 					
-					let possibility_SC2 <- false;
-					let possibility_SC3_1 <- false;
-					//let correspondence <- create_map ([possibility_SC2, possibility_SC3_1], ['yld_SC2', 'yld_SC3_1']);
-					let possibilities <- [];
-					//step 1: possibilities are identified
-					if available_workers > laborcost_install_SC2 {
-						possibility_SC2 <- true;
-						add possibility_SC2 to: possibilities;
-					}
-
-					if available_workers > laborcost_install_SC3 {
-						possibility_SC3_1 <- true;
-						add possibility_SC3_1 to: possibilities;
-					}
-					//step 2: determining the best possibility
-					switch length(possibilities) {
-						match 0 {
-							write "no possibility...";
-						}
-
-						match 1 {
-							if possibilities contains possibility_SC2 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC2';
-									write "new deforestation for subsistence at " + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-							if possibilities contains possibility_SC3_1 {
-								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-									is_deforest <- true;
-									landuse <- 'SC3.1';
-									write "new deforestation for subsistence at " + location;
-									//TODO: penser à gérer le cout en MOF
-									nb_months <- 0;
-									add landuse to: land_use_hist;
-								}
-
-							}
-
-						}
-
-						match 2 {
-							//let test1 <- possibilities at 0;
-							//let test2 <- possibilities at 1;
-							
-							
-
-						}
-
-					}
+//					let possibility_SC2 <- false;
+//					let possibility_SC3_1 <- false;
+//					//let correspondence <- create_map ([possibility_SC2, possibility_SC3_1], ['yld_SC2', 'yld_SC3_1']);
+//					let possibilities <- [];
+//					//step 1: possibilities are identified
+//					if available_workers > laborcost_install_SC2 {
+//						possibility_SC2 <- true;
+//						add possibility_SC2 to: possibilities;
+//					}
+//
+//					if available_workers > laborcost_install_SC3 {
+//						possibility_SC3_1 <- true;
+//						add possibility_SC3_1 to: possibilities;
+//					}
+//					//step 2: determining the best possibility
+//					switch length(possibilities) {
+//						match 0 {
+//							write "no possibility...";
+//						}
+//
+//						match 1 {
+//							if possibility_SC2 in possibilities {
+//								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
+//									is_deforest <- true;
+//									landuse <- 'SC2';
+//									write "new deforestation for subsistence at " + location;
+//									//TODO: penser à gérer le cout en MOF
+//									nb_months <- 0;
+//									add landuse to: land_use_hist;
+//								}
+//
+//							}
+//
+//							if possibilities contains possibility_SC3_1 {
+//								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
+//									is_deforest <- true;
+//									landuse <- 'SC3.1';
+//									write "new deforestation for subsistence at " + location;
+//									//TODO: penser à gérer le cout en MOF
+//									nb_months <- 0;
+//									add landuse to: land_use_hist;
+//								}
+//
+//							}
+//
+//						}
+//
+//						match 2 {
+//							//let test1 <- possibilities at 0;
+//							//let test2 <- possibilities at 1;
+//							
+//							
+//
+//						}
+//
+//					}
 
 				}
 
