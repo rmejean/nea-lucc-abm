@@ -894,7 +894,7 @@ global { //Lists
 				money_alert <- true;
 			}
 
-			if hunger_alert and money_alert { //TODO: la multiplication par 12 sous-entend que le ménage est capable d'anticiper à l'année... à voir si je le laisse ou non
+			if hunger_alert and money_alert {
 				needs_alert <- true;
 			}
 

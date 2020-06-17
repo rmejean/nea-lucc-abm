@@ -313,12 +313,26 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		yld_eggs <- 93.33;
 		rev <- (yld_oldchicken * price_oldchicken) + (yld_chicken * price_chicken) + (yld_eggs * price_eggs);
 	}
+	
+	//***************************************************************
+	//***************************************************************
+	//***************************************************************
 
 	action crop_cycle {
 		nb_months <- nb_months + 1;
 		do reforestation;
 		do fallow_and_resow;
 		do param_activities;
+	}
+	
+	action reforestation {
+		if (landuse = 'fallow') and (nb_months >= 120) {
+			write "reforestation at " + location;
+			is_deforest <- false;
+			landuse <- nil;
+			nb_months <- nil;
+		}
+
 	}
 
 	action fallow_and_resow {
@@ -402,16 +416,6 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 			}
 
-		}
-
-	}
-
-	action reforestation {
-		if (landuse = 'fallow') and (nb_months >= 120) {
-			write "reforestation at " + location;
-			is_deforest <- false;
-			landuse <- nil;
-			nb_months <- nil;
 		}
 
 	}

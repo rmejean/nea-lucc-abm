@@ -81,7 +81,6 @@ global { //Time aspects
 	reflex update {
 		ask personas {
 			do update;
-			do labour_value_and_needs;
 		}
 
 		ask cell {
