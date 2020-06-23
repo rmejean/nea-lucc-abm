@@ -102,27 +102,27 @@ species personas parent: hogares {
 					do die;
 				}
 
-				if oil_worker = true {
-					working_months <- working_months + 1;
-					if working_months > contract_term { //if my employment contract is over...
-						oil_worker <- false;
-						contract_term <- nil;
-						working_months <- nil;
-						job_wages <- 0;
-						annual_inc <- 0;
-						ask empresa {
-							remove myself from: workers;
-						}
+			}
 
-						ask my_hogar {
-							available_workers <- available_workers + myself.work_pace;
-							oil_workers <- oil_workers - 1;
-						}
-
-						work_pace <- nil;
-						empresa <- nil;
+			if oil_worker = true {
+				working_months <- working_months + 1;
+				if working_months > contract_term { //if my employment contract is over...
+					oil_worker <- false;
+					contract_term <- nil;
+					working_months <- nil;
+					job_wages <- 0;
+					annual_inc <- 0;
+					ask empresa {
+						remove myself from: workers;
 					}
 
+					ask my_hogar {
+						available_workers <- available_workers + myself.work_pace;
+						oil_workers <- oil_workers - 1;
+					}
+
+					work_pace <- nil;
+					empresa <- nil;
 				}
 
 			}

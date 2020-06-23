@@ -890,7 +890,7 @@ global { //Lists
 				hunger_alert <- true;
 			}
 
-			if ($_ANFP > estimated_annual_inc) {
+			if (($_ANFP * Total_Personas) > estimated_annual_inc) {
 				money_alert <- true;
 			}
 
