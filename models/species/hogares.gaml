@@ -69,105 +69,143 @@ species hogares {
 	}
 
 	action subsistence_LUC {
-		if hunger_alert {
-			switch livelihood_strategy {
-				match "SP1.1" {
+		switch livelihood_strategy {
+			match "SP1.1" {
+				let needs <- subcrops_needs - my_predio.subcrops_amount;
+				let stop <- false;
+				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajotuer aussi les friches longues!
+					if available_workers > (laborcost_SC3_1) {
+						ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+							is_deforest <- true;
+							landuse <- 'SC3.1';
+							predio.subcrops_amount <- predio.subcrops_amount + 1;
+							write "new deforestation for subsistence at " + location;
+							myself.available_workers <- (myself.available_workers - laborcost_SC3_1);
+							nb_months <- 0;
+							add landuse to: land_use_hist;
+						}
+
+						needs <- subcrops_needs - my_predio.subcrops_amount;
+					} else {
+						write "pas assez de main d'oeuvre pour faire du subsistence LUC";
+						stop <- true;
+					}
+
+				}
+
+			}
+
+			match "SP1.2" {
+				if hunger_alert and not money_alert { //si c'est la nourriture qui pose problème...
 					let needs <- subcrops_needs - my_predio.subcrops_amount;
 					let stop <- false;
-					loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajotuer aussi les friches longues!
-						if available_workers > (laborcost_SC3_1) {
+					loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) {
+						if available_workers > (laborcost_SC4_1) {
 							ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
 								is_deforest <- true;
-								landuse <- 'SC3.1';
+								landuse <- 'SC4.1';
 								predio.subcrops_amount <- predio.subcrops_amount + 1;
-								write "new deforestation for subsistence at " + location;
-								myself.available_workers <- (myself.available_workers - laborcost_SC3_1);
+								write "new deforestation for HUNGER at " + location;
+								myself.available_workers <- (myself.available_workers - laborcost_SC4_1);
 								nb_months <- 0;
 								add landuse to: land_use_hist;
 							}
-							needs <- subcrops_needs - my_predio.subcrops_amount;
 
+							needs <- subcrops_needs - my_predio.subcrops_amount;
 						} else {
-							write "pas assez de main d'oeuvre pour faire du subsistence LUC";
-							stop <- true;
+							if available_workers > (laborcost_SC4_2) {
+								ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+									is_deforest <- true;
+									landuse <- 'SC4.2';
+									predio.subcrops_amount <- predio.subcrops_amount + 1;
+									write "new deforestation for HUNGER at " + location;
+									myself.available_workers <- (myself.available_workers - laborcost_SC4_2);
+									nb_months <- 0;
+									add landuse to: land_use_hist;
+								}
+
+								needs <- subcrops_needs - my_predio.subcrops_amount;
+							} else {
+								write "pas assez de main d'oeuvre pour faire du subsistence LUC";
+								stop <- true;
+							}
+
 						}
 
 					}
 
-					//TODO: chantier en cours
+				}
 
+				if money_alert and not hunger_alert { //si c'est l'argent qui pose problème...
+					let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
+					let stop <- false;
+					loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (money_missing > 0) and (stop = false) {
+						if flip(0.5) = true { //cacao
+							if available_workers > (laborcost_SC1_1) {
+								ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+									is_deforest <- true;
+									landuse <- 'SC1.1';
+									predio.subcrops_amount <- predio.subcrops_amount + 1;
+									write "new CACAO 1 for MONEY at " + location;
+									myself.available_workers <- (myself.available_workers - laborcost_SC1_1);
+									nb_months <- 0;
+									add landuse to: land_use_hist;
+								}
 
-					//					let possibility_SC2 <- false;
-					//					let possibility_SC3_1 <- false;
-					//					//let correspondence <- create_map ([possibility_SC2, possibility_SC3_1], ['yld_SC2', 'yld_SC3_1']);
-					//					let possibilities <- [];
-					//					//step 1: possibilities are identified
-					//					if available_workers > laborcost_install_SC2 {
-					//						possibility_SC2 <- true;
-					//						add possibility_SC2 to: possibilities;
-					//					}
-					//
-					//					if available_workers > laborcost_install_SC3 {
-					//						possibility_SC3_1 <- true;
-					//						add possibility_SC3_1 to: possibilities;
-					//					}
-					//					//step 2: determining the best possibility
-					//					switch length(possibilities) {
-					//						match 0 {
-					//							write "no possibility...";
-					//						}
-					//
-					//						match 1 {
-					//							if possibility_SC2 in possibilities {
-					//								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-					//									is_deforest <- true;
-					//									landuse <- 'SC2';
-					//									write "new deforestation for subsistence at " + location;
-					//									//TODO: penser à gérer le cout en MOF
-					//									nb_months <- 0;
-					//									add landuse to: land_use_hist;
-					//								}
-					//
-					//							}
-					//
-					//							if possibilities contains possibility_SC3_1 {
-					//								ask one_of(my_predio.cells_inside where (each.is_deforest = false)) {
-					//									is_deforest <- true;
-					//									landuse <- 'SC3.1';
-					//									write "new deforestation for subsistence at " + location;
-					//									//TODO: penser à gérer le cout en MOF
-					//									nb_months <- 0;
-					//									add landuse to: land_use_hist;
-					//								}
-					//
-					//							}
-					//
-					//						}
-					//
-					//						match 2 {
-					//							//let test1 <- possibilities at 0;
-					//							//let test2 <- possibilities at 1;
-					//							
-					//							
-					//
-					//						}
-					//
-					//					}
+								money_missing <- (Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_cacao * price_cacao) - costmaint_cacaoinputs));
+							} else {
+								if available_workers > (laborcost_SC1_2) {
+									ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+										is_deforest <- true;
+										landuse <- 'SC1.2';
+										predio.subcrops_amount <- predio.subcrops_amount + 1;
+										write "new CACAO 2 for MONEY at " + location;
+										myself.available_workers <- (myself.available_workers - laborcost_SC1_2);
+										nb_months <- 0;
+										add landuse to: land_use_hist;
+									}
+
+									money_missing <- (Total_Personas * $_ANFP) - (estimated_annual_inc + (yld_cacao * price_cacao));
+								} else {
+									write "pas assez de main d'oeuvre pour faire du cacao";
+									stop <- true;
+								}
+
+							}
+
+						} else { //if flip (0.5) = false : café
+							if available_workers > (laborcost_SC2) {
+								ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+									is_deforest <- true;
+									landuse <- 'SC2';
+									predio.subcrops_amount <- predio.subcrops_amount + 1;
+									write "new COFFEE for MONEY at " + location;
+									myself.available_workers <- (myself.available_workers - laborcost_SC2);
+									nb_months <- 0;
+									add landuse to: land_use_hist;
+								}
+
+								money_missing <- (Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_cacao * price_cacao) - costmaint_cacaoinputs));
+							} else {
+								write "pas assez de main d'oeuvre pour faire du café";
+								stop <- true;
+							}
+
+						}
+
+					}
 
 				}
 
-				match "SP1.2" {
-				}
+			}
 
-				match "SP1.3" {
-				}
+			match "SP1.3" {
+			}
 
-				match "SP2" {
-				}
+			match "SP2" {
+			}
 
-				match "SP3" {
-				}
-
+			match "SP3" {
 			}
 
 		}

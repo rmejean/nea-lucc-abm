@@ -27,7 +27,7 @@ global { //Lists
 				do die; //TODO: peut-être pas utile, ça a l'air de perturber les charts
 			}
 
-			if grid_value >= 3 {
+			if grid_value = 3 {
 				is_deforest <- true;
 			} else {
 				is_deforest <- false;
