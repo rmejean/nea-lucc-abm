@@ -58,6 +58,7 @@ global {
 	float laborcost_install_SC2 <- 19.35;
 	float laborcost_install_SC3 <- 8.5;//TODO: à vérifier...
 	float laborcost_install_SC4 <- 8.5;//TODO: à vérifier...
+	float laborcost_install_SE1 <- 32.5;
 	//float moneycost_install_SC1 <- 290.25;
 	
 	

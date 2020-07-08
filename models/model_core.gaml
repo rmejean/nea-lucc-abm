@@ -89,9 +89,7 @@ global { //Time aspects
 		}
 
 		do assess_income_needs;
-	}
-
-	reflex decision_making {
+		
 		ask hogares {
 			if needs_alert = true {
 				do subsistence_LUC;

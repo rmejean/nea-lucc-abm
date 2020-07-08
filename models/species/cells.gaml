@@ -71,6 +71,9 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	string landuse;
 	string landuse2;
 	string landuse3;
+	string future_landuse;
+	int wip;
+	string type_wip;
 	list<string> land_use_hist; //history: pasts land uses
 	int nb_months;
 	float rev;
@@ -81,6 +84,11 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	action param_activities {
 		switch landuse {
+			
+			match 'wip' {//work in progress
+				color <- #white;
+			}
+			
 			match 'SC1.1' {
 				color <- rgb(96, 30, 29);
 			}
@@ -418,6 +426,20 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 		}
 
+	}
+	
+	action address_wip {
+		if wip > 1 {
+			wip <- wip - 1;
+		}
+		if wip = 1 {
+			wip <- 0;
+			landuse <- future_landuse;
+			future_landuse <- nil;
+			add landuse to: land_use_hist;
+			nb_months <- 0;
+			my_hogar.available_workers <- (my_hogar.available_workers + ((type_wip as int) / 2));
+		}
 	}
 
 	aspect land_use {
