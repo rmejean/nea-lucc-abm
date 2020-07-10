@@ -327,7 +327,7 @@ global {
 		write "------END OF INIT ALG SP3";
 		ask predios {
 			ask cells_inside {
-				do param_activities;
+				do color_activities;
 				do update_yields;
 			}
 

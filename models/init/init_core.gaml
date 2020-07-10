@@ -264,7 +264,7 @@ global { //Lists
 						landuse <- myself.type;
 						nb_months <- myself.months;
 						add landuse to: land_use_hist;
-						do param_activities; //TODO: pas à répéter à chaque fois!
+						do color_activities; //TODO: pas à répéter à chaque fois!
 						do update_yields;
 					}
 
@@ -417,7 +417,7 @@ global { //Lists
 							landuse <- myself.type;
 							nb_months <- myself.months;
 							add landuse to: land_use_hist;
-							do param_activities;
+							do color_activities;
 							do update_yields;
 						}
 
@@ -432,7 +432,7 @@ global { //Lists
 							ask pxl_cible {
 								landuse2 <- myself.type;
 								add landuse2 to: land_use_hist;
-								do param_activities;
+								do color_activities;
 								do update_yields;
 							}
 
@@ -448,7 +448,7 @@ global { //Lists
 							ask pxl_cible {
 								landuse3 <- myself.type;
 								add landuse3 to: land_use_hist;
-								do param_activities;
+								do color_activities;
 								do update_yields;
 							}
 
@@ -586,7 +586,7 @@ global { //Lists
 							landuse <- myself.type;
 							nb_months <- myself.months;
 							add landuse to: land_use_hist;
-							do param_activities;
+							do color_activities;
 							do update_yields;
 						}
 
@@ -601,7 +601,7 @@ global { //Lists
 							ask pxl_cible {
 								landuse2 <- myself.type;
 								add landuse2 to: land_use_hist;
-								do param_activities;
+								do color_activities;
 								do update_yields;
 							}
 
@@ -617,7 +617,7 @@ global { //Lists
 							ask pxl_cible {
 								landuse3 <- myself.type;
 								add landuse3 to: land_use_hist;
-								do param_activities;
+								do color_activities;
 								do update_yields;
 							}
 
@@ -693,7 +693,7 @@ global { //Lists
 							landuse <- myself.type;
 							nb_months <- myself.months;
 							add landuse to: land_use_hist;
-							do param_activities;
+							do color_activities;
 							do update_yields;
 						}
 
@@ -707,7 +707,7 @@ global { //Lists
 						ask pxl_cible {
 							landuse2 <- myself.type;
 							add landuse2 to: land_use_hist;
-							do param_activities;
+							do color_activities;
 							do update_yields;
 						}
 
@@ -768,7 +768,7 @@ global { //Lists
 						landuse <- myself.type;
 						nb_months <- myself.months;
 						add landuse to: land_use_hist;
-						do param_activities;
+						do color_activities;
 						do update_yields;
 					}
 
@@ -886,6 +886,14 @@ global { //Lists
 				do crops_calc;
 			}
 
+		}
+
+		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
+	}
+
+	action setting_alerts {
+		write "---START OF SETTING ALERTS";
+		ask hogares {
 			if (subcrops_needs > my_predio.subcrops_amount) {
 				hunger_alert <- true;
 			}
@@ -900,7 +908,7 @@ global { //Lists
 
 		}
 
-		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
+		write "---END OF SETTING ALERTS";
 	}
 
 }

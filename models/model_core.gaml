@@ -78,7 +78,7 @@ global { //Time aspects
 
 	}
 
-	reflex update {
+	reflex update { //coeur de la dynamique du modèle
 		ask personas {
 			do update;
 		}
@@ -89,20 +89,23 @@ global { //Time aspects
 		}
 
 		do assess_income_needs;
+		do setting_alerts;
 		
 		ask hogares {
 			if needs_alert = true {
 				do subsistence_LUC;
 			}
+			do profit_LUC;
 
 		}
 
 		ask cell {
-			do param_activities;
-			do update_yields;
+			//do update_yields;
+			do address_wip;
+			do color_activities;
 		}
 
-		do assess_income_needs;
+		//do assess_income_needs;
 	}
 
 }

@@ -73,7 +73,8 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	string landuse3;
 	string future_landuse;
 	int wip;
-	string type_wip;
+	int wip_division;
+	float wip_laborforce;
 	list<string> land_use_hist; //history: pasts land uses
 	int nb_months;
 	float rev;
@@ -82,13 +83,12 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	hogares my_hogar;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
 
-	action param_activities {
+	action color_activities {
 		switch landuse {
-			
-			match 'wip' {//work in progress
+			match 'wip' { //work in progress
 				color <- #white;
 			}
-			
+
 			match 'SC1.1' {
 				color <- rgb(96, 30, 29);
 			}
@@ -186,7 +186,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			do yld_SE1_2;
 		}
 
-		if landuse = 'SE2.1' or landuse2 = 'SE2.1' or landuse3 = 'SE2.1'  {
+		if landuse = 'SE2.1' or landuse2 = 'SE2.1' or landuse3 = 'SE2.1' {
 			do yld_SE2_1;
 		}
 
@@ -321,18 +321,19 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		yld_eggs <- 93.33;
 		rev <- (yld_oldchicken * price_oldchicken) + (yld_chicken * price_chicken) + (yld_eggs * price_eggs);
 	}
-	
-	//***************************************************************
-	//***************************************************************
-	//***************************************************************
 
+	//***************************************************************
+	//***************************************************************
+	//***************************************************************
 	action crop_cycle {
-		nb_months <- nb_months + 1;
+		if landuse != 'wip' {
+			nb_months <- nb_months + 1;
+		}
+
 		do reforestation;
 		do fallow_and_resow;
-		do param_activities;
 	}
-	
+
 	action reforestation {
 		if (landuse = 'fallow') and (nb_months >= 120) {
 			write "reforestation at " + location;
@@ -364,6 +365,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 					} else {
 						write "" + my_hogar.name + " cannot re-sow SC3.1";
+						//TODO: alors, libérer la MOF correspondante ?
 					}
 
 				}
@@ -389,6 +391,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 						} else {
 							write "" + my_hogar.name + " cannot re-sow SC4.1";
+							//TODO: alors, libérer la MOF correspondante ?
 						}
 
 					}
@@ -416,6 +419,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 						} else {
 							write "" + my_hogar.name + " cannot re-sow SC4.2";
+							//TODO: alors, libérer la MOF correspondante ?
 						}
 
 					}
@@ -427,19 +431,25 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		}
 
 	}
-	
+
 	action address_wip {
+		write "--START address work in progress";
 		if wip > 1 {
 			wip <- wip - 1;
 		}
+
 		if wip = 1 {
 			wip <- 0;
 			landuse <- future_landuse;
 			future_landuse <- nil;
 			add landuse to: land_use_hist;
 			nb_months <- 0;
-			my_hogar.available_workers <- (my_hogar.available_workers + ((type_wip as int) / 2));
+			my_hogar.available_workers <- (my_hogar.available_workers + ((wip_laborforce) / wip_division));
+			wip_division <- nil;
+			wip_laborforce <- nil;
 		}
+
+		write "--END address work in progress";
 	}
 
 	aspect land_use {
