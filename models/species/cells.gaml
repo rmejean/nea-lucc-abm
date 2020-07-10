@@ -433,7 +433,6 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	}
 
 	action address_wip {
-		write "--START address work in progress";
 		if wip > 1 {
 			wip <- wip - 1;
 		}
@@ -448,8 +447,6 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			wip_division <- nil;
 			wip_laborforce <- nil;
 		}
-
-		write "--END address work in progress";
 	}
 
 	aspect land_use {

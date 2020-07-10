@@ -37,6 +37,7 @@ global { //Time aspects
 			do init_farm_jobs;
 			do init_oil_jobs;
 			do assess_income_needs;
+			do setting_alerts;
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
@@ -51,6 +52,7 @@ global { //Time aspects
 			do load_saved_personas;
 			do load_saved_landscape;
 			do assess_income_needs;
+			do setting_alerts;
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
@@ -90,20 +92,23 @@ global { //Time aspects
 
 		do assess_income_needs;
 		do setting_alerts;
-		
 		ask hogares {
 			if needs_alert = true {
 				do subsistence_LUC;
 			}
-			do profit_LUC;
 
+			do profit_LUC;
 		}
 
+		write "--START address work in progress";
 		ask cell {
-			//do update_yields;
+		//do update_yields;
 			do address_wip;
 			do color_activities;
 		}
+
+		write "--END address work in progress";
+		write "END OF TURN/MONTH";
 
 		//do assess_income_needs;
 	}
