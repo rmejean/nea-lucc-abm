@@ -99,7 +99,6 @@ experiment save_init type: gui until: stop_simulation = true {
 	parameter "File chooser plots" category: "Saving init" var: save_predios;
 	parameter "File chooser households" category: "Saving init" var: save_hogares;
 	parameter "File chooser people" category: "Saving init" var: save_personas;
-	
 	output {
 		display map_ALG type: opengl {
 			grid cell;
@@ -160,23 +159,20 @@ experiment save_init type: gui until: stop_simulation = true {
 			}
 
 		}
-		
 
 		display "Deforestation" type: java2D synchronized: true {
-			chart "deforested pxl in fincas" type: series x_label: "months" y_range: 1000 x_tick_unit: 1.0 {
-				
-				data "deforested pxl in fincas" value: [deforestation] color: #red marker: false style: line;
-
+			chart "Proportion: serie" type: series series_label_position: legend style: line {
+				data "deforested pixels in fincas" accumulate_values: true value: deforestation color: #black;
 			}
 
 		}
-		
-		display "Needs" type: java2D synchronized: true {
-			chart "Households don't have their needs met" type: series x_label: "months" x_tick_unit: 1.0 {
-				
-				data "Households don't have their needs met" value: [length(hogares where (each.needs_alert = true))] color: #red marker: false style: line;
 
+		display "Needs" type: java2D synchronized: true {
+			chart "Households don't have their needs met" type: series series_label_position: legend //y_range: (deforestation)
+			style: line {
+				data "Households don't have their needs met" accumulate_values: true value: [length(hogares where (each.needs_alert = true))] color: #red marker: false style: line;
 			}
+
 		}
 
 	}

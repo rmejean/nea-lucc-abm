@@ -86,6 +86,7 @@ global { //Time aspects
 		}
 
 		ask cell {
+			if starting_wip {starting_wip <- false;}
 			do crop_cycle;
 			do update_yields;
 		}

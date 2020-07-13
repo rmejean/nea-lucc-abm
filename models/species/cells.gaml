@@ -75,6 +75,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	int wip;
 	int wip_division;
 	float wip_laborforce;
+	bool starting_wip;
 	list<string> land_use_hist; //history: pasts land uses
 	int nb_months;
 	float rev;
@@ -86,7 +87,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	action color_activities {
 		switch landuse {
 			match 'wip' { //work in progress
-				color <- #white;
+				color <- #black;
 			}
 
 			match 'SC1.1' {
@@ -338,6 +339,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		if (landuse = 'fallow') and (nb_months >= 120) {
 			write "reforestation at " + location;
 			is_deforest <- false;
+			color <- rgb(35, 75, 0);
 			landuse <- nil;
 			nb_months <- nil;
 		}
@@ -433,11 +435,11 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	}
 
 	action address_wip {
-		if wip > 1 {
+		if not starting_wip and wip > 1 {
 			wip <- wip - 1;
 		}
 
-		if wip = 1 {
+		if not starting_wip and wip = 1 {
 			wip <- 0;
 			landuse <- future_landuse;
 			future_landuse <- nil;

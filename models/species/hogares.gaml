@@ -218,6 +218,7 @@ species hogares {
 								landuse <- 'wip';
 								future_landuse <- 'SE1.2';
 								wip <- 1; //signification : on termine de planter le mois prochain
+								starting_wip <- true;//on vient de démarrer un wip ce tour-ci
 								wip_division <- 2;
 								wip_laborforce <- laborcost_install_SE1;
 								write "deforestation in progress for MONEY at " + location;
@@ -265,6 +266,7 @@ species hogares {
 								landuse <- 'wip';
 								future_landuse <- 'SE1.1';
 								wip <- 1; //signification : on termine de planter le mois prochain
+								starting_wip <- true;//on vient de démarrer un wip ce tour-ci
 								wip_division <- 2;
 								wip_laborforce <- laborcost_install_SE1;
 								write "deforestation in progress for MONEY at " + location;
