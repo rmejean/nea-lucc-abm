@@ -74,7 +74,7 @@ species hogares {
 				let new_SC3 <- 0;
 				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajotuer aussi les friches longues!
 					if available_workers > (laborcost_SC3_1 + laborcost_install_SC3) {
-						ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+						ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC3.1';
 							new_SC3 <- new_SC3 + 1;
@@ -105,7 +105,7 @@ species hogares {
 				let new_SC4 <- 0;
 				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
-						ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+						ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC4.1';
 							new_SC4 <- new_SC4 + 1;
@@ -119,7 +119,7 @@ species hogares {
 						needs <- subcrops_needs - my_predio.subcrops_amount;
 					} else {
 						if available_workers > (laborcost_SC4_2 + laborcost_install_SC4) {
-							ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+							ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 								is_deforest <- true;
 								landuse <- 'SC4.2';
 								new_SC4 <- new_SC4 + 1;
@@ -152,7 +152,7 @@ species hogares {
 				let new_SC4 <- 0;
 				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
-						ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+						ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC4.1';
 							new_SC4 <- new_SC4 + 1;
@@ -166,7 +166,7 @@ species hogares {
 						needs <- subcrops_needs - my_predio.subcrops_amount;
 					} else {
 						if available_workers > (laborcost_SC4_2 + laborcost_install_SC4) {
-							ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+							ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 								is_deforest <- true;
 								landuse <- 'SC4.2';
 								new_SC4 <- new_SC4 + 1;
@@ -199,7 +199,7 @@ species hogares {
 				let new_SE1_2 <- 0;
 				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_2 + laborcost_install_SE1) {
-						ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+						ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.2';
 							new_SE1_2 <- new_SE1_2 + 1;
@@ -213,7 +213,7 @@ species hogares {
 						(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux * price_veaux) + (yld_vachereforme * price_vachereforme) + (yld_cheese * price_cheese) - costmaint_cattle_2));
 					} else {
 						if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2)) {
-							ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+							ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SE1.2';
@@ -247,7 +247,7 @@ species hogares {
 				let new_SE1_1 <- 0;
 				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_1 + laborcost_install_SE1) {
-						ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+						ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.1';
 							new_SE1_1 <- new_SE1_1 + 1;
@@ -261,7 +261,7 @@ species hogares {
 						(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux * price_veaux) + (yld_vachereforme * price_vachereforme) + (yld_cheese * price_cheese) - costmaint_cattle_2));
 					} else {
 						if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 2)) {
-							ask 1 among (my_predio.cells_inside where (each.is_deforest = false)) {
+							ask closest_to (my_predio.cells_inside where (each.is_deforest = false), one_of (my_predio.cells_inside where (each.is_deforest = true)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SE1.1';
