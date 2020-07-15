@@ -357,7 +357,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			switch previous_landuse {
 				match 'SC3.1' {
 					if one_matches(predio.cells_inside, each.is_deforest = false) {
-						ask closest_to (predio.cells_inside where (each.is_deforest = false), one_of (predio.cells_inside where (each.is_deforest = true)), 1) {
+						ask closest_to(predio.cells_inside where (each.is_deforest = false), one_of(predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;
 							landuse <- previous_landuse;
 							write "deforest to resow at " + location;
@@ -367,7 +367,11 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 					} else {
 						write "" + my_hogar.name + " cannot re-sow SC3.1";
-						//TODO: alors, libérer la MOF correspondante ?
+						ask my_hogar { //alors, libérer la MOF correspondante
+							occupied_workers <- occupied_workers - laborcost_SC3_1;
+							available_workers <- labor_force - occupied_workers;
+						}
+
 					}
 
 				}
@@ -383,7 +387,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 					} else {
 						if one_matches(predio.cells_inside, each.is_deforest = false) {
-							ask closest_to (predio.cells_inside where (each.is_deforest = false), one_of (predio.cells_inside where (each.is_deforest = true)), 1) {
+							ask closest_to(predio.cells_inside where (each.is_deforest = false), one_of(predio.cells_inside where (each.is_deforest = true)), 1) {
 								is_deforest <- true;
 								landuse <- previous_landuse;
 								write "deforest to resow at " + location;
@@ -393,7 +397,11 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 						} else {
 							write "" + my_hogar.name + " cannot re-sow SC4.1";
-							//TODO: alors, libérer la MOF correspondante ?
+							ask my_hogar { //alors, libérer la MOF correspondante
+								occupied_workers <- occupied_workers - laborcost_SC4_1;
+								available_workers <- labor_force - occupied_workers;
+							}
+
 						}
 
 					}
@@ -411,7 +419,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 					} else {
 						if one_matches(predio.cells_inside, each.is_deforest = false) {
-							ask closest_to (predio.cells_inside where (each.is_deforest = false), one_of (predio.cells_inside where (each.is_deforest = true)), 1) {
+							ask closest_to(predio.cells_inside where (each.is_deforest = false), one_of(predio.cells_inside where (each.is_deforest = true)), 1) {
 								is_deforest <- true;
 								landuse <- previous_landuse;
 								write "deforest to resow at " + location;
@@ -421,7 +429,11 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 						} else {
 							write "" + my_hogar.name + " cannot re-sow SC4.2";
-							//TODO: alors, libérer la MOF correspondante ?
+							ask my_hogar { //alors, libérer la MOF correspondante
+								occupied_workers <- occupied_workers - laborcost_SC4_2;
+								available_workers <- labor_force - occupied_workers;
+							}
+
 						}
 
 					}
@@ -449,6 +461,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			wip_division <- nil;
 			wip_laborforce <- nil;
 		}
+
 	}
 
 	aspect land_use {
