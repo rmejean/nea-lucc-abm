@@ -99,27 +99,14 @@ experiment save_init type: gui until: stop_simulation = true {
 	parameter "File chooser plots" category: "Saving init" var: save_predios;
 	parameter "File chooser households" category: "Saving init" var: save_hogares;
 	parameter "File chooser people" category: "Saving init" var: save_personas;
+	
 	output {
 		display map_ALG type: opengl {
 			grid cell;
 			species predios aspect: default;
 			species hogares;
-		} //		display map_LS type: opengl {
-		//			grid cell;
-		//			species predios aspect: map_LS;
-		//			species hogares;
-		//		}
-		//
-		//		display map_tx_def type: opengl {
-		//			grid cell;
-		//			species predios aspect: map_def_rate;
-		//			species hogares;
-		//		}
-		//		display map_LUC_decisions type: opengl {
-		//			species cell aspect: land_use;
-		//			species predios aspect: map_LUC_decisions;
-		//			//species hogares;
-		//		}
+		} 
+		
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
 		monitor "Total parcelles" value: nb_predios;
