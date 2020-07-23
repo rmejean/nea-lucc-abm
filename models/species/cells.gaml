@@ -46,17 +46,21 @@ global {
 	float buy_pig <- 12.27;
 	float costmaint_pigbreeding <- 5.375;
 	float costmaint_pigbreeding2 <- 21.1;
-	float yld_cacao;
-	float yld_coffee;
+	float yld_cacao1 <- 0.66;
+	float yld_cacao2 <- 0.16;
+	float yld_coffee <- 2.08;
 	float yld_manioc;
 	float yld_plantain;
 	float yld_tubercules;
 	float yld_papayes;
 	float yld_ananas;
 	float yld_mais;
-	float yld_veaux;
-	float yld_vachereforme;
-	float yld_cheese;
+	float yld_veaux1 <- 0.079875;
+	float yld_vachereforme1 <- 0.027;
+	float yld_cheese1 <- 11.43;
+	float yld_veaux2 <- 0.040;
+	float yld_vachereforme2 <- 0.022;
+	float yld_cheese2 <- 1.2;
 	float yld_pig;
 	float yld_porcelets;
 	float yld_truie;
@@ -206,17 +210,14 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	}
 
 	action yld_SC1_1 { //cocoa in production with inputs
-		yld_cacao <- 0.66;
-		rev <- (yld_cacao * price_cacao) - costmaint_cacaoinputs;
+		rev <- (yld_cacao1 * price_cacao) - costmaint_cacaoinputs;
 	}
 
 	action yld_SC1_2 { //cocoa in production without inputs
-		yld_cacao <- 0.16;
-		rev <- (yld_cacao * price_cacao);
+		rev <- (yld_cacao2 * price_cacao);
 	}
 
 	action yld_SC2 { //coffee plants in production
-		yld_coffee <- 2.08;
 		rev <- (yld_coffee * price_coffee);
 	}
 
@@ -285,17 +286,11 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	}
 
 	action yld_SE1_1 { // cattle breeding with cheese marketing (30 mothers and 70ha of pastures)
-		yld_veaux <- 0.079875;
-		yld_vachereforme <- 0.027;
-		yld_cheese <- 11.43;
-		rev <- (yld_veaux * price_veaux) + (yld_vachereforme * price_vachereforme) + (yld_cheese * price_cheese) - costmaint_cattle_1;
+		rev <- (yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1;
 	}
 
 	action yld_SE1_2 { // cattle breeding with cheese marketing (30 mothers and 70ha of pastures)
-		yld_veaux <- 0.040;
-		yld_vachereforme <- 0.022;
-		yld_cheese <- 1.2;
-		rev <- (yld_veaux * price_veaux) + (yld_vachereforme * price_vachereforme) + (yld_cheese * price_cheese) - costmaint_cattle_2;
+		rev <- (yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2;
 	}
 
 	action yld_SE2_1 {
