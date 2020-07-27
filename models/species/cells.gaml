@@ -78,7 +78,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	string future_landuse;
 	int wip;
 	int wip_division;
-	float wip_laborforce;
+	float wip_laborforce <- 0.0;
 	bool starting_wip;
 	list<string> land_use_hist; //history: pasts land uses
 	int nb_months;

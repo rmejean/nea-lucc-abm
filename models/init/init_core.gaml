@@ -739,8 +739,8 @@ global { //Lists
 					save ("SE1.1" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 					ask my_hogar {
-						available_workers <- available_workers - laborcost_SE1_2;
-						occupied_workers <- occupied_workers + laborcost_SE1_2;
+						available_workers <- available_workers - laborcost_SE1_1;
+						occupied_workers <- occupied_workers + laborcost_SE1_1;
 					}
 
 				} else {

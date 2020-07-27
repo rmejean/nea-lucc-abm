@@ -218,10 +218,10 @@ species hogares {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SE1.2';
-								wip <- 1; //signification : on termine de planter le mois prochain
-								starting_wip <- true; //on vient de démarrer un wip ce tour-ci
+								wip <- 1; //meaning: we will finish planting next month
+								starting_wip <- true; //we just started planting
 								wip_division <- 2;
-								wip_laborforce <- laborcost_install_SE1;
+								wip_laborforce <- wip_laborforce + laborcost_install_SE1;
 								write "deforestation in progress for MONEY at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
 								add landuse to: land_use_hist;
@@ -266,10 +266,10 @@ species hogares {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SE1.1';
-								wip <- 1; //signification : on termine de planter le mois prochain
-								starting_wip <- true; //on vient de démarrer un wip ce tour-ci
+								wip <- 1; //meaning: we will finish planting next month
+								starting_wip <- true; //we just started planting
 								wip_division <- 2;
-								wip_laborforce <- laborcost_install_SE1;
+								wip_laborforce <- wip_laborforce + laborcost_install_SE1;
 								write "deforestation in progress for MONEY at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
 								add landuse to: land_use_hist;
@@ -296,10 +296,10 @@ species hogares {
 
 	action profit_LUC {
 		switch livelihood_strategy {
-		//TODO: programmer le choix entre SC1 et SC2 : influence du voisinage ? oui mais commencer par faire une chance sur deux
+		//TODO: programmer le choix entre SC1 et SC2 : rajouter l'influence du voisinage ? 
+		//oui mais commencer par faire une chance sur deux
 		//
 			match "SP1.2" {
-				let stop <- false;
 				let new_SC1 <- 0;
 				let new_SC2 <- 0;
 				if index_of(profits_SP1_2, max(profits_SP1_2)) = 0 {
@@ -312,6 +312,24 @@ species hogares {
 							myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1));
 							nb_months <- 0;
 							add landuse to: land_use_hist;
+						}
+
+					} else {
+						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+								is_deforest <- true;
+								landuse <- 'wip';
+								future_landuse <- 'SC1.1';
+								wip <- 1; //meaning: we will finish planting next month
+								starting_wip <- true; //we just started planting
+								wip_division <- 2;
+								wip_laborforce <- wip_laborforce + laborcost_install_SC1;
+								write "deforestation in progress for MONEY at " + location;
+								myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1 / wip_division));
+								nb_months <- 0;
+								add landuse to: land_use_hist;
+							}
+
 						}
 
 					}
@@ -328,6 +346,24 @@ species hogares {
 							myself.available_workers <- (myself.available_workers - (laborcost_SC1_2 + laborcost_install_SC1));
 							nb_months <- 0;
 							add landuse to: land_use_hist;
+						}
+
+					} else {
+						if (available_workers > (laborcost_SC1_2 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+								is_deforest <- true;
+								landuse <- 'wip';
+								future_landuse <- 'SC1.2';
+								wip <- 1; //meaning: we will finish planting next month
+								starting_wip <- true; //we just started planting
+								wip_division <- 2;
+								wip_laborforce <- wip_laborforce + laborcost_install_SC1;
+								write "deforestation in progress for MONEY at " + location;
+								myself.available_workers <- (myself.available_workers - (laborcost_SC1_2 + laborcost_install_SC1 / wip_division));
+								nb_months <- 0;
+								add landuse to: land_use_hist;
+							}
+
 						}
 
 					}
@@ -361,16 +397,111 @@ species hogares {
 			}
 
 			match "SP1.3" {
-				let stop <- false;
 				let new_SC1 <- 0;
 				let new_SC2 <- 0;
-				let new_SE1_2 <- 0;
+				let new_SE1 <- 0;
+				if index_of(profits_SP1_3, max(profits_SP1_3)) = 0 {
+					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+							is_deforest <- true;
+							landuse <- 'SC1.2';
+							new_SC1 <- new_SC1 + 1;
+							write "new deforestation for PROFIT at " + location;
+							myself.available_workers <- (myself.available_workers - (laborcost_SC1_2 + laborcost_install_SC1));
+							nb_months <- 0;
+							add landuse to: land_use_hist;
+						}
+
+					}
+
+				}
+
+				if index_of(profits_SP1_3, max(profits_SP1_3)) = 1 {
+					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+							is_deforest <- true;
+							landuse <- 'SC2';
+							new_SC2 <- new_SC2 + 1;
+							write "new deforestation for PROFIT at " + location;
+							myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2));
+							nb_months <- 0;
+							add landuse to: land_use_hist;
+						}
+
+					}
+
+				}
+
+				if index_of(profits_SP1_3, max(profits_SP1_3)) = 2 {
+					if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+							is_deforest <- true;
+							landuse <- 'SE1.2';
+							new_SE1 <- new_SE1 + 1;
+							write "new deforestation for PROFIT at " + location;
+							myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1));
+							nb_months <- 0;
+							add landuse to: land_use_hist;
+						}
+
+					}
+
+				}
+
+				if new_SC1 > 0 {
+					available_workers <- (available_workers + (new_SC1 * laborcost_install_SC1));
+				}
+
+				if new_SC2 > 0 {
+					available_workers <- (available_workers + (new_SC2 * laborcost_install_SC2));
+				}
+
+				if new_SE1 > 0 {
+					available_workers <- (available_workers + (new_SE1 * laborcost_install_SE1));
+				}
+
 			}
 
 			match "SP2" {
+				let new_SE1 <- 0;
+				if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+					ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						is_deforest <- true;
+						landuse <- 'SE1.2';
+						new_SE1 <- new_SE1 + 1;
+						write "new deforestation for PROFIT at " + location;
+						myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1));
+						nb_months <- 0;
+						add landuse to: land_use_hist;
+					}
+
+				}
+
+				if new_SE1 > 0 {
+					available_workers <- (available_workers + (new_SE1 * laborcost_install_SE1));
+				}
+
 			}
 
 			match "SP3" {
+				let new_SE1 <- 0;
+				if (available_workers > (laborcost_SE1_1 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+					ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						is_deforest <- true;
+						landuse <- 'SE1.1';
+						new_SE1 <- new_SE1 + 1;
+						write "new deforestation for PROFIT at " + location;
+						myself.available_workers <- (myself.available_workers - (laborcost_SE1_1 + laborcost_install_SE1));
+						nb_months <- 0;
+						add landuse to: land_use_hist;
+					}
+
+				}
+
+				if new_SE1 > 0 {
+					available_workers <- (available_workers + (new_SE1 * laborcost_install_SE1));
+				}
+
 			}
 
 		}
