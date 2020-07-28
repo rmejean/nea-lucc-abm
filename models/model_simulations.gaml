@@ -118,25 +118,25 @@ init {
 }
 //Saving pixels
 	user_command "Save Agricultural Landscape" category: "Export data" when: init_end = true color: #darkblue {
-		save cell to: save_landscape type: "shp" attributes:
+		save cell to: export_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 	} //Saving roads
 	user_command "Save Roads" category: "Export data" when: init_end = true color: #darkblue {
-		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
+		save vias to: export_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 	} //Saving oil ompagnies
 	user_command "Save oil compagnies" category: "Export data" when: init_end = true color: #darkblue {
-		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
+		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
 	} //Saving plots
 	user_command "Save Plots" category: "Export data" when: init_end = true color: #darkblue {
-		save predios to: save_predios type: "shp" attributes:
+		save predios to: export_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "SUB_C"::subcrops_amount, "NEIGH"::neighbors];
 	} //Saving households
 	user_command "Save Households" category: "Export data" when: init_end = true color: #darkblue {
-		save hogares to: save_hogares type: "shp" attributes:
+		save hogares to: export_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "HUNGER_W"::hunger_alert, "MONEY_W"::money_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc];
 	} //Saving people
 	user_command "Save People" category: "Export data" when: init_end = true color: #darkblue {
-		save personas to: save_personas type: "shp" attributes:
+		save personas to: export_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 	} //Saving cells
 	user_command "Save cells" category: "Export data" when: init_end = true color: #darkblue {
@@ -146,16 +146,16 @@ init {
 
 	} //Saving all
 	user_command "Save all files" category: "Export data" when: init_end = true color: #darkred {
-		save cell to: save_landscape type: "shp" attributes:
+		save cell to: export_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
-		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
-		save predios to: save_predios type: "shp" attributes:
+		save vias to: export_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
+		save predios to: export_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "SUB_C"::subcrops_amount, "NEIGH"::neighbors, "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];
-		save hogares to: save_hogares type: "shp" attributes:
+		save hogares to: export_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "HUNGER_W"::hunger_alert, "MONEY_W"::money_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc];
-		save personas to: save_personas type: "shp" attributes:
+		save personas to: export_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
-		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "WORKERS"::workers];
+		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "WORKERS"::workers];
 	}
 
 	user_command "Save init (serialization)" category: "Init Generator" color: #darkgreen {
