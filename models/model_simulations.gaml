@@ -49,41 +49,37 @@ experiment save_init type: gui until: stop_simulation = true {
 //
 //DATA EXPORT
 //
-
-init {
-	new_init <- true;
-}
 //Saving pixels
 //TODO : il faut ajouter des messages avant et après enregistrement en utilisant file_exists
 	user_command "Save Agricultural Landscape" category: "Saving init" when: init_end = true color: #darkblue {
 		save cell to: save_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 	} //Saving roads
-	user_command "Save Roads" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save Roads" category: "Saving init" when: init_end = true color: #darkblue {
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 	} //Saving oil ompagnies
-	user_command "Save oil compagnies" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save oil compagnies" category: "Saving init" when: init_end = true color: #darkblue {
 		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
 	} //Saving plots
-	user_command "Save Plots" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save Plots" category: "Saving init" when: init_end = true color: #darkblue {
 		save predios to: save_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "SUB_C"::subcrops_amount, "NEIGH"::neighbors];
 	} //Saving households
-	user_command "Save Households" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save Households" category: "Saving init" when: init_end = true color: #darkblue {
 		save hogares to: save_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "HUNGER_W"::hunger_alert, "MONEY_W"::money_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc];
 	} //Saving people
-	user_command "Save People" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save People" category: "Saving init" when: init_end = true color: #darkblue {
 		save personas to: save_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 	} //Saving cells
-	user_command "Save cells" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save cells" category: "Saving init" when: init_end = true color: #darkblue {
 		ask cell {
 			save (cell where (grid_value != 0.0)) to: ("../../includes/initGENfiles/cells.csv") type: "csv" rewrite: true;
 		}
 
 	} //Saving all
-	user_command "Save all files" category: "Save files" when: init_end = true color: #darkred {
+	user_command "Save all files" category: "Saving init" when: init_end = true color: #darkred {
 		save cell to: save_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
@@ -104,7 +100,7 @@ init {
 		write "Save of simulation : " + save_simulation('simpleSimuList.gsim');
 	}
 
-	parameter "Generate a new init?" category: "Parameters" var: new_init;
+	parameter "Generate a new init?" category: "Parameters" var: new_init init: true;
 	parameter "File chooser landscape" category: "Saving init" var: save_landscape;
 	parameter "File chooser roads" category: "Saving init" var: save_vias;
 	parameter "File chooser plots" category: "Saving init" var: save_predios;
@@ -125,31 +121,31 @@ init {
 		save cell to: save_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 	} //Saving roads
-	user_command "Save Roads" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save Roads" category: "Export data" when: init_end = true color: #darkblue {
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 	} //Saving oil ompagnies
-	user_command "Save oil compagnies" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save oil compagnies" category: "Export data" when: init_end = true color: #darkblue {
 		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
 	} //Saving plots
-	user_command "Save Plots" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save Plots" category: "Export data" when: init_end = true color: #darkblue {
 		save predios to: save_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "CELLS_U"::cells_urban, "SUB_C"::subcrops_amount, "NEIGH"::neighbors];
 	} //Saving households
-	user_command "Save Households" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save Households" category: "Export data" when: init_end = true color: #darkblue {
 		save hogares to: save_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "HUNGER_W"::hunger_alert, "MONEY_W"::money_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc];
 	} //Saving people
-	user_command "Save People" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save People" category: "Export data" when: init_end = true color: #darkblue {
 		save personas to: save_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 	} //Saving cells
-	user_command "Save cells" category: "Save files" when: init_end = true color: #darkblue {
+	user_command "Save cells" category: "Export data" when: init_end = true color: #darkblue {
 		ask cell {
 			save (cell where (grid_value != 0.0)) to: ("../../includes/initGENfiles/cells.csv") type: "csv" rewrite: true;
 		}
 
 	} //Saving all
-	user_command "Save all files" category: "Save files" when: init_end = true color: #darkred {
+	user_command "Save all files" category: "Export data" when: init_end = true color: #darkred {
 		save cell to: save_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
@@ -169,7 +165,8 @@ init {
 	user_command "Save init - 2 (serialization)" category: "Init Generator" color: #darkgreen {
 		write "Save of simulation : " + save_simulation('simpleSimuList.gsim');
 	}
-
+	
+	parameter "Generate a new init?" category: "Parameters" var: new_init init: false;
 	parameter "File chooser landscape" category: "Saving init" var: export_landscape;
 	parameter "File chooser roads" category: "Saving init" var: export_vias;
 	parameter "File chooser plots" category: "Saving init" var: export_predios;

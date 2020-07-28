@@ -14,7 +14,7 @@ import "model_simulations.gaml"
 
 global { //Time aspects
 	bool stop_simulation <- false;
-	bool new_init <- true;
+	bool new_init <- false;
 	date starting_date <- date("2008-01-01");
 	date current_date <- starting_date;
 	string current_month;
