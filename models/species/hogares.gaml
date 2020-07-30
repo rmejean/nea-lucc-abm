@@ -79,9 +79,9 @@ species hogares {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
 				let new_SC3 <- 0;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajotuer aussi les friches longues!
+				loop while: (one_matches(my_predio.cells_deforest, each.grid_value = 2)) and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajotuer aussi les friches longues!
 					if available_workers > (laborcost_SC3_1 + laborcost_install_SC3) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC3.1';
 							new_SC3 <- new_SC3 + 1;
@@ -110,9 +110,9 @@ species hogares {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
 				let new_SC4 <- 0;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) {
+				loop while: (one_matches(my_predio.cells_deforest, each.grid_value = 2)) and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC4.1';
 							new_SC4 <- new_SC4 + 1;
@@ -126,7 +126,7 @@ species hogares {
 						needs <- subcrops_needs - my_predio.subcrops_amount;
 					} else {
 						if available_workers > (laborcost_SC4_2 + laborcost_install_SC4) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'SC4.2';
 								new_SC4 <- new_SC4 + 1;
@@ -157,9 +157,9 @@ species hogares {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
 				let new_SC4 <- 0;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) {
+				loop while: (one_matches(my_predio.cells_deforest, each.grid_value = 2)) and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC4.1';
 							new_SC4 <- new_SC4 + 1;
@@ -173,7 +173,7 @@ species hogares {
 						needs <- subcrops_needs - my_predio.subcrops_amount;
 					} else {
 						if available_workers > (laborcost_SC4_2 + laborcost_install_SC4) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'SC4.2';
 								new_SC4 <- new_SC4 + 1;
@@ -204,9 +204,9 @@ species hogares {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
 				let new_SE1_2 <- 0;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (money_missing > 0) and (stop = false) {
+				loop while: (one_matches(my_predio.cells_deforest, each.grid_value = 2)) and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_2 + laborcost_install_SE1) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.2';
 							new_SE1_2 <- new_SE1_2 + 1;
@@ -220,7 +220,7 @@ species hogares {
 						(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2));
 					} else {
 						if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2)) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SE1.2';
@@ -235,7 +235,7 @@ species hogares {
 
 						} else {
 							if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 3)) {
-								ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+								ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 									is_deforest <- true;
 									landuse <- 'wip';
 									future_landuse <- 'SE1.2';
@@ -269,9 +269,9 @@ species hogares {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
 				let new_SE1_1 <- 0;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (money_missing > 0) and (stop = false) {
+				loop while: (one_matches(my_predio.cells_deforest, each.grid_value = 2)) and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_1 + laborcost_install_SE1) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.1';
 							new_SE1_1 <- new_SE1_1 + 1;
@@ -285,7 +285,7 @@ species hogares {
 						(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_2));
 					} else {
 						if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 2)) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SE1.1';
@@ -300,7 +300,7 @@ species hogares {
 
 						} else {
 							if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 3)) {
-								ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+								ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 									is_deforest <- true;
 									landuse <- 'wip';
 									future_landuse <- 'SE1.1';
@@ -350,8 +350,8 @@ species hogares {
 				let new_SC1 <- 0;
 				let new_SC2 <- 0;
 				if index_of(profits_SP1_2, max(profits_SP1_2)) = 0 {
-					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.1';
 							new_SC1 <- new_SC1 + 1;
@@ -362,8 +362,8 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SC1.1';
@@ -384,8 +384,8 @@ species hogares {
 				}
 
 				if index_of(profits_SP1_2, max(profits_SP1_2)) = 1 {
-					if (available_workers > (laborcost_SC1_2 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+					if (available_workers > (laborcost_SC1_2 + laborcost_install_SC1)) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.2';
 							new_SC1 <- new_SC1 + 1;
@@ -396,8 +396,8 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC1_2 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						if (available_workers > (laborcost_SC1_2 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SC1.2';
@@ -418,8 +418,8 @@ species hogares {
 				}
 
 				if index_of(profits_SP1_2, max(profits_SP1_2)) = 2 {
-					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC2';
 							new_SC2 <- new_SC2 + 1;
@@ -430,8 +430,8 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SC2';
@@ -466,8 +466,8 @@ species hogares {
 				let new_SC2 <- 0;
 				let new_SE1 <- 0;
 				if index_of(profits_SP1_3, max(profits_SP1_3)) = 0 {
-					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.2';
 							new_SC1 <- new_SC1 + 1;
@@ -478,8 +478,8 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SC1.1';
@@ -500,8 +500,8 @@ species hogares {
 				}
 
 				if index_of(profits_SP1_3, max(profits_SP1_3)) = 1 {
-					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SC2';
 							new_SC2 <- new_SC2 + 1;
@@ -512,8 +512,8 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SC2';
@@ -534,8 +534,8 @@ species hogares {
 				}
 
 				if index_of(profits_SP1_3, max(profits_SP1_3)) = 2 {
-					if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+					if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+						ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.2';
 							new_SE1 <- new_SE1 + 1;
@@ -546,8 +546,8 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-							ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+						if (available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2))) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+							ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
 								future_landuse <- 'SE1.2';
@@ -583,8 +583,8 @@ species hogares {
 
 			match "SP2" {
 				let new_SE1 <- 0;
-				if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-					ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+				if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+					ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 						is_deforest <- true;
 						landuse <- 'SE1.2';
 						new_SE1 <- new_SE1 + 1;
@@ -604,8 +604,8 @@ species hogares {
 
 			match "SP3" {
 				let new_SE1 <- 0;
-				if (available_workers > (laborcost_SE1_1 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
-					ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
+				if (available_workers > (laborcost_SE1_1 + laborcost_install_SE1)) and (one_matches(my_predio.cells_deforest, each.grid_value = 2)) {
+					ask closest_to(my_predio.cells_deforest where (each.grid_value = 2), one_of(my_predio.cells_deforest where (each.grid_value = 2)), 1) {
 						is_deforest <- true;
 						landuse <- 'SE1.1';
 						new_SE1 <- new_SE1 + 1;

@@ -56,9 +56,10 @@ species predios {
 	}
 
 	action identify_house {
-		ask (cells_deforest closest_to (vias closest_to self)) {
+		ask (cells_deforest where (each.grid_value = 3) closest_to (vias closest_to self)) {
 			landuse <- "house";
 			is_free <- false;
+			grid_value <- 4.0;
 		}
 
 	}
