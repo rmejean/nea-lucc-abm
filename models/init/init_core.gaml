@@ -147,6 +147,7 @@ global { //Lists
 		// --------------------------
 		create personas from: pop_gen {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
+			my_house <- my_hogar.my_house;
 			if my_hogar != nil {
 				location <- my_hogar.location;
 				my_predio <- my_hogar.my_predio;

@@ -452,7 +452,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			future_landuse <- nil;
 			add landuse to: land_use_hist;
 			nb_months <- 0;
-			my_hogar.available_workers <- (my_hogar.available_workers + ((wip_laborforce) / wip_division));
+			my_hogar.available_workers <- (my_hogar.available_workers + (wip_laborforce / wip_division));
 			wip_division <- nil;
 			wip_laborforce <- nil;
 		}

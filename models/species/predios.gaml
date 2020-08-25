@@ -59,6 +59,7 @@ species predios {
 		ask (cells_deforest closest_to (vias closest_to self)) {
 			landuse <- "house";
 			is_free <- false;
+			is_deforest <- nil;
 		}
 
 	}

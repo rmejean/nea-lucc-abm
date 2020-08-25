@@ -48,7 +48,7 @@ global { //Time aspects
 			do init_vias;
 			do load_saved_empresas;
 			do load_saved_predios;
-			ask predios {do identify_house;}
+			//ask predios {do identify_house;}
 			do load_saved_hogares;
 			do load_saved_personas;
 			do load_saved_landscape;

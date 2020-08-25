@@ -349,7 +349,7 @@ species hogares {
 			match "SP1.2" {
 				let new_SC1 <- 0;
 				let new_SC2 <- 0;
-				if index_of(profits_SP1_2, max(profits_SP1_2)) = 0 {
+				if index_of(profits_SP1_2, max(profits_SP1_2)) = 0 {//if the most profitable cash crop is SC1_1
 					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
 						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;
@@ -383,7 +383,7 @@ species hogares {
 
 				}
 
-				if index_of(profits_SP1_2, max(profits_SP1_2)) = 1 {
+				if index_of(profits_SP1_2, max(profits_SP1_2)) = 1 {//if the most profitable cash crop is SC1_2
 					if (available_workers > (laborcost_SC1_2 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
 						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;
@@ -417,7 +417,7 @@ species hogares {
 
 				}
 
-				if index_of(profits_SP1_2, max(profits_SP1_2)) = 2 {
+				if index_of(profits_SP1_2, max(profits_SP1_2)) = 2 {//if the most profitable cash crop is SC2
 					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
 						ask closest_to(my_predio.cells_inside where (each.is_deforest = false), one_of(my_predio.cells_inside where (each.is_deforest = true)), 1) {
 							is_deforest <- true;

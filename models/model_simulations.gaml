@@ -71,7 +71,7 @@ experiment save_init type: gui until: stop_simulation = true {
 	} //Saving people
 	user_command "Save People" category: "Saving init" when: init_end = true color: #darkblue {
 		save personas to: save_personas type: "shp" attributes:
-		["NAME"::name, "HOG_ID"::hog_id, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
+		["NAME"::name, "HOG_ID"::hog_id, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 	} //Saving cells
 	user_command "Save cells" category: "Saving init" when: init_end = true color: #darkblue {
 		ask cell {
@@ -88,7 +88,7 @@ experiment save_init type: gui until: stop_simulation = true {
 		save hogares to: save_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "HUNGER_W"::hunger_alert, "MONEY_W"::money_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc];
 		save personas to: save_personas type: "shp" attributes:
-		["NAME"::name, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
+		["NAME"::name, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 		save empresas to: save_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "WORKERS"::workers];
 	}
 
@@ -137,7 +137,7 @@ init {
 	} //Saving people
 	user_command "Save People" category: "Export data" when: init_end = true color: #darkblue {
 		save personas to: export_personas type: "shp" attributes:
-		["NAME"::name, "HOG_ID"::hog_id, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
+		["NAME"::name, "HOG_ID"::hog_id, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 	} //Saving cells
 	user_command "Save cells" category: "Export data" when: init_end = true color: #darkblue {
 		ask cell {
@@ -154,7 +154,7 @@ init {
 		save hogares to: export_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "HUNGER_W"::hunger_alert, "MONEY_W"::money_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc];
 		save personas to: export_personas type: "shp" attributes:
-		["NAME"::name, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "HOGAR"::my_hogar, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
+		["NAME"::name, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "WORKERS"::workers];
 	}
 

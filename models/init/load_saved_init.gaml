@@ -45,8 +45,17 @@ global {
 		write "---START OF INIT HOUSEHOLDS";
 		create hogares from: saved_hogares with:
 		[name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")),
-		//my_predio::(first(predios where(each.name = get("PLOT")))), my_house::(first(cell where (each.name =get("HOUSE")))),
-		chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")), livelihood_strategy::string(get("LS")), available_workers::float(get("MOF_A")), occupied_workers::float(get("MOF_O")), employees_workers::float(get("MOF_E")), labor_alert::bool(get("MOF_W")), subcrops_needs::(float(get("SUB_NEED"))), oil_workers::(int(get("NB_OIL_W")))];
+		my_predio::(first(predios where (each.name = get("PLOT")))), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")), livelihood_strategy::string(get("LS")), available_workers::float(get("MOF_A")), occupied_workers::float(get("MOF_O")), employees_workers::float(get("MOF_E")), labor_alert::bool(get("MOF_W")), subcrops_needs::(float(get("SUB_NEED"))), oil_workers::(int(get("NB_OIL_W")))];
+		ask hogares {
+			my_house <- first (cell overlapping self);
+			ask my_house {
+				landuse <- "house";
+				is_free <- false;
+				is_deforest <- nil;
+			}
+
+		}
+
 		write "---END OF INIT HOUSEHOLDS";
 	}
 
@@ -54,9 +63,10 @@ global {
 		write "---START OF INIT PEOPLE";
 		create personas from: saved_personas with: [name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), my_predio::(first(predios where
 		(each.name = get("PLOT")))), my_hogar::(first(hogares where
-		(each.name = get("HOUSEHOLD")))), income::float(get("INC")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")), //my_house::(first(cell where (each.name =get("HOUSE")))),
+		(each.name = get("HOUSEHOLD")))), income::float(get("INC")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")),
 		oil_worker::bool(get("WORK")), empresa::(first(empresas where
 		(each.name = get("EMPRESA")))), contract_term::int(get("CONTRACT")), working_months::int(get("WORK_M")), work_pace::int(get("WORKPACE")), annual_inc::int(get("ANNUAL_INC"))] {
+			my_house <- my_hogar.my_house;
 			ask my_predio {
 				my_hogar <- myself.my_hogar;
 			}
@@ -68,7 +78,6 @@ global {
 
 			ask my_hogar {
 				add myself to: membres_hogar;
-				my_predio <- myself.my_predio;
 			}
 
 		}
@@ -78,7 +87,6 @@ global {
 		}
 		//		ask predios {
 		//			neighbors <- predios where (each.is_free = false) closest_to (self, 5);
-		//			do identify_house;
 		//		}
 		write "---END OF INIT PEOPLE";
 	}
