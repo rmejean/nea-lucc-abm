@@ -70,7 +70,7 @@ global {
 }
 
 grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
-	bool is_deforest <- true;
+	bool is_deforest;
 	bool is_free <- true;
 	string landuse;
 	string landuse2;

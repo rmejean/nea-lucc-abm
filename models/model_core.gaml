@@ -110,7 +110,7 @@ global { //Time aspects
 		}
 
 		write "--END address work in progress";
-		write "END OF TURN/MONTH" + months_between(starting_date, current_date);
+		write "END OF TURN/MONTH " + months_between(starting_date, current_date);
 
 		//do assess_income_needs;
 	}

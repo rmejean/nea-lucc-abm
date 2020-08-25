@@ -30,8 +30,20 @@ global { //Lists
 			if grid_value = 2 {
 				is_deforest <- false;
 				add 'forest' to: land_use_hist;
-			} else {
+			}
+
+			if grid_value = 3 {
 				is_deforest <- true;
+			}
+
+			if grid_value = 4 {
+				is_deforest <- nil;
+				add 'urban' to: land_use_hist;
+			}
+
+			if grid_value = 1 {
+				is_deforest <- nil;
+				add 'water' to: land_use_hist;
 			}
 
 		}
