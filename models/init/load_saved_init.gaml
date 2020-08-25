@@ -79,6 +79,10 @@ global {
 			ask my_hogar {
 				add myself to: membres_hogar;
 			}
+			
+			ask empresa {
+				add myself to: workers;
+			}
 
 		}
 
