@@ -80,7 +80,7 @@ global { //Time aspects
 
 	}
 
-	reflex update { //coeur de la dynamique du modèle
+	reflex update { //model core
 		ask personas {
 			do update;
 		}

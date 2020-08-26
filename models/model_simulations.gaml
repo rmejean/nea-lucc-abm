@@ -15,8 +15,8 @@ global {
 	int nb_personas -> length(personas);
 	int nb_predios -> length(predios);
 	int nb_patches -> length(patches);
-	int nb_jobs -> sum(empresas collect (each.nb_jobs));
-	int nb_free_jobs -> sum(empresas collect (each.free_jobs));
+	int total_jobs -> sum(empresas collect (each.nb_jobs));
+	int total_free_jobs -> sum(empresas collect (each.free_jobs));
 	int deforestation -> sum(predios collect (each.area_deforest));
 	float ratio_deforest_min -> predios min_of (each.def_rate);
 	float ratio_deforest_max -> predios max_of (each.def_rate);
@@ -185,8 +185,8 @@ init {
 		monitor "Total ménages" value: nb_menages;
 		monitor "Total personas" value: nb_personas;
 		monitor "Total parcelles" value: nb_predios;
-		monitor "Total oil_jobs" value: nb_jobs;
-		monitor "Total free_oil_jobs" value: nb_free_jobs;
+		monitor "Total oil_jobs" value: total_jobs;
+		monitor "Total free_oil_jobs" value: total_free_jobs;
 		monitor "Total patches" value: nb_patches;
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;
