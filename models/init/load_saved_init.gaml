@@ -80,9 +80,9 @@ global {
 				add myself to: membres_hogar;
 			}
 			
-			ask empresa {
-				add myself to: workers;
-			}
+//			ask empresa {
+//				add myself to: workers;
+//			}
 
 		}
 

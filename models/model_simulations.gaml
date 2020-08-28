@@ -11,6 +11,9 @@
 import "model_core.gaml"
 import "species_def.gaml" //Global variables for monitors
 global {
+	//-----------------------------
+	//Monitors & charts------------
+	//-----------------------------
 	int nb_menages -> length(hogares);
 	int nb_personas -> length(personas);
 	int nb_predios -> length(predios);
@@ -28,6 +31,10 @@ global {
 	int area_deforest_max -> predios max_of (each.area_deforest);
 	float area_deforest_mean <- predios mean_of (each.area_deforest) update: predios mean_of (each.area_deforest);
 	float labor_mean <- hogares mean_of (each.labor_force) update: hogares mean_of (each.labor_force);
+	//-----------------------------
+	//Parameters-------------------
+	//-----------------------------
+	int nb_new_jobs;
 	//-----------------------------
 	//Saving init------------------
 	//-----------------------------
@@ -159,21 +166,14 @@ init {
 		["NAME"::name, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
 	}
-
-	user_command "Save init (serialization)" category: "Init Generator" color: #darkgreen {
-		save saved_simulation_file('init.gsim', [simulation]);
-	}
-
-	user_command "Save init - 2 (serialization)" category: "Init Generator" color: #darkgreen {
-		write "Save of simulation : " + save_simulation('simpleSimuList.gsim');
-	}
 	
-	parameter "Generate a new init?" category: "Parameters" var: new_init init: false;
-	parameter "File chooser landscape" category: "Saving init" var: export_landscape;
-	parameter "File chooser roads" category: "Saving init" var: export_vias;
-	parameter "File chooser plots" category: "Saving init" var: export_predios;
-	parameter "File chooser households" category: "Saving init" var: export_hogares;
-	parameter "File chooser people" category: "Saving init" var: export_personas;
+	parameter "File chooser landscape" category: "Folders" var: export_landscape;
+	parameter "File chooser roads" category: "Folders" var: export_vias;
+	parameter "File chooser plots" category: "Folders" var: export_predios;
+	parameter "File chooser households" category: "Folders" var: export_hogares;
+	parameter "File chooser people" category: "Folders" var: export_personas;
+	
+	parameter "Number of new jobs per months" category: "Parameters" var: nb_new_jobs init:rnd(5) min:1 max:30;
 	
 	output {
 		display map_ALG type: opengl {

@@ -84,6 +84,10 @@ global { //Time aspects
 		ask personas {
 			do update;
 		}
+		
+		ask empresas {
+			do generate_jobs;
+		}
 
 		ask cell {
 			if starting_wip {starting_wip <- false;}
@@ -96,9 +100,9 @@ global { //Time aspects
 		ask hogares {
 			if needs_alert = true {
 				do subsistence_LUC;
+			} else {
+				do profit_LUC;
 			}
-
-			do profit_LUC;
 		}
 
 		write "--START address work in progress";
@@ -111,7 +115,6 @@ global { //Time aspects
 		write "--END address work in progress";
 		write "END OF TURN/MONTH " + months_between(starting_date, current_date);
 
-		//do assess_income_needs;
 	}
 
 }

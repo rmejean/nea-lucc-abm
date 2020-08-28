@@ -18,6 +18,13 @@ species empresas {
 	float job_wages <- 350.0;
 	list<personas> workers;
 
+	action generate_jobs {
+		if flip(0.5) = true {
+			free_jobs <- free_jobs + nb_new_jobs;
+		}
+
+	}
+
 	aspect default {
 		draw shape color: #black border: #black;
 	}

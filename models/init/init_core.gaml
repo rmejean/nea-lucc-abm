@@ -76,7 +76,7 @@ global { //Lists
 	action init_empresas { //Oil companies init
 		write "---START OF INIT OIL COMPANIES";
 		create empresas from: plataformas_shp {
-			nb_jobs <- rnd(10, 50);
+			nb_jobs <- rnd(0, 10);//number of jobs held by agents of the model by firm at init
 			free_jobs <- nb_jobs;
 		}
 
