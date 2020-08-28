@@ -20,6 +20,7 @@ species empresas {
 
 	action generate_jobs {
 		if flip(0.5) = true {
+			nb_jobs <- nb_jobs + nb_new_jobs;
 			free_jobs <- free_jobs + nb_new_jobs;
 		}
 

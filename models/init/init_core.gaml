@@ -116,7 +116,6 @@ global { //Lists
 				is_free <- false;
 				is_free_MCA <- true;
 				my_hogar <- myself;
-				neighbors <- predios where (each.is_free = false) closest_to (self, 5);
 			}
 
 			ask my_predio.cells_inside {
@@ -168,6 +167,9 @@ global { //Lists
 			do init_values;
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
+			}
+			ask my_predio {
+				neighbors <- predios where (each.is_free = false) closest_to (self, 5);
 			}
 
 		}
@@ -803,7 +805,8 @@ global { //Lists
 				if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
 					employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
 					labor_force <- labor_force + (employees_workers * 30);
-					available_workers <- labor_force - occupied_workers;
+					occupied_workers <- occupied_workers + (employees_workers * 30);
+					//available_workers <- labor_force - occupied_workers;
 				}
 
 				if (livelihood_strategy = "SP1.1") or (livelihood_strategy = "SP1.2") or (livelihood_strategy = "SP1.3") {
@@ -821,8 +824,7 @@ global { //Lists
 		write "---START OF INIT OIL JOBS";
 		ask hogares {
 			let no_more_jobs <- false;
-			let wasnt_drawn <- false;
-			loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (no_more_jobs = false) {
+			loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and (no_more_jobs = false) {
 				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
 					if one_matches(empresas, each.free_jobs > 0) {
 						empresa <- empresas where (each.free_jobs > 0) closest_to self;
@@ -840,7 +842,7 @@ global { //Lists
 
 						ask my_hogar {
 							occupied_workers <- occupied_workers + myself.work_pace;
-							available_workers <- labor_force - occupied_workers;
+							available_workers <- available_workers - myself.work_pace;
 							oil_workers <- oil_workers + 1;
 						}
 

@@ -39,6 +39,7 @@ species hogares {
 	bool money_alert <- false;
 	bool labor_alert <- false;
 	int oil_workers <- 0;
+	int oil_workers_max <- round(Total_Personas / 3);
 	list best_profit_LUC;
 
 	action init_values {
