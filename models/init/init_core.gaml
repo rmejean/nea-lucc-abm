@@ -162,15 +162,14 @@ global { //Lists
 		// Instructions post-génération
 		// --------------------------
 		ask hogares {
+			neighbors <- hogares closest_to (self, 5);
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
 			do head_and_ethnicity;
 			do init_values;
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
 			}
-			ask my_predio {
-				neighbors <- predios where (each.is_free = false) closest_to (self, 5);
-			}
+			
 
 		}
 
@@ -858,6 +857,15 @@ global { //Lists
 
 		write "---END OF INIT OIL JOBS";
 	}
+	
+//	action init_social_network {
+//		write "---START OF INIT SOCIAL NETWORKS";
+//		ask hogares {
+//			add 
+//			add neighbors to: social_network;
+//			
+//		}
+//	}
 
 	action assess_income_needs { //calculation of cash income (does not include food crops)
 		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";

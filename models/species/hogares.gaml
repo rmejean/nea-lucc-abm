@@ -22,6 +22,8 @@ species hogares {
 	predios my_predio;
 	cell my_house;
 	list<personas> membres_hogar;
+	list<hogares> neighbors;
+	list<personas> social_network;
 	personas chef_hogar;
 	string chef_auto_id;
 	float labor_force;

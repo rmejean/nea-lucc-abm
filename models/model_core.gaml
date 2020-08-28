@@ -36,6 +36,7 @@ global { //Time aspects
 			do init_ALG;
 			do init_farm_jobs;
 			do init_oil_jobs;
+			//do init_social_network;
 			do assess_income_needs;
 			do setting_alerts;
 			init_end <- true;
