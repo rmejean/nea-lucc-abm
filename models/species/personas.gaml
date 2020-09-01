@@ -32,6 +32,7 @@ species personas parent: hogares {
 	int job_wages;
 	int annual_inc;
 	empresas empresa;
+	list<hogares> co_workers_hog;
 
 	action labour_value_and_needs {
 		if Age < 11 {
@@ -112,6 +113,7 @@ species personas parent: hogares {
 					working_months <- nil;
 					job_wages <- 0;
 					annual_inc <- 0;
+					co_workers_hog <- nil;
 					ask empresa {
 						remove myself from: workers;
 					}

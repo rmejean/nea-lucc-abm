@@ -23,7 +23,7 @@ species hogares {
 	cell my_house;
 	list<personas> membres_hogar;
 	list<hogares> neighbors;
-	list<personas> social_network;
+	list<hogares> social_network;
 	personas chef_hogar;
 	string chef_auto_id;
 	float labor_force;
@@ -50,9 +50,6 @@ species hogares {
 		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
 	}
 
-	//action update_values {
-	//labor_force <- (sum(membres_hogar collect each.labor_value) * 30) + (employees_workers * 30) - (oil_workers * 14.0);
-	//}
 	action head_and_ethnicity {
 		chef_hogar <- membres_hogar with_min_of each.orden_en_hogar;
 		chef_auto_id <- chef_hogar.auto_id;

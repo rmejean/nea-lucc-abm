@@ -76,7 +76,7 @@ global { //Lists
 	action init_empresas { //Oil companies init
 		write "---START OF INIT OIL COMPANIES";
 		create empresas from: plataformas_shp {
-			nb_jobs <- rnd(0, 10);//number of jobs held by agents of the model by firm at init
+			nb_jobs <- rnd(0, 10); //number of jobs held by agents of the model by firm at init
 			free_jobs <- nb_jobs;
 		}
 
@@ -169,7 +169,6 @@ global { //Lists
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
 			}
-			
 
 		}
 
@@ -823,7 +822,8 @@ global { //Lists
 		write "---START OF INIT OIL JOBS";
 		ask hogares {
 			let no_more_jobs <- false;
-			loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and (no_more_jobs = false) {
+			loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and
+			(no_more_jobs = false) {
 				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
 					if one_matches(empresas, each.free_jobs > 0) {
 						empresa <- empresas where (each.free_jobs > 0) closest_to self;
@@ -853,19 +853,28 @@ global { //Lists
 
 			}
 
+			ask personas where (each.oil_worker = true) {//co-worker's households (to be added to the social network)
+				co_workers_hog <- empresa.workers collect each.my_hogar;
+				co_workers_hog <- remove_duplicates(co_workers_hog);
+				remove all: my_hogar from: co_workers_hog;
+			}
+
 		}
 
 		write "---END OF INIT OIL JOBS";
 	}
-	
-//	action init_social_network {
-//		write "---START OF INIT SOCIAL NETWORKS";
-//		ask hogares {
-//			add 
-//			add neighbors to: social_network;
-//			
-//		}
-//	}
+
+	action init_social_network {
+		write "---START OF INIT SOCIAL NETWORKS";
+		ask personas {
+			add all:co_workers_hog to: my_hogar.social_network;
+		}
+		ask hogares {
+			add all:neighbors to: social_network;
+		}
+		write "---END OF INIT SOCIAL NETWORKS";
+
+	}
 
 	action assess_income_needs { //calculation of cash income (does not include food crops)
 		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";

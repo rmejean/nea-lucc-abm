@@ -44,10 +44,11 @@ global {
 	action load_saved_hogares {
 		write "---START OF INIT HOUSEHOLDS";
 		create hogares from: saved_hogares with:
-		[name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")),
-		my_predio::(first(predios where (each.name = get("PLOT")))), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")), livelihood_strategy::string(get("LS")), available_workers::float(get("MOF_A")), occupied_workers::float(get("MOF_O")), employees_workers::float(get("MOF_E")), labor_alert::bool(get("MOF_W")), subcrops_needs::(float(get("SUB_NEED"))), oil_workers::(int(get("NB_OIL_W")))];
+		[name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")), my_predio::(first(predios
+		where
+		(each.name = get("PLOT")))), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")), livelihood_strategy::string(get("LS")), available_workers::float(get("MOF_A")), occupied_workers::float(get("MOF_O")), employees_workers::float(get("MOF_E")), labor_alert::bool(get("MOF_W")), subcrops_needs::(float(get("SUB_NEED"))), oil_workers::(int(get("NB_OIL_W")))];
 		ask hogares {
-			my_house <- first (cell overlapping self);
+			my_house <- first(cell overlapping self);
 			ask my_house {
 				landuse <- "house";
 				is_free <- false;
@@ -63,8 +64,8 @@ global {
 		write "---START OF INIT PEOPLE";
 		create personas from: saved_personas with: [name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), my_predio::(first(predios where
 		(each.name = get("PLOT")))), my_hogar::(first(hogares where
-		(each.name = get("HOUSEHOLD")))), income::float(get("INC")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")),
-		oil_worker::bool(get("WORK")), empresa::(first(empresas where
+		(each.name = get("HOUSEHOLD")))), income::float(get("INC")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")), oil_worker::bool(get("WORK")), empresa::(first(empresas
+		where
 		(each.name = get("EMPRESA")))), contract_term::int(get("CONTRACT")), working_months::int(get("WORK_M")), work_pace::int(get("WORKPACE")), annual_inc::int(get("ANNUAL_INC"))] {
 			my_house <- my_hogar.my_house;
 			ask my_predio {
@@ -78,20 +79,24 @@ global {
 
 			ask my_hogar {
 				add myself to: membres_hogar;
+				chef_hogar <- membres_hogar with_min_of each.orden_en_hogar;
+				neighbors <- hogares closest_to (self, 5);
+				add all: neighbors to: social_network;
 			}
-			
-//			ask empresa {
-//				add myself to: workers;
-//			}
 
+			if oil_worker = true {
+				ask empresa {
+					add myself to: workers;
+				}
+
+				co_workers_hog <- empresa.workers collect each.my_hogar;
+				co_workers_hog <- remove_duplicates(co_workers_hog);
+				remove all: my_hogar from: co_workers_hog;
+			}
+
+			add all: co_workers_hog to: my_hogar.social_network;
 		}
 
-		ask hogares {
-			chef_hogar <- membres_hogar with_min_of each.orden_en_hogar;
-		}
-		//		ask predios {
-		//			neighbors <- predios where (each.is_free = false) closest_to (self, 5);
-		//		}
 		write "---END OF INIT PEOPLE";
 	}
 
