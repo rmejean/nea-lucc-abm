@@ -29,6 +29,7 @@ global { //Lists
 
 			if grid_value = 2 {
 				is_deforest <- false;
+				landuse <- 'forest';
 				add 'forest' to: land_use_hist;
 			}
 
@@ -38,11 +39,13 @@ global { //Lists
 
 			if grid_value = 4 {
 				is_deforest <- nil;
+				landuse <- 'urban';
 				add 'urban' to: land_use_hist;
 			}
 
 			if grid_value = 1 {
 				is_deforest <- nil;
+				landuse <- 'water';
 				add 'water' to: land_use_hist;
 			}
 
@@ -53,15 +56,13 @@ global { //Lists
 
 	action init_predios { //Plots init
 		write "---START OF INIT PLOTS";
-		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))];
-		ask predios {
+		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))] {
 			if length(cells_deforest) = 0 { //Delete any plots with no deforestation
 				do die;
 			}
 
-			do deforestation_rate_calc;
-			do map_deforestation_rate;
-			do identify_house; //TODO : plutôt uniquement quand les predios sont occupés ?
+//			do deforestation_rate_calc;
+//			do map_deforestation_rate;
 		}
 
 		write "---END OF INIT PLOTS";
@@ -110,8 +111,14 @@ global { //Lists
 		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
 			my_predio <- first(predios overlapping self);
-			my_house <- first(my_predio.cells_inside where (each.landuse = "house"));
-			location <- my_house.location; //A AMELIORER : first est trop régulier, one_of trop hasardeux
+			my_house <- first(my_predio.cells_deforest closest_to (vias closest_to self));
+			location <- my_house.location;
+			ask my_house {
+				landuse <- 'house';
+				is_free <- false;
+				is_deforest <- nil;
+			}
+
 			ask my_predio {
 				is_free <- false;
 				is_free_MCA <- true;
@@ -278,7 +285,7 @@ global { //Lists
 						nb_months <- myself.months;
 						add landuse to: land_use_hist;
 						do color_activities; //TODO: pas à répéter à chaque fois!
-						do update_yields;
+						do update_yields; //TODO: idem!
 					}
 
 				}
@@ -853,7 +860,7 @@ global { //Lists
 
 			}
 
-			ask personas where (each.oil_worker = true) {//co-worker's households (to be added to the social network)
+			ask personas where (each.oil_worker = true) { //co-worker's households (to be added to the social network)
 				co_workers_hog <- empresa.workers collect each.my_hogar;
 				co_workers_hog <- remove_duplicates(co_workers_hog);
 				remove all: my_hogar from: co_workers_hog;
@@ -867,13 +874,14 @@ global { //Lists
 	action init_social_network {
 		write "---START OF INIT SOCIAL NETWORKS";
 		ask personas {
-			add all:co_workers_hog to: my_hogar.social_network;
+			add all: co_workers_hog to: my_hogar.social_network;
 		}
-		ask hogares {
-			add all:neighbors to: social_network;
-		}
-		write "---END OF INIT SOCIAL NETWORKS";
 
+		ask hogares {
+			add all: neighbors to: social_network;
+		}
+
+		write "---END OF INIT SOCIAL NETWORKS";
 	}
 
 	action assess_income_needs { //calculation of cash income (does not include food crops)

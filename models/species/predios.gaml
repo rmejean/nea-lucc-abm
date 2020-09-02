@@ -25,7 +25,7 @@ species predios {
 	int id_EMC_LS3 <- 0;
 	int area_total <- length(cells_inside);
 	int area_deforest <- length(cells_deforest) update: length(cells_deforest);
-	int area_forest <- length(cells_forest);
+	int area_forest <- length(cells_forest) update: length(cells_forest);
 	float def_rate;
 	float forest_rate;
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //distance to via Auca (main road on the study area, original settlement and and location of oil companies)
@@ -41,7 +41,7 @@ species predios {
 	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.is_deforest = true);
 	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
-	list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
+	//list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
 
 	action deforestation_rate_calc {
@@ -56,7 +56,7 @@ species predios {
 
 	action identify_house {
 		ask (cells_deforest closest_to (vias closest_to self)) {
-			landuse <- "house";
+			landuse <- 'house';
 			is_free <- false;
 			is_deforest <- nil;
 		}
