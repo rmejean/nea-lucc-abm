@@ -100,6 +100,7 @@ global { //Time aspects
 		do setting_alerts;
 		ask hogares {
 			if needs_alert = true {
+				//do looking_for_job;
 				do subsistence_LUC;
 			} else {
 				do profit_LUC;

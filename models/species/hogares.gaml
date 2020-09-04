@@ -67,6 +67,12 @@ species hogares {
 		}
 
 	}
+	
+	action looking_for_job {
+		if available_workers > 14 {
+			
+		}
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////
@@ -280,7 +286,7 @@ species hogares {
 													is_deforest <- true;
 													landuse <- 'wip';
 													future_landuse <- 'SC4.1';
-													wip <- 3; //meaning: we will finish planting in 2 months
+													wip <- 3; //meaning: we will finish planting in 3 months
 													starting_wip <- true; //we just started planting
 													wip_division <- 4;
 													wip_laborforce <- wip_laborforce + laborcost_install_SC4;
@@ -298,7 +304,7 @@ species hogares {
 														is_deforest <- true;
 														landuse <- 'wip';
 														future_landuse <- 'SC4.2';
-														wip <- 3; //meaning: we will finish planting in 2 months
+														wip <- 3; //meaning: we will finish planting in 3 months
 														starting_wip <- true; //we just started planting
 														wip_division <- 4;
 														wip_laborforce <- wip_laborforce + laborcost_install_SC4;
@@ -447,7 +453,7 @@ species hogares {
 													is_deforest <- true;
 													landuse <- 'wip';
 													future_landuse <- 'SC4.1';
-													wip <- 3; //meaning: we will finish planting in 2 months
+													wip <- 3; //meaning: we will finish planting in 3 months
 													starting_wip <- true; //we just started planting
 													wip_division <- 4;
 													wip_laborforce <- wip_laborforce + laborcost_install_SC4;
@@ -465,7 +471,7 @@ species hogares {
 														is_deforest <- true;
 														landuse <- 'wip';
 														future_landuse <- 'SC4.2';
-														wip <- 3; //meaning: we will finish planting in 2 months
+														wip <- 3; //meaning: we will finish planting in 3 months
 														starting_wip <- true; //we just started planting
 														wip_division <- 4;
 														wip_laborforce <- wip_laborforce + laborcost_install_SC4;

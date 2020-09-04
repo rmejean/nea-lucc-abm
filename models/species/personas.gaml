@@ -116,7 +116,7 @@ species personas parent: hogares {
 					contract_term <- nil;
 					working_months <- nil;
 					job_wages <- 0;
-					annual_inc <- 0;
+					annual_inc <- 0;//TODO: éventuelle erreur ? car ça annule ce qui a été gagné avant
 					co_workers_hog <- nil;
 					ask empresa {
 						remove myself from: workers;

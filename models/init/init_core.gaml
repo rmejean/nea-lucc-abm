@@ -890,7 +890,7 @@ global { //Lists
 			if livelihood_strategy = "SP1.1" {
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
+				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
 				//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production (le WIP)
 			}
 			//TODO: penser aux chèques des autorités pour le SP1
@@ -899,7 +899,7 @@ global { //Lists
 				each.job_wages));
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
 				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect
-				each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
+				each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
 			}
 
 			if livelihood_strategy = "SP1.3" {
@@ -907,19 +907,19 @@ global { //Lists
 				each.rev + sum(membres_hogar collect each.job_wages));
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
 				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-				each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
+				each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
 			}
 
 			if livelihood_strategy = "SP2" {
 				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
+				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
 			}
 
 			if livelihood_strategy = "SP3" {
 				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
+				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
 			}
 
 			ask my_predio {
