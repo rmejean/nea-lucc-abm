@@ -810,7 +810,6 @@ global { //Lists
 				if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
 					employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
 					labor_force <- labor_force + (employees_workers * 30);
-					occupied_workers <- occupied_workers + (employees_workers * 30);
 					available_workers <- labor_force - occupied_workers;
 				}
 
