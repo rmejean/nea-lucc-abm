@@ -75,6 +75,10 @@ species hogares {
 	//////////////////////////////////////////////////////////////////////////////////
 	action subsistence_LUC {
 		switch livelihood_strategy {
+
+		///////////////////////////////////
+		//////////////SP 1.1///////////////
+		///////////////////////////////////
 			match "SP1.1" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
@@ -94,16 +98,77 @@ species hogares {
 
 						needs <- subcrops_needs - my_predio.subcrops_amount;
 					} else {
-						write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
-						stop <- true;
+						if available_workers > (laborcost_SC3_1 + (laborcost_install_SC3 / 2)) {
+							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+								is_deforest <- true;
+								landuse <- 'wip';
+								future_landuse <- 'SC3.1';
+								wip <- 1; //meaning: we will finish planting next month
+								starting_wip <- true; //we just started planting
+								wip_division <- 2;
+								wip_laborforce <- wip_laborforce + laborcost_install_SC3;
+								predio.subcrops_amount <- predio.subcrops_amount + 1;
+								my_hogar.last_decision <- 'SC3.1';
+								write "deforestation in progress for SUBSISTENCE at " + location;
+								myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
+								add landuse to: land_use_hist;
+							}
+
+							needs <- subcrops_needs - my_predio.subcrops_amount;
+						} else {
+							if available_workers > (laborcost_SC3_1 + (laborcost_install_SC3 / 3)) {
+								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+									is_deforest <- true;
+									landuse <- 'wip';
+									future_landuse <- 'SC3.1';
+									wip <- 2; //meaning: we will finish planting in 2 months
+									starting_wip <- true; //we just started planting
+									wip_division <- 3;
+									wip_laborforce <- wip_laborforce + laborcost_install_SC3;
+									predio.subcrops_amount <- predio.subcrops_amount + 1;
+									my_hogar.last_decision <- 'SC3.1';
+									write "deforestation in progress for SUBSISTENCE at " + location;
+									myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
+									add landuse to: land_use_hist;
+								}
+
+								needs <- subcrops_needs - my_predio.subcrops_amount;
+							} else {
+								if available_workers > (laborcost_SC3_1 + (laborcost_install_SC3 / 4)) {
+									ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+										is_deforest <- true;
+										landuse <- 'wip';
+										future_landuse <- 'SC3.1';
+										wip <- 3; //meaning: we will finish planting in 3 months
+										starting_wip <- true; //we just started planting
+										wip_division <- 4;
+										wip_laborforce <- wip_laborforce + laborcost_install_SC3;
+										predio.subcrops_amount <- predio.subcrops_amount + 1;
+										my_hogar.last_decision <- 'SC3.1';
+										write "deforestation in progress for SUBSISTENCE at " + location;
+										myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
+										add landuse to: land_use_hist;
+									}
+
+									needs <- subcrops_needs - my_predio.subcrops_amount;
+								} else {
+									write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
+									stop <- true;
+								}
+
+							}
+
+						}
+
 					}
 
 				}
 
-				
-
 			}
 
+			///////////////////////////////////
+			//////////////SP 1.2///////////////
+			///////////////////////////////////
 			match "SP1.2" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
@@ -138,18 +203,139 @@ species hogares {
 
 							needs <- subcrops_needs - my_predio.subcrops_amount;
 						} else {
-							write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
-							stop <- true;
+							if available_workers > (laborcost_SC4_1 + (laborcost_install_SC4 / 2)) {
+								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+									is_deforest <- true;
+									landuse <- 'wip';
+									future_landuse <- 'SC4.1';
+									wip <- 1; //meaning: we will finish planting next month
+									starting_wip <- true; //we just started planting
+									wip_division <- 2;
+									wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+									predio.subcrops_amount <- predio.subcrops_amount + 1;
+									my_hogar.last_decision <- 'SC4.1';
+									write "deforestation in progress for SUBSISTENCE at " + location;
+									myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+									add landuse to: land_use_hist;
+								}
+
+								needs <- subcrops_needs - my_predio.subcrops_amount;
+							} else {
+								if available_workers > (laborcost_SC4_2 + (laborcost_install_SC4 / 2)) {
+									ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+										is_deforest <- true;
+										landuse <- 'wip';
+										future_landuse <- 'SC4.2';
+										wip <- 1; //meaning: we will finish planting next month
+										starting_wip <- true; //we just started planting
+										wip_division <- 2;
+										wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+										predio.subcrops_amount <- predio.subcrops_amount + 1;
+										my_hogar.last_decision <- 'SC4.2';
+										write "deforestation in progress for SUBSISTENCE at " + location;
+										myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+										add landuse to: land_use_hist;
+									}
+
+									needs <- subcrops_needs - my_predio.subcrops_amount;
+								} else {
+									if available_workers > (laborcost_SC4_1 + (laborcost_install_SC4 / 3)) {
+										ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+											is_deforest <- true;
+											landuse <- 'wip';
+											future_landuse <- 'SC4.1';
+											wip <- 2; //meaning: we will finish planting in 2 months
+											starting_wip <- true; //we just started planting
+											wip_division <- 3;
+											wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+											predio.subcrops_amount <- predio.subcrops_amount + 1;
+											my_hogar.last_decision <- 'SC4.1';
+											write "deforestation in progress for SUBSISTENCE at " + location;
+											myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+											add landuse to: land_use_hist;
+										}
+
+										needs <- subcrops_needs - my_predio.subcrops_amount;
+									} else {
+										if available_workers > (laborcost_SC4_2 + (laborcost_install_SC4 / 3)) {
+											ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+												is_deforest <- true;
+												landuse <- 'wip';
+												future_landuse <- 'SC4.2';
+												wip <- 2; //meaning: we will finish planting in 2 months
+												starting_wip <- true; //we just started planting
+												wip_division <- 3;
+												wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+												predio.subcrops_amount <- predio.subcrops_amount + 1;
+												my_hogar.last_decision <- 'SC4.2';
+												write "deforestation in progress for SUBSISTENCE at " + location;
+												myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+												add landuse to: land_use_hist;
+											}
+
+											needs <- subcrops_needs - my_predio.subcrops_amount;
+										} else {
+											if available_workers > (laborcost_SC4_1 + (laborcost_install_SC4 / 4)) {
+												ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+													is_deforest <- true;
+													landuse <- 'wip';
+													future_landuse <- 'SC4.1';
+													wip <- 3; //meaning: we will finish planting in 2 months
+													starting_wip <- true; //we just started planting
+													wip_division <- 4;
+													wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+													predio.subcrops_amount <- predio.subcrops_amount + 1;
+													my_hogar.last_decision <- 'SC4.1';
+													write "deforestation in progress for SUBSISTENCE at " + location;
+													myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+													add landuse to: land_use_hist;
+												}
+
+												needs <- subcrops_needs - my_predio.subcrops_amount;
+											} else {
+												if available_workers > (laborcost_SC4_2 + (laborcost_install_SC4 / 4)) {
+													ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+														is_deforest <- true;
+														landuse <- 'wip';
+														future_landuse <- 'SC4.2';
+														wip <- 3; //meaning: we will finish planting in 2 months
+														starting_wip <- true; //we just started planting
+														wip_division <- 4;
+														wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+														predio.subcrops_amount <- predio.subcrops_amount + 1;
+														my_hogar.last_decision <- 'SC4.2';
+														write "deforestation in progress for SUBSISTENCE at " + location;
+														myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+														add landuse to: land_use_hist;
+													}
+
+													needs <- subcrops_needs - my_predio.subcrops_amount;
+												} else {
+													write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
+													stop <- true;
+												}
+
+											}
+
+										}
+
+									}
+
+								}
+
+							}
+
 						}
 
 					}
 
 				}
 
-				
-
 			}
 
+			///////////////////////////////////
+			//////////////SP 1.3///////////////
+			///////////////////////////////////
 			match "SP1.3" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
@@ -184,18 +370,139 @@ species hogares {
 
 							needs <- subcrops_needs - my_predio.subcrops_amount;
 						} else {
-							write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
-							stop <- true;
+							if available_workers > (laborcost_SC4_1 + (laborcost_install_SC4 / 2)) {
+								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+									is_deforest <- true;
+									landuse <- 'wip';
+									future_landuse <- 'SC4.1';
+									wip <- 1; //meaning: we will finish planting next month
+									starting_wip <- true; //we just started planting
+									wip_division <- 2;
+									wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+									predio.subcrops_amount <- predio.subcrops_amount + 1;
+									my_hogar.last_decision <- 'SC4.1';
+									write "deforestation in progress for SUBSISTENCE at " + location;
+									myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+									add landuse to: land_use_hist;
+								}
+
+								needs <- subcrops_needs - my_predio.subcrops_amount;
+							} else {
+								if available_workers > (laborcost_SC4_2 + (laborcost_install_SC4 / 2)) {
+									ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+										is_deforest <- true;
+										landuse <- 'wip';
+										future_landuse <- 'SC4.2';
+										wip <- 1; //meaning: we will finish planting next month
+										starting_wip <- true; //we just started planting
+										wip_division <- 2;
+										wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+										predio.subcrops_amount <- predio.subcrops_amount + 1;
+										my_hogar.last_decision <- 'SC4.2';
+										write "deforestation in progress for SUBSISTENCE at " + location;
+										myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+										add landuse to: land_use_hist;
+									}
+
+									needs <- subcrops_needs - my_predio.subcrops_amount;
+								} else {
+									if available_workers > (laborcost_SC4_1 + (laborcost_install_SC4 / 3)) {
+										ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+											is_deforest <- true;
+											landuse <- 'wip';
+											future_landuse <- 'SC4.1';
+											wip <- 2; //meaning: we will finish planting in 2 months
+											starting_wip <- true; //we just started planting
+											wip_division <- 3;
+											wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+											predio.subcrops_amount <- predio.subcrops_amount + 1;
+											my_hogar.last_decision <- 'SC4.1';
+											write "deforestation in progress for SUBSISTENCE at " + location;
+											myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+											add landuse to: land_use_hist;
+										}
+
+										needs <- subcrops_needs - my_predio.subcrops_amount;
+									} else {
+										if available_workers > (laborcost_SC4_2 + (laborcost_install_SC4 / 3)) {
+											ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+												is_deforest <- true;
+												landuse <- 'wip';
+												future_landuse <- 'SC4.2';
+												wip <- 2; //meaning: we will finish planting in 2 months
+												starting_wip <- true; //we just started planting
+												wip_division <- 3;
+												wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+												predio.subcrops_amount <- predio.subcrops_amount + 1;
+												my_hogar.last_decision <- 'SC4.2';
+												write "deforestation in progress for SUBSISTENCE at " + location;
+												myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+												add landuse to: land_use_hist;
+											}
+
+											needs <- subcrops_needs - my_predio.subcrops_amount;
+										} else {
+											if available_workers > (laborcost_SC4_1 + (laborcost_install_SC4 / 4)) {
+												ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+													is_deforest <- true;
+													landuse <- 'wip';
+													future_landuse <- 'SC4.1';
+													wip <- 3; //meaning: we will finish planting in 2 months
+													starting_wip <- true; //we just started planting
+													wip_division <- 4;
+													wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+													predio.subcrops_amount <- predio.subcrops_amount + 1;
+													my_hogar.last_decision <- 'SC4.1';
+													write "deforestation in progress for SUBSISTENCE at " + location;
+													myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+													add landuse to: land_use_hist;
+												}
+
+												needs <- subcrops_needs - my_predio.subcrops_amount;
+											} else {
+												if available_workers > (laborcost_SC4_2 + (laborcost_install_SC4 / 4)) {
+													ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+														is_deforest <- true;
+														landuse <- 'wip';
+														future_landuse <- 'SC4.2';
+														wip <- 3; //meaning: we will finish planting in 2 months
+														starting_wip <- true; //we just started planting
+														wip_division <- 4;
+														wip_laborforce <- wip_laborforce + laborcost_install_SC4;
+														predio.subcrops_amount <- predio.subcrops_amount + 1;
+														my_hogar.last_decision <- 'SC4.2';
+														write "deforestation in progress for SUBSISTENCE at " + location;
+														myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
+														add landuse to: land_use_hist;
+													}
+
+													needs <- subcrops_needs - my_predio.subcrops_amount;
+												} else {
+													write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
+													stop <- true;
+												}
+
+											}
+
+										}
+
+									}
+
+								}
+
+							}
+
 						}
 
 					}
 
 				}
 
-				
-
 			}
 
+			///////////////////////////////////
+			///////////////SP 2////////////////
+			///////////////////////////////////
 			match "SP2" {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
@@ -236,7 +543,7 @@ species hogares {
 									is_deforest <- true;
 									landuse <- 'wip';
 									future_landuse <- 'SE1.2';
-									wip <- 2; //meaning: we will finish planting next month
+									wip <- 2; //meaning: we will finish planting in 2 months
 									starting_wip <- true; //we just started planting
 									wip_division <- 3;
 									wip_laborforce <- wip_laborforce + laborcost_install_SE1;
@@ -257,9 +564,11 @@ species hogares {
 
 				}
 
-				
 			}
 
+			///////////////////////////////////
+			///////////////SP 3////////////////
+			///////////////////////////////////
 			match "SP3" {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
@@ -300,7 +609,7 @@ species hogares {
 									is_deforest <- true;
 									landuse <- 'wip';
 									future_landuse <- 'SE1.1';
-									wip <- 2; //meaning: we will finish planting next month
+									wip <- 2; //meaning: we will finish planting in 2 months
 									starting_wip <- true; //we just started planting
 									wip_division <- 3;
 									wip_laborforce <- wip_laborforce + laborcost_install_SE1;
@@ -321,7 +630,6 @@ species hogares {
 
 				}
 
-				
 			}
 
 		}
@@ -448,8 +756,6 @@ species hogares {
 
 				}
 
-				
-
 			}
 
 			match "SP1.3" {
@@ -561,8 +867,6 @@ species hogares {
 
 				}
 
-				
-
 			}
 
 			match "SP2" {
@@ -580,7 +884,6 @@ species hogares {
 
 				}
 
-				
 			}
 
 			match "SP3" {
@@ -598,7 +901,6 @@ species hogares {
 
 				}
 
-				
 			}
 
 		}
