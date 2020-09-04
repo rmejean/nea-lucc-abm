@@ -87,6 +87,13 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	predios predio;
 	hogares my_hogar;
 	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
+	int new_SC1 <- 0;
+	int new_SC2 <- 0;
+	int new_SC3 <- 0;
+	int new_SC4 <- 0;
+	int new_SE1 <- 0;
+	int new_SE1_2 <- 0;
+	int new_SE1_1 <- 0;
 
 	action color_activities {
 		switch landuse {
@@ -152,9 +159,9 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 		}
 
-//		if is_deforest = false {
-//			color <- rgb(35, 75, 0);
-//		}
+		//		if is_deforest = false {
+		//			color <- rgb(35, 75, 0);
+		//		}
 
 	}
 
@@ -456,6 +463,31 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			wip_division <- nil;
 			wip_laborforce <- nil;
 		}
+
+			if new_SC1 > 0 {
+				my_hogar.available_workers <- (my_hogar.available_workers + (new_SC1 * laborcost_install_SC1));
+			}
+
+			if new_SC2 > 0 {
+				my_hogar.available_workers <- (my_hogar.available_workers + (new_SC2 * laborcost_install_SC2));
+			}
+
+			if new_SC3 > 0 {
+				my_hogar.available_workers <- (my_hogar.available_workers + (new_SC3 * laborcost_install_SC3));
+			}
+
+			if new_SC4 > 0 {
+				my_hogar.available_workers <- (my_hogar.available_workers + (new_SC4 * laborcost_install_SC4));
+			}
+
+			if new_SE1_1 > 0 {
+				my_hogar.available_workers <- (my_hogar.available_workers + (new_SE1_1 * laborcost_install_SE1));
+			}
+
+			if new_SE1_2 > 0 {
+				my_hogar.available_workers <- (my_hogar.available_workers + (new_SE1_2 * laborcost_install_SE1));
+			}
+
 
 	}
 

@@ -61,8 +61,8 @@ global { //Lists
 				do die;
 			}
 
-//			do deforestation_rate_calc;
-//			do map_deforestation_rate;
+			do deforestation_rate_calc;
+			do map_deforestation_rate;
 		}
 
 		write "---END OF INIT PLOTS";
@@ -891,7 +891,7 @@ global { //Lists
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
 				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc);
-				//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production
+				//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production (le WIP)
 			}
 			//TODO: penser aux chèques des autorités pour le SP1
 			if livelihood_strategy = "SP1.2" {

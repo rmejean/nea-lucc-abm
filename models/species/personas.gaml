@@ -70,7 +70,11 @@ species personas parent: hogares {
 		if current_month = self.mes_nac { //when it's my birthday!
 			Age <- Age + 1;
 			do labour_value_and_needs;
-			//MORT
+			ask my_hogar {
+				labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
+				available_workers <- labor_force - occupied_workers;
+			}
+			//DEATH
 			if between(Age, 70, 80) {
 				if flip(0.1) {
 					remove self from: my_hogar.membres_hogar;
