@@ -337,7 +337,7 @@ global { //Lists
 					}
 
 				} else { //if food requirements are OK:
-					if my_hogar.labor_force >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
+					if my_hogar.available_workers >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
 						save ("SE3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_chicken <- pxl_chicken + 1;
 						ask my_hogar {
@@ -347,7 +347,7 @@ global { //Lists
 
 					}
 
-					if my_hogar.labor_force >= laborcost_SE2_1 and pxl_pig < 1 { //pig farming
+					if my_hogar.available_workers >= laborcost_SE2_1 and pxl_pig < 1 { //pig farming
 						save ("SE2.1" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_pig <- pxl_pig + 1;
 						ask my_hogar {
@@ -525,7 +525,7 @@ global { //Lists
 					}
 
 				} else { //if food requirements are OK:
-					if my_hogar.labor_force >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
+					if my_hogar.available_workers >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
 						save ("SE3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_chicken <- pxl_chicken + 1;
 						ask my_hogar {
@@ -535,7 +535,7 @@ global { //Lists
 
 					}
 
-					if my_hogar.labor_force >= laborcost_SE2_3 and pxl_pig < 1 { //pigs farming TODO: attribution à revoir (pas frocément prioritaire sur café/cacao et/ou gros élevage
+					if my_hogar.available_workers >= laborcost_SE2_3 and pxl_pig < 1 { //pigs farming TODO: attribution à revoir (pas frocément prioritaire sur café/cacao et/ou gros élevage
 						save ("SE2.3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_pig <- pxl_pig + 1;
 						ask my_hogar {
@@ -668,7 +668,7 @@ global { //Lists
 			let pxl_chicken <- 0;
 			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
-				if my_hogar.labor_force >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
+				if my_hogar.available_workers >= laborcost_SE3 and pxl_chicken < 1 { //chicken farming
 					save ("SE3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_chicken <- pxl_chicken + 1;
 					ask my_hogar {
@@ -811,7 +811,7 @@ global { //Lists
 					employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
 					labor_force <- labor_force + (employees_workers * 30);
 					occupied_workers <- occupied_workers + (employees_workers * 30);
-					//available_workers <- labor_force - occupied_workers;
+					available_workers <- labor_force - occupied_workers;
 				}
 
 				if (livelihood_strategy = "SP1.1") or (livelihood_strategy = "SP1.2") or (livelihood_strategy = "SP1.3") {
