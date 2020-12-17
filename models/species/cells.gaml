@@ -342,6 +342,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			write "reforestation at " + location;
 			is_deforest <- false;
 			color <- rgb(35, 75, 0);
+			grid_value <- 2.0;
 			landuse <- nil;
 			nb_months <- nil;
 		}
@@ -357,11 +358,12 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			add landuse to: land_use_hist;
 			rev <- 0.0;
 			switch previous_landuse {
-				match 'SC3.1' {
+				match 'SC3.1' {//TODO: pourquoi ici je fais pas de if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) comme juste en-dessous ??
 					if one_matches(predio.cells_inside, each.is_deforest = false) {
 						ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- previous_landuse;
+							grid_value <- 3.0;
 							write "deforest to resow at " + location;
 							nb_months <- 0;
 							add landuse to: land_use_hist;
@@ -382,6 +384,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
 						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
 							landuse <- previous_landuse;
+							grid_value <- 3.0;
 							write "resow at " + location;
 							nb_months <- 0;
 							add landuse to: land_use_hist;
@@ -392,6 +395,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- previous_landuse;
+								grid_value <- 3.0;
 								write "deforest to resow at " + location;
 								nb_months <- 0;
 								add landuse to: land_use_hist;
@@ -414,6 +418,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
 						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
 							landuse <- previous_landuse;
+							grid_value <- 3.0;
 							write "resow at " + location;
 							nb_months <- 0;
 							add landuse to: land_use_hist;
@@ -424,6 +429,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- previous_landuse;
+								grid_value <- 3.0;
 								write "deforest to resow at " + location;
 								nb_months <- 0;
 								add landuse to: land_use_hist;
@@ -456,6 +462,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		if not starting_wip and wip = 1 {
 			wip <- 0;
 			landuse <- future_landuse;
+			grid_value <- 3.0;
 			future_landuse <- nil;
 			add landuse to: land_use_hist;
 			nb_months <- 0;
