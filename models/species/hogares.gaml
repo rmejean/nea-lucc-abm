@@ -93,7 +93,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC3.1';
-							grid_value <- 3.0;
 							new_SC3 <- new_SC3 + 1;
 							predio.subcrops_amount <- predio.subcrops_amount + 1;
 							my_hogar.last_decision <- 'SC3.1';
@@ -184,7 +183,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC4.1';
-							grid_value <- 3.0;
 							new_SC4 <- new_SC4 + 1;
 							predio.subcrops_amount <- predio.subcrops_amount + 1;
 							my_hogar.last_decision <- 'SC4.1';
@@ -200,7 +198,6 @@ species hogares {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'SC4.2';
-								grid_value <- 3.0;
 								new_SC4 <- new_SC4 + 1;
 								predio.subcrops_amount <- predio.subcrops_amount + 1;
 								my_hogar.last_decision <- 'SC4.2';
@@ -353,7 +350,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC4.1';
-							grid_value <- 3.0;
 							new_SC4 <- new_SC4 + 1;
 							predio.subcrops_amount <- predio.subcrops_amount + 1;
 							my_hogar.last_decision <- 'SC4.1';
@@ -369,7 +365,6 @@ species hogares {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'SC4.2';
-								grid_value <- 3.0;
 								new_SC4 <- new_SC4 + 1;
 								predio.subcrops_amount <- predio.subcrops_amount + 1;
 								my_hogar.last_decision <- 'SC4.2';
@@ -522,7 +517,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.2';
-							grid_value <- 3.0;
 							new_SE1_2 <- new_SE1_2 + 1;
 							my_hogar.last_decision <- 'SE1.2';
 							write "new deforestation for SUBSISTENCE at " + location;
@@ -589,7 +583,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.1';
-							grid_value <- 3.0;
 							new_SE1_1 <- new_SE1_1 + 1;
 							my_hogar.last_decision <- 'SE1.1';
 							write "new deforestation for SUBSISTENCE at " + location;
@@ -666,7 +659,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.1';
-							grid_value <- 3.0;
 							new_SC1 <- new_SC1 + 1;
 							my_hogar.last_decision <- 'SC1.1';
 							write "new deforestation for PROFIT at " + location;
@@ -703,7 +695,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.2';
-							grid_value <- 3.0;
 							new_SC1 <- new_SC1 + 1;
 							my_hogar.last_decision <- 'SC1.2';
 							write "new deforestation for PROFIT at " + location;
@@ -740,7 +731,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC2';
-							grid_value <- 3.0;
 							my_hogar.last_decision <- 'SC2';
 							new_SC2 <- new_SC2 + 1;
 							write "new deforestation for PROFIT at " + location;
@@ -780,7 +770,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.2';
-							grid_value <- 3.0;
 							new_SC1 <- new_SC1 + 1;
 							my_hogar.last_decision <- 'SC1.2';
 							write "new deforestation for PROFIT at " + location;
@@ -817,7 +806,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC2';
-							grid_value <- 3.0;
 							new_SC2 <- new_SC2 + 1;
 							my_hogar.last_decision <- 'SC2';
 							write "new deforestation for PROFIT at " + location;
@@ -854,7 +842,6 @@ species hogares {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.2';
-							grid_value <- 3.0;
 							new_SE1 <- new_SE1 + 1;
 							my_hogar.last_decision <- 'SE1.2';
 							write "new deforestation for PROFIT at " + location;
@@ -893,7 +880,6 @@ species hogares {
 					ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 						is_deforest <- true;
 						landuse <- 'SE1.2';
-						grid_value <- 3.0;
 						new_SE1 <- new_SE1 + 1;
 						my_hogar.last_decision <- 'SE1.2';
 						write "new deforestation for PROFIT at " + location;
@@ -911,7 +897,6 @@ species hogares {
 					ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 						is_deforest <- true;
 						landuse <- 'SE1.1';
-						grid_value <- 3.0;
 						new_SE1 <- new_SE1 + 1;
 						my_hogar.last_decision <- 'SE1.1';
 						write "new deforestation for PROFIT at " + location;
