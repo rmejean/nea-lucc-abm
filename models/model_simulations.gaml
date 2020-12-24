@@ -40,6 +40,7 @@ global {
 	//-----------------------------
 	bool init_end <- false;
 	string save_landscape <- ("../includes/initGENfiles/agricultural_landscape.shp");
+	string save_simplified_classif <- ("../includes/initGENfiles/simplified_classif.tif");
 	string save_vias <- ("../includes/initGENfiles/vias.shp");
 	string save_empresas <- ("../includes/initGENfiles/empresas.shp");
 	string save_predios <- ("../includes/initGENfiles/predios.shp");
@@ -47,12 +48,19 @@ global {
 	string save_personas <- ("../includes/initGENfiles/personas.shp");
 	//
 	string export_landscape <- ("../includes/exports/agricultural_landscape.shp");
+	string export_simplified_classif <- ("../includes/exports/simplified_classif.tif");
 	string export_vias <- ("../includes/exports/vias.shp");
 	string export_empresas <- ("../includes/exports/empresas.shp");
 	string export_predios <- ("../includes/exports/predios.shp");
 	string export_hogares <- ("../includes/exports/hogares.shp");
 	string export_personas <- ("../includes/exports/personas.shp");
 }
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////// SAVE AN INIT /////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////
 
 experiment save_init type: gui until: stop_simulation = true {
 //
@@ -81,16 +89,11 @@ experiment save_init type: gui until: stop_simulation = true {
 	user_command "Save People" category: "Saving init" when: init_end = true color: #darkblue {
 		save personas to: save_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "COWORKHOG"::co_workers_hog, "PLOT"::my_predio, "HOUSE"::my_house, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
-	} //Saving cells
-	user_command "Save cells" category: "Saving init" when: init_end = true color: #darkblue {
-		ask cell {
-			save (cell where (grid_value != 0.0)) to: ("../../includes/initGENfiles/cells.csv") type: "csv" rewrite: true;
-		}
-
 	} //Saving all
 	user_command "Save all files" category: "Saving init" when: init_end = true color: #darkred {
 		save cell to: save_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
+		save cell to: save_simplified_classif type: "geotiff";//Export a simplified classification
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: save_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUB_C"::subcrops_amount, "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];
@@ -103,12 +106,19 @@ experiment save_init type: gui until: stop_simulation = true {
 
 	parameter "Generate a new init?" category: "Parameters" var: new_init init: true;
 	parameter "File chooser landscape" category: "Saving init" var: save_landscape;
+	parameter "File chooser simplified classif" category: "Folders" var: save_simplified_classif;
 	parameter "File chooser roads" category: "Saving init" var: save_vias;
 	parameter "File chooser plots" category: "Saving init" var: save_predios;
 	parameter "File chooser households" category: "Saving init" var: save_hogares;
 	parameter "File chooser people" category: "Saving init" var: save_personas;
 
 }
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////// RUN MODEL //////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////
 
 experiment run_model type: gui until: stop_simulation = true {
 //
@@ -139,16 +149,11 @@ init {
 	user_command "Save People" category: "Export data" when: init_end = true color: #darkblue {
 		save personas to: export_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "COWORKHOG"::co_workers_hog, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
-	} //Saving cells
-	user_command "Save cells" category: "Export data" when: init_end = true color: #darkblue {
-		ask cell {
-			save (cell where (grid_value != 0.0)) to: ("../../includes/initGENfiles/cells.csv") type: "csv" rewrite: true;
-		}
-
 	} //Saving all
 	user_command "Save all files" category: "Export data" when: init_end = true color: #darkred {
 		save cell to: export_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
+		save cell to: export_simplified_classif type: "geotiff";//Export a simplified classification
 		save vias to: export_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: export_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUB_C"::subcrops_amount, "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];
@@ -160,6 +165,7 @@ init {
 	}
 	
 	parameter "File chooser landscape" category: "Folders" var: export_landscape;
+	parameter "File chooser simplified classif" category: "Folders" var: export_simplified_classif;
 	parameter "File chooser roads" category: "Folders" var: export_vias;
 	parameter "File chooser plots" category: "Folders" var: export_predios;
 	parameter "File chooser households" category: "Folders" var: export_hogares;
