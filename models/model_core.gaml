@@ -84,30 +84,42 @@ global { //Time aspects
 	reflex update { //model core
 		ask personas {
 			do update;
+			write "---PERSONAS UPDATED";
 		}
-		
+
+		ask hogares {
+			do update_social_network; //Car le contrat de travail de certains est terminé donc on enlève les collègues de travail du RS
+			write "---SOCIAL NETWORK UPDATED";
+		}
+
 		ask empresas {
 			do generate_jobs;
+			write "---NEW JOBS GENERATED";
 		}
 
 		ask cell {
-			if starting_wip {starting_wip <- false;}
+			if starting_wip {
+				starting_wip <- false;
+			}
+
 			do crop_cycle;
 			do update_yields;
+			write "---CELLS UPDATED";
 		}
 
 		do assess_income_needs;
 		do setting_alerts;
 		ask hogares {
 			if needs_alert = true {
-				//do looking_for_job;
+			//do looking_for_job;
+				do update_social_network; //car il faut rajouter au RS les collègues de travail de ceux qui viennent de trouver un job
+				write "---SOCIAL NETWORK UPDATED";
 				do subsistence_LUC;
 			} else {
 				do profit_LUC;
 			}
+
 		}
-		
-		//do update_social_network;
 
 		write "--START address work in progress";
 		ask cell {
@@ -118,7 +130,6 @@ global { //Time aspects
 
 		write "--END address work in progress";
 		write "END OF TURN/MONTH " + months_between(starting_date, current_date);
- 
 	}
 
 }

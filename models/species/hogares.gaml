@@ -67,11 +67,19 @@ species hogares {
 		}
 
 	}
-	
+
 	action looking_for_job {
 		if available_workers > 14 {
-			
 		}
+
+	}
+
+	action update_social_network {
+		ask personas {
+			my_hogar.social_network <- nil;
+			add all: co_workers_hog to: my_hogar.social_network;
+		}
+			add all: neighbors to: social_network;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////

@@ -859,12 +859,12 @@ global { //Lists
 
 			}
 
-			ask personas where (each.oil_worker = true) { //co-worker's households (to be added to the social network)
-				co_workers_hog <- empresa.workers collect each.my_hogar;
-				co_workers_hog <- remove_duplicates(co_workers_hog);
-				remove all: my_hogar from: co_workers_hog;
-			}
+		}
 
+		ask personas where (each.oil_worker = true) { //co-worker's households (to be added to the social network)
+			co_workers_hog <- empresa.workers collect each.my_hogar;
+			co_workers_hog <- remove_duplicates(co_workers_hog);
+			remove all: my_hogar from: co_workers_hog;
 		}
 
 		write "---END OF INIT OIL JOBS";
@@ -889,7 +889,8 @@ global { //Lists
 			if livelihood_strategy = "SP1.1" {
 				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
 				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect
+				each.annual_inc) - ((employees_workers * cost_employees) * 12);
 				//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production (le WIP)
 			}
 			//TODO: penser aux chèques des autorités pour le SP1

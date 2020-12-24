@@ -86,7 +86,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	float yld; //yield
 	predios predio;
 	hogares my_hogar;
-	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
+	rgb color <- grid_value = 0 ? #white : (grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red)));
 	int new_SC1 <- 0;
 	int new_SC2 <- 0;
 	int new_SC3 <- 0;
