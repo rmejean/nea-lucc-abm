@@ -35,6 +35,7 @@ global {
 	//Parameters-------------------
 	//-----------------------------
 	int nb_new_jobs;
+	bool social_network_inf;//Enables the imitation of LUCC choices from the household's social network
 	//-----------------------------
 	//Saving init------------------
 	//-----------------------------
@@ -172,6 +173,7 @@ init {
 	parameter "File chooser people" category: "Folders" var: export_personas;
 	
 	parameter "Number of new jobs per months" category: "Parameters" var: nb_new_jobs init:rnd(5) min:1 max:30;
+	parameter "LUCC influenced by social network choices?" category: "Parameters" var:social_network_inf init: false;
 	
 	output {
 		display map_ALG type: opengl {
