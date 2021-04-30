@@ -35,7 +35,7 @@ global {
 	//Parameters-------------------
 	//-----------------------------
 	int nb_new_jobs;
-	bool social_network_inf;//Enables the imitation of LUCC choices from the household's social network
+	bool social_network_inf <- false;//Enables the imitation of LUCC choices from the household's social network
 	//-----------------------------
 	//Saving init------------------
 	//-----------------------------

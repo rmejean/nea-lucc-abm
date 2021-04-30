@@ -81,15 +81,18 @@ global { //Time aspects
 
 	}
 
-	reflex update { //model core
+	reflex update {
 		ask personas {
 			do update;
 			write "---PERSONAS UPDATED";
 		}
 
 		ask hogares {
-			do update_social_network; //Car le contrat de travail de certains est terminé donc on enlève les collègues de travail du RS
-			write "---SOCIAL NETWORK UPDATED";
+			if social_network_inf {
+				do update_social_network; //Car le contrat de travail de certains est terminé donc on enlève les collègues de travail du RS
+				write "---SOCIAL NETWORK UPDATED";
+			}
+
 		}
 
 		ask empresas {
@@ -109,11 +112,17 @@ global { //Time aspects
 
 		do assess_income_needs;
 		do setting_alerts;
+	}
+
+	reflex LUC {
 		ask hogares {
 			if needs_alert = true {
 			//do looking_for_job;
-				do update_social_network; //car il faut rajouter au RS les collègues de travail de ceux qui viennent de trouver un job
-				write "---SOCIAL NETWORK UPDATED";
+				if social_network_inf {
+					do update_social_network; //car il faut rajouter au RS les collègues de travail de ceux qui viennent de trouver un job
+					write "---SOCIAL NETWORK UPDATED";
+				}
+
 				do subsistence_LUC;
 			} else {
 				do profit_LUC;
