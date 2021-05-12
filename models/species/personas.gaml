@@ -76,10 +76,11 @@ species personas parent: hogares {
 			}
 			//DEATH
 			if between(Age, 70, 80) {
-				if flip(0.1) {
+				if flip(0.2) {
 					remove self from: my_hogar.membres_hogar;
 					ask my_hogar {
 						labor_force <- labor_force - 30;
+						occupied_workers <- occupied_workers - 30;
 						if occupied_workers > labor_force {
 							write "there's a problem: the death disrupted the balance of the workforce";
 							//TODO: à régler (réorganisation du travail après décès)
@@ -97,6 +98,7 @@ species personas parent: hogares {
 					remove self from: my_hogar.membres_hogar;
 					ask my_hogar {
 						labor_force <- labor_force - 30;
+						occupied_workers <- occupied_workers - 30;
 						if occupied_workers > labor_force {
 							write "there's a problem: the death disrupted the balance of the workforce";
 							//TODO: à régler (réorganisation du travail après décès)
@@ -116,7 +118,7 @@ species personas parent: hogares {
 					contract_term <- nil;
 					working_months <- nil;
 					job_wages <- 0;
-					annual_inc <- 0;//TODO: éventuelle erreur ? car ça annule ce qui a été gagné avant
+					annual_inc <- 0; //TODO: éventuelle erreur ? car ça annule ce qui a été gagné avant
 					co_workers_hog <- nil;
 					ask empresa {
 						remove myself from: workers;

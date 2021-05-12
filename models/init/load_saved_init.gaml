@@ -54,9 +54,11 @@ global {
 				is_free <- false;
 				is_deforest <- nil;
 			}
+
 			ask my_predio {
 				my_hogar <- myself;
 			}
+
 			ask my_predio.cells_inside {
 				my_hogar <- myself;
 			}

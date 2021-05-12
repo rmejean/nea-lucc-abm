@@ -79,7 +79,8 @@ species hogares {
 			my_hogar.social_network <- nil;
 			add all: co_workers_hog to: my_hogar.social_network;
 		}
-			add all: neighbors to: social_network;
+
+		add all: neighbors to: social_network;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////

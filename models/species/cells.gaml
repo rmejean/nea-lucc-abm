@@ -86,7 +86,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	float yld; //yield
 	predios predio;
 	hogares my_hogar;
-	rgb color <- grid_value = 0 ? #white : (grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red)));
+	rgb color <- grid_value = 1 ? #blue : (grid_value = 2 ? rgb(35, 75, 0) : (grid_value = 3 ? #burlywood : #red));
 	int new_SC1 <- 0;
 	int new_SC2 <- 0;
 	int new_SC3 <- 0;
@@ -358,22 +358,34 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			add landuse to: land_use_hist;
 			rev <- 0.0;
 			switch previous_landuse {
-				match 'SC3.1' {//TODO: pourquoi ici je fais pas de if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) comme juste en-dessous ??
-					if one_matches(predio.cells_inside, each.is_deforest = false) {
-						ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
-							is_deforest <- true;
+				match 'SC3.1' {
+					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
+						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
 							landuse <- previous_landuse;
 							grid_value <- 3.0;
-							write "deforest to resow at " + location;
+							write "resow at " + location;
 							nb_months <- 0;
 							add landuse to: land_use_hist;
 						}
 
 					} else {
-						write "" + my_hogar.name + " cannot re-sow SC3.1";
-						ask my_hogar { //alors, libérer la MOF correspondante
-							occupied_workers <- occupied_workers - laborcost_SC3_1;
-							available_workers <- available_workers + laborcost_SC3_1;
+						if one_matches(predio.cells_inside, each.is_deforest = false) {
+							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
+								is_deforest <- true;
+								landuse <- previous_landuse;
+								grid_value <- 3.0;
+								write "deforest to resow at " + location;
+								nb_months <- 0;
+								add landuse to: land_use_hist;
+							}
+
+						} else {
+							write "" + my_hogar.name + " cannot re-sow SC3.1";
+							ask my_hogar { //alors, libérer la MOF correspondante
+								occupied_workers <- occupied_workers - laborcost_SC3_1;
+								available_workers <- available_workers + laborcost_SC3_1;
+							}
+
 						}
 
 					}
@@ -471,30 +483,29 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			wip_laborforce <- nil;
 		}
 
-			if new_SC1 > 0 {
-				my_hogar.available_workers <- (my_hogar.available_workers + (new_SC1 * laborcost_install_SC1));
-			}
+		if new_SC1 > 0 {
+			my_hogar.available_workers <- (my_hogar.available_workers + (new_SC1 * laborcost_install_SC1));
+		}
 
-			if new_SC2 > 0 {
-				my_hogar.available_workers <- (my_hogar.available_workers + (new_SC2 * laborcost_install_SC2));
-			}
+		if new_SC2 > 0 {
+			my_hogar.available_workers <- (my_hogar.available_workers + (new_SC2 * laborcost_install_SC2));
+		}
 
-			if new_SC3 > 0 {
-				my_hogar.available_workers <- (my_hogar.available_workers + (new_SC3 * laborcost_install_SC3));
-			}
+		if new_SC3 > 0 {
+			my_hogar.available_workers <- (my_hogar.available_workers + (new_SC3 * laborcost_install_SC3));
+		}
 
-			if new_SC4 > 0 {
-				my_hogar.available_workers <- (my_hogar.available_workers + (new_SC4 * laborcost_install_SC4));
-			}
+		if new_SC4 > 0 {
+			my_hogar.available_workers <- (my_hogar.available_workers + (new_SC4 * laborcost_install_SC4));
+		}
 
-			if new_SE1_1 > 0 {
-				my_hogar.available_workers <- (my_hogar.available_workers + (new_SE1_1 * laborcost_install_SE1));
-			}
+		if new_SE1_1 > 0 {
+			my_hogar.available_workers <- (my_hogar.available_workers + (new_SE1_1 * laborcost_install_SE1));
+		}
 
-			if new_SE1_2 > 0 {
-				my_hogar.available_workers <- (my_hogar.available_workers + (new_SE1_2 * laborcost_install_SE1));
-			}
-
+		if new_SE1_2 > 0 {
+			my_hogar.available_workers <- (my_hogar.available_workers + (new_SE1_2 * laborcost_install_SE1));
+		}
 
 	}
 

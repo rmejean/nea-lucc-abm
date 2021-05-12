@@ -23,9 +23,9 @@ global { //Lists
 	action init_cells { //Cells init
 		write "---START OF INIT CELLS";
 		ask cell {
-//			if grid_value = 0.0 {
-//				do die; //TODO: peut-être pas utile, ça a l'air de perturber les charts
-//			}
+			if grid_value = 0.0 {
+				do die; //TODO: peut-être pas utile, ça a l'air de perturber les charts
+			}
 
 			if grid_value = 2 {
 				is_deforest <- false;
@@ -859,12 +859,12 @@ global { //Lists
 
 			}
 
-		}
+			ask personas where (each.oil_worker = true) { //co-worker's households (to be added to the social network)
+				co_workers_hog <- empresa.workers collect each.my_hogar;
+				co_workers_hog <- remove_duplicates(co_workers_hog);
+				remove all: my_hogar from: co_workers_hog;
+			}
 
-		ask personas where (each.oil_worker = true) { //co-worker's households (to be added to the social network)
-			co_workers_hog <- empresa.workers collect each.my_hogar;
-			co_workers_hog <- remove_duplicates(co_workers_hog);
-			remove all: my_hogar from: co_workers_hog;
 		}
 
 		write "---END OF INIT OIL JOBS";

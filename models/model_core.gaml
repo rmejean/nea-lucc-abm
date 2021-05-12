@@ -84,9 +84,9 @@ global { //Time aspects
 	reflex update {
 		ask personas {
 			do update;
-			write "---PERSONAS UPDATED";
 		}
 
+		write "---PERSONAS UPDATED";
 		ask hogares {
 			if social_network_inf {
 				do update_social_network; //Car le contrat de travail de certains est terminé donc on enlève les collègues de travail du RS
@@ -107,22 +107,22 @@ global { //Time aspects
 
 			do crop_cycle;
 			do update_yields;
-			write "---CELLS UPDATED";
 		}
 
+		write "---CELLS UPDATED";
 		do assess_income_needs;
 		do setting_alerts;
 	}
 
 	reflex LUC {
 		ask hogares {
+			if social_network_inf {
+				do update_social_network; //car il faut rajouter au RS les collègues de travail de ceux qui viennent de trouver un job
+				write "---SOCIAL NETWORK UPDATED";
+			}
+
 			if needs_alert = true {
 			//do looking_for_job;
-				if social_network_inf {
-					do update_social_network; //car il faut rajouter au RS les collègues de travail de ceux qui viennent de trouver un job
-					write "---SOCIAL NETWORK UPDATED";
-				}
-
 				do subsistence_LUC;
 			} else {
 				do profit_LUC;
