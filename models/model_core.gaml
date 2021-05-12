@@ -90,16 +90,17 @@ global { //Time aspects
 		ask hogares {
 			if social_network_inf {
 				do update_social_network; //Car le contrat de travail de certains est terminé donc on enlève les collègues de travail du RS
-				write "---SOCIAL NETWORK UPDATED";
+
 			}
 
+			write "---SOCIAL NETWORKS UPDATED";
 		}
 
 		ask empresas {
 			do generate_jobs;
-			write "---NEW JOBS GENERATED";
 		}
 
+		write "---NEW JOBS GENERATED";
 		ask cell {
 			if starting_wip {
 				starting_wip <- false;
@@ -118,9 +119,10 @@ global { //Time aspects
 		ask hogares {
 			if social_network_inf {
 				do update_social_network; //car il faut rajouter au RS les collègues de travail de ceux qui viennent de trouver un job
-				write "---SOCIAL NETWORK UPDATED";
+
 			}
 
+			write "---SOCIAL NETWORKS UPDATED";
 			if needs_alert = true {
 			//do looking_for_job;
 				do subsistence_LUC;

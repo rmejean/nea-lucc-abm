@@ -169,7 +169,10 @@ global { //Lists
 		// Instructions post-génération
 		// --------------------------
 		ask hogares {
-			neighbors <- hogares closest_to (self, 5);
+			if social_network_inf {
+				neighbors <- hogares closest_to (self, 5);
+			}
+
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
 			do head_and_ethnicity;
 			do init_values;
@@ -179,9 +182,9 @@ global { //Lists
 
 		}
 
-		ask sectores {
-			do carto_pop;
-		}
+		//ask sectores {
+			//do carto_pop;
+		//}
 
 		write "---END OF INIT POPULATION";
 	}
@@ -810,6 +813,7 @@ global { //Lists
 				if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
 					employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
 					labor_force <- labor_force + (employees_workers * 30);
+					occupied_workers <- occupied_workers + (employees_workers * 30);
 					available_workers <- labor_force - occupied_workers;
 				}
 
@@ -859,10 +863,13 @@ global { //Lists
 
 			}
 
-			ask personas where (each.oil_worker = true) { //co-worker's households (to be added to the social network)
-				co_workers_hog <- empresa.workers collect each.my_hogar;
-				co_workers_hog <- remove_duplicates(co_workers_hog);
-				remove all: my_hogar from: co_workers_hog;
+			if social_network_inf {
+				ask personas where (each.oil_worker = true) { //co-worker's households (to be added to the social network)
+					co_workers_hog <- empresa.workers collect each.my_hogar;
+					co_workers_hog <- remove_duplicates(co_workers_hog);
+					remove all: my_hogar from: co_workers_hog;
+				}
+
 			}
 
 		}
