@@ -835,8 +835,8 @@ global { //Lists
 			loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and
 			(no_more_jobs = false) {
 				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
-					if one_matches(empresas, each.free_jobs > 0) {
-						empresa <- empresas where (each.free_jobs > 0) closest_to self;
+					if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) {
+						empresa <- empresas at_distance (5 #km) where (each.free_jobs > 0) closest_to self;
 						write "" + empresa.name + " found a worker";
 						oil_worker <- true;
 						work_pace <- 14;
@@ -888,74 +888,6 @@ global { //Lists
 		}
 
 		write "---END OF INIT SOCIAL NETWORKS";
-	}
-
-	action assess_income_needs { //calculation of cash income (does not include food crops)
-		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
-		ask hogares {
-			if livelihood_strategy = "SP1.1" {
-				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect
-				each.annual_inc) - ((employees_workers * cost_employees) * 12);
-				//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production (le WIP)
-			}
-			//TODO: penser aux chèques des autorités pour le SP1
-			if livelihood_strategy = "SP1.2" {
-				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev + sum(membres_hogar collect
-				each.job_wages));
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect
-				each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			}
-
-			if livelihood_strategy = "SP1.3" {
-				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-				each.rev + sum(membres_hogar collect each.job_wages));
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-				each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			}
-
-			if livelihood_strategy = "SP2" {
-				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			}
-
-			if livelihood_strategy = "SP3" {
-				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			}
-
-			ask my_predio {
-				do crops_calc;
-			}
-
-		}
-
-		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
-	}
-
-	action setting_alerts {
-		write "---START OF SETTING ALERTS";
-		ask hogares {
-			if (subcrops_needs > my_predio.subcrops_amount) {
-				hunger_alert <- true;
-			}
-
-			if (($_ANFP * Total_Personas) > estimated_annual_inc) {
-				money_alert <- true;
-			}
-
-			if hunger_alert and money_alert {
-				needs_alert <- true;
-			}
-
-		}
-
-		write "---END OF SETTING ALERTS";
 	}
 
 }

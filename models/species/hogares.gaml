@@ -69,7 +69,34 @@ species hogares {
 	}
 
 	action looking_for_job {
-		if available_workers > 14 {
+		let no_more_jobs <- false;
+		loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and
+		(no_more_jobs = false) {
+			if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) { //look for a job within 5km
+				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
+					empresa <- empresas where (each.free_jobs > 0) closest_to self;
+					write "" + empresa.name + " found a worker";
+					oil_worker <- true;
+					work_pace <- 14;
+					job_wages <- 350;
+					contract_term <- rnd(5, 7);
+					working_months <- 0;
+					annual_inc <- contract_term * job_wages;
+					ask empresa {
+						free_jobs <- free_jobs - 1;
+						add myself to: workers;
+					}
+
+					ask my_hogar {
+						occupied_workers <- occupied_workers + myself.work_pace;
+						available_workers <- available_workers - myself.work_pace;
+						oil_workers <- oil_workers + 1;
+					}
+
+				}
+
+			}
+
 		}
 
 	}
