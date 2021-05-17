@@ -1,0 +1,68 @@
+
+
+[<frame>Livelihood strategy SP1.1| [<start>SP1.1]->[<choice>unassigned pixels?]
+[unassigned pixels?] yes ->[<choice>needs>subcrops AND sufficient laborforce for SC3.1?]
+[needs>subcrops AND sufficient laborforce for SC3.1?] yes -> [<state>write "SC3.1"]
+[<state>write "SC3.1"] -> [<state>subcrops + 1]
+[<state>ask my_hogar : laborforce - SC3.1] -> [<state>assigned_pxl + 1]
+[<state>write "SC3.1"] -> [<state>ask my_hogar : laborforce - SC3.1]
+[needs>subcrops AND sufficient laborforce for SC3.1?] no -> [<choice>sufficient laborforce for SC2 AND pxl_coffee != pxl_coffee_max?]
+[<choice>sufficient laborforce for SC2 AND pxl_coffee != pxl_coffee_max?] yes -> [<state>write "SC2"]
+[<state>write "SC2"] -> [<state>pxl_coffee + 1]
+[<state>write "SC2"] -> [<state>ask my_hogar : laborforce - SC2]
+[<state>pxl_coffee + 1] -> [<state>assigned_pxl + 1]
+[<choice>sufficient laborforce for SC2 AND pxl_coffee != pxl_coffee_max?] no -> [<state>write "fallow"]
+[<state>write "fallow"] -> [<state>assigned_pxl + 1]
+[unassigned pixels?] no ->[<end>e]]
+
+
+#title: SP1.1
+#padding: 12
+#edgeMargin: 15
+#.choice: visual=rhomb
+#fill: #eee8d5; #fdf6e3
+
+
+_______ PLANTUML_____________
+
+
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+}
+
+
+start
+
+while (pxl_generated != length(cells_deforest)) is (yes)
+
+if ([sufficient laborforce for SE3] AND [pxl_chicken < 1]) then (yes)
+            #IMPLEMENTATION:save "SE3";
+            #IMPLEMENTATION:laborforce - SE3;
+            #IMPLEMENTATION:pxl_chicken + 1;
+            else (no)
+        endif
+        
+if (flip 0.05) then (true)
+            #Lawngreen:save "SE1.2" + "0";
+            #Lawngreen:laborforce - SE1.2;
+            #Lawngreen:pxl_generated + 1;
+        
+    else (false)
+            #LightGreen:save "fallow" + rnd(60);
+            #LightGreen:pxl_generated + 1;
+        
+        endif
+    
+    
+endwhile (no)
+
+
+stop
+
+@enduml

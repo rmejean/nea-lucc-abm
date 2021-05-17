@@ -1,0 +1,143 @@
+
+
+[<start>SP1.2]->[<choice>unassigned pixels?]
+[unassigned pixels?] yes ->[<choice>needs>subcrops AND sufficient laborforce for SC4.1?]
+[unassigned pixels?] no ->[<end>end]
+
+
+[needs>subcrops AND sufficient laborforce for SC4.1?] yes -> [<choice>flip 0.5]
+[needs>subcrops AND sufficient laborforce for SC4.1?] no -> [<choice>sufficient laborforce for SE3 AND pxl_chicken < 1?]
+[needs>subcrops AND sufficient laborforce for SC4.1?] no -> [<choice>sufficient laborforce for SE2.1 AND pxl_pig < 1?]
+
+[<choice>sufficient laborforce for SE3 AND pxl_chicken < 1?] yes -> [<state>write "SE3"]
+[<state>write "SE3"] -> [<state>laborforce - SE3]
+[<state>laborforce - SE3] -> [<state>pxl_chicken + 1]
+
+[<choice>sufficient laborforce for SE2.1 AND pxl_pig < 1?] yes -> [<state>write "SE2.1"]
+[<state>write "SE2.1"] -> [<state>laborforce - SE2.1]
+[<state>laborforce - SE2.1] -> [<state>pxl_pig + 1]
+
+[<choice>sufficient laborforce for SE3 AND pxl_chicken < 1?] no -> [<state>write "SE3"]
+
+[<choice>flip 0.5] true -> [<state>write "SC4.1"]
+[<choice>flip 0.5] false -> [<state>write "SC4.2"]
+
+[<state>write "SC4.1"] -> [<state>ask my_hogar : laborforce - SC4.1] 
+[<state>ask my_hogar : laborforce - SC4.1] -> [<state>subcrops + 1]
+[<state>subcrops + 1] -> [<state>assigned_pxl + 1]
+
+[<state>write "SC4.2"] -> [<state>ask my_hogar : laborforce - SC4.2] 
+[<state>ask my_hogar : laborforce - SC4.2] -> [<state>subcrops + 1]
+[<state>subcrops + 1] -> [<state>assigned_pxl + 1]
+
+
+#title: SP1.1
+#padding: 12
+#edgeMargin: 15
+#.choice: visual=rhomb
+#fill: #eee8d5; #fdf6e3
+
+
+**********************PLANTUML*******************
+
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+}
+
+
+start
+
+while (pxl_generated != length(cells_deforest)) is (yes)
+
+    if ([needs > subcrops] AND [sufficient laborforce for SC4.1]) then (yes)
+        if (flip 0.5) then (true)
+            #Gold:save "SC4.1" + rnd(30);
+            #Gold:laborforce - SC4.1;
+            #Gold:pxl_subcrops + 1;
+            #Gold:pxl_generated + 1;
+        
+        else (false)
+            #Gold:save "SC4.2" + rnd(30);
+            #Gold:laborforce - SC4.2;
+            #Gold:pxl_subcrops + 1;
+            #Gold:pxl_generated + 1;
+        
+        endif
+
+    else (no)
+        if ([sufficient laborforce for SE3] AND [pxl_chicken < 1]) then (yes)
+            #IMPLEMENTATION:save "SE3" + "0";
+            #IMPLEMENTATION:laborforce - SE3;
+            #IMPLEMENTATION:pxl_chicken + 1;
+            else (no)
+        endif
+        
+       if ([sufficient laborforce for SE2.1] AND [pxl_pig < 1]) then (yes)
+            #HotPink:save "SE2.1" + "0";
+            #HotPink:laborforce - SE2.1;
+            #HotPink:pxl_pig + 1;
+    else (no)
+        endif
+        
+        if (laborforce > pxl_cacao_max * laborcost of SC1.1) then (yes)
+            if ([sufficient laborforce for SC1.1] AND [pxl_cacao != pxl_cacao_max]) then (yes)
+               #Rosybrown:save "SC1.1" + "0";
+               #Rosybrown:laborforce - SC1.1;
+               #Rosybrown:pxl_cacao + 1;
+               #Rosybrown:pxl_generated + 1;
+               
+            else (no)
+                if ([sufficient laborforce for SC2] AND [pxl_coffee != pxl_coffee_max]) then (yes)
+                #Peru:save "SC2" + "0";
+                #Peru:laborforce - SC2;
+               #Peru:pxl_coffee + 1;
+               #Peru:pxl_generated + 1;
+               
+               else (no)
+               #PaleGreen:save "fallow" + rnd(65);
+               #PaleGreen:pxl_generated + 1;
+               
+               endif
+            endif
+               
+         
+         else (no)
+            if ([sufficient laborforce for SC1.2] AND [pxl_cacao != pxl_cacao_max]) then (yes)
+            #Rosybrown:save "SC1.2" + "0";
+            #Rosybrown:laborforce - SC1.2;
+            #Rosybrown:pxl_cacao + 1;
+            #Rosybrown:pxl_generated + 1;
+        
+        else (no)
+            if ([sufficient laborforce for SC2] AND [pxl_coffee != pxl_coffee_max]) then (yes)
+            #Peru:save "SC2" + "0";
+            #Peru:laborforce - SC2;
+            #Peru:pxl_coffee + 1;
+            #Peru:pxl_generated + 1;
+            
+            else (no)
+            #LightGreen:save "fallow" + rnd(65);
+            #LightGreen:pxl_generated + 1;
+            
+            endif
+            endif
+        
+        
+        endif
+        
+       
+
+    endif
+    
+    
+endwhile (no)
+
+stop
+
+@enduml

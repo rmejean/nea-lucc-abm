@@ -1,0 +1,47 @@
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+activityMessageAlign center
+}
+
+
+start
+
+if (new_init?) then (yes)
+:init_cells;
+:init_vias;
+:init_predios;
+:init_pop;
+:init_LS_EMC;
+:init_ALG;
+:init_farm_jobs;
+:init_oil_jobs;
+:init_social_network;
+:assess_income_needs;
+:setting_alerts;
+
+
+
+else (no)
+:init_saved_files;
+:init_cells;
+:init_vias;
+:load_saved_empresas;
+:load_saved_predios;
+:load_saved_hogares;
+:load_saved_personas;
+:load_saved_landscape;
+:assess_income_needs;
+:setting_alerts;
+
+endif
+
+
+stop
+
+@enduml

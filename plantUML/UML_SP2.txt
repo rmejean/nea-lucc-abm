@@ -1,0 +1,42 @@
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+}
+
+
+start
+
+while (pxl_generated != length(cells_deforest)) is (yes)
+
+if ([sufficient laborforce for SE3] AND [pxl_chicken < 1]) then (yes)
+            #IMPLEMENTATION:save "SE3";
+            #IMPLEMENTATION:laborforce - SE3;
+            #IMPLEMENTATION:pxl_chicken + 1;
+            else (no)
+        endif
+        
+if (flip 0.05) then (true)
+            #Lawngreen:save "SE1.2" + "0";
+            #Lawngreen:laborforce - SE1.2;
+            #Lawngreen:pxl_generated + 1;
+        
+    else (false)
+            #LightGreen:save "fallow" + rnd(60);
+            #LightGreen:pxl_generated + 1;
+        
+        endif
+    
+    
+endwhile (no)
+
+
+stop
+
+header Pixel generation for SP2
+
+@enduml

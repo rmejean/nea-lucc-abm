@@ -1,0 +1,86 @@
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+}
+
+
+start
+
+while (pxl_generated != length(cells_deforest)) is (yes)
+
+if ([needs > subcrops] AND [sufficient laborforce for SC4.1]) then (yes)
+    if (flip 0.5) then (true)
+            #Gold:save "SC4.1" + rnd(30);
+            #Gold:laborforce - SC4.1;
+            #Gold:pxl_subcrops + 1;
+            #Gold:pxl_assigned + 1;
+        
+        else (false)
+            #Gold:save "SC4.2" + rnd(30);
+            #Gold:laborforce - SC4.2;
+            #Gold:pxl_subcrops + 1;
+            #Gold:pxl_assigned + 1;
+        
+        endif
+        
+        else (no)
+        if ([sufficient laborforce for SE3] AND [pxl_chicken < 1]) then (yes)
+            #IMPLEMENTATION:save "SE3" + "0";
+            #IMPLEMENTATION:laborforce - SE3;
+            #IMPLEMENTATION:pxl_chicken + 1;
+            else (no)
+        endif
+        
+       if ([sufficient laborforce for SE2.3] AND [pxl_pig < 1]) then (yes)
+            #HotPink:save "SE2.3" + "0";
+            #HotPink:laborforce - SE2.3;
+            #HotPink:pxl_pig + 1;
+            else (no)
+        endif
+        
+        if (laborforce > pxl_cacao_max * laborcost of SC1.2) then (yes)
+            if ([sufficient laborforce for SC1.2] AND [pxl_cacao != pxl_cacao_max]) then (yes)
+               #Rosybrown:save "SC1.2" + "0";
+               #Rosybrown:laborforce - SC1.1;
+               #Rosybrown:pxl_cacao + 1;
+               #Rosybrown:pxl_assigned + 1;
+               
+               else (no)
+                if ([sufficient laborforce for SC2] AND [pxl_coffee != pxl_coffee_max]) then (yes)
+                #Peru:save "SC2" + "0";
+                #Peru:laborforce - SC2;
+               #Peru:pxl_coffee + 1;
+               #Peru:pxl_assigned + 1;
+               
+               else (no)
+            if ([sufficient laborforce for SE1.2] AND [pxl_cacao != pxl_cacao_max]) then (yes)
+            #Lawngreen:save "SE1.2" + "0";
+            #Lawngreen:laborforce - SE1.2;
+            #Lawngreen:pxl_assigned + 1;
+            
+            else (no)
+            #LightGreen:save "fallow" + rnd(60);
+            #LightGreen:pxl_assigned + 1;
+            
+            endif
+            endif
+            endif
+            endif
+           
+
+endif
+   
+
+
+    
+    
+endwhile (no)
+
+stop
+
+@enduml

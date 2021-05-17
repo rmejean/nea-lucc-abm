@@ -1,0 +1,38 @@
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+activityMessageAlign center
+}
+
+
+
+
+start
+
+title ask cell
+
+
+switch (grid_value?)
+case ( 1 )
+  :is_deforest <- nil;
+case ( 2 ) 
+  :is_deforest <- false;
+	:landuse <- 'forest';
+
+case ( 3 ) 
+  :is_deforest <- true;
+
+case ( 4 ) 
+  :is_deforest <- nil;
+	:landuse <- 'urban';
+
+endswitch
+stop
+
+
+@enduml

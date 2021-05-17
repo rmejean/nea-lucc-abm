@@ -1,0 +1,54 @@
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+activityMessageAlign center
+}
+
+
+start
+
+while ((one_matches(my_predio.cells_inside, each.is_deforest = false)) AND (money_missing > 0) AND (stop = false)) is (yes)
+
+if (sufficient laborforce for SE1.2 cultivation and installation) then (true)
+             #Lawngreen:deforest 1 pixel for SE1.2;
+             #Lawngreen:new_SE1_2 + 1;
+             #Lawngreen:available_workers - (laborcost_SE1_2 + laborcost_install_SE1);
+             :recalculate money needs;
+
+     else (false)
+     
+        if (sufficient laborforce for SE1.2 cultivation and HALF of its installation) then (true)
+     
+             :deforest 1 pixel 'work in progress';
+             #Lawngreen:future_landuse : 'SE1.2';
+             :wip : 1;
+             :available_workers - (laborcost_SE1_2 + laborcost_install_SE1 /2);
+             :recalculate money needs;
+             
+             else (false)
+             
+             :write "pas assez de main d'oeuvre";
+             :stop = true;
+             
+             endif
+
+         endif
+
+
+endwhile (no)
+
+if (new_SE1_2 > 0) then (true)
+:available_workers <- (available_workers + (new_SE1_2 * laborcost_install_SE1);
+
+else (false)
+
+endif
+
+stop
+
+@enduml

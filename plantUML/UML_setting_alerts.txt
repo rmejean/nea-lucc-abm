@@ -1,0 +1,34 @@
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+activityMessageAlign center
+}
+
+
+
+
+start
+
+title ask hogares
+
+
+if (subcrops_needs > my_predio.subcrops_amount) then (true)
+:hunger_alert <- true;
+endif
+if (($_ANFP * Total_Personas) > estimated_annual_inc) then (true)
+:money_alert <- true;
+endif
+if (hunger_alert AND money_alert) then (true)
+:needs_alert <- true;
+
+endif
+
+
+
+
+@enduml

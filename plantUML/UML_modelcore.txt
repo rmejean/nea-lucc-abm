@@ -1,0 +1,37 @@
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+activityMessageAlign center
+shadowing false
+}
+
+
+start
+
+partition "update" {
+:update personas;
+:generate_jobs;
+:update cells;
+:assess_income_needs;
+:setting_alerts;
+}
+
+partition "LUC" {
+if (need_alert?) then (true)
+:looking_for_job;
+:subsistence_LUC;
+else (false)
+:profit_LUC;
+endif
+}
+
+
+stop
+
+
+@enduml
