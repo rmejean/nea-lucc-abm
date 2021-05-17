@@ -39,9 +39,9 @@ global { //Time aspects
 			do init_social_network;
 			ask hogares {
 				do assess_income_needs;
+				do setting_alerts;
 			}
 
-			do setting_alerts;
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
@@ -57,9 +57,9 @@ global { //Time aspects
 			do load_saved_landscape;
 			ask hogares {
 				do assess_income_needs;
+				do setting_alerts;
 			}
 
-			do setting_alerts;
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
@@ -124,9 +124,9 @@ global { //Time aspects
 		//
 		ask hogares {
 			do assess_income_needs;
+			do setting_alerts;
 		}
 
-		do setting_alerts;
 	}
 	//////////////////
 	////////LUC///////
@@ -144,12 +144,10 @@ global { //Time aspects
 		ask hogares {
 			if needs_alert = true {
 				do looking_for_job;
+				do assess_income_needs;
+				do setting_alerts;
 			}
 
-		}
-
-		ask hogares {
-			do assess_income_needs;
 		}
 
 		ask hogares {
@@ -170,26 +168,6 @@ global { //Time aspects
 
 		write "--END address work in progress";
 		write "END OF TURN/MONTH " + months_between(starting_date, current_date);
-	}
-
-	action setting_alerts {
-		write "---START OF SETTING ALERTS";
-		ask hogares {
-			if (subcrops_needs > my_predio.subcrops_amount) {
-				hunger_alert <- true;
-			}
-
-			if (($_ANFP * Total_Personas) > estimated_annual_inc) {
-				money_alert <- true;
-			}
-
-			if hunger_alert and money_alert {
-				needs_alert <- true;
-			}
-
-		}
-
-		write "---END OF SETTING ALERTS";
 	}
 
 }

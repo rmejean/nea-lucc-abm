@@ -70,7 +70,8 @@ species hogares {
 
 	action looking_for_job {
 		let no_more_jobs <- false;
-		if one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false) and (oil_workers < oil_workers_max) {
+		loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and
+		(no_more_jobs = false) {
 			if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) { //look for a job within 5km
 				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
 					empresa <- empresas where (each.free_jobs > 0) closest_to self;
@@ -143,6 +144,23 @@ species hogares {
 		}
 
 		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
+	}
+
+	action setting_alerts {
+		write "---START OF SETTING ALERTS";
+		if (subcrops_needs > my_predio.subcrops_amount) {
+			hunger_alert <- true;
+		}
+
+		if (($_ANFP * Total_Personas) > estimated_annual_inc) {
+			money_alert <- true;
+		}
+
+		if hunger_alert and money_alert {
+			needs_alert <- true;
+		}
+
+		write "---END OF SETTING ALERTS";
 	}
 
 	action update_social_network {
