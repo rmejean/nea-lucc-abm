@@ -36,6 +36,7 @@ global {
 	//-----------------------------
 	int nb_new_jobs;
 	bool social_network_inf <- false; //Enables the imitation of LUCC choices from the household's social network
+	bool scenarios <- false;
 	//-----------------------------
 	//Saving init------------------
 	//-----------------------------
@@ -48,13 +49,14 @@ global {
 	string save_hogares <- ("../includes/initGENfiles/hogares.shp");
 	string save_personas <- ("../includes/initGENfiles/personas.shp");
 	//
-	string export_landscape <- ("../includes/exports/agricultural_landscape.shp");
-	string export_simplified_classif <- ("../includes/exports/simplified_classif.tif");
-	string export_vias <- ("../includes/exports/vias.shp");
-	string export_empresas <- ("../includes/exports/empresas.shp");
-	string export_predios <- ("../includes/exports/predios.shp");
-	string export_hogares <- ("../includes/exports/hogares.shp");
-	string export_personas <- ("../includes/exports/personas.shp");
+	bool step_end <- false;
+	string export_landscape <- ("../exports/agricultural_landscape.shp");
+	string export_simplified_classif <- ("../exports/simplified_classif.tif");
+	string export_vias <- ("../exports/vias.shp");
+	string export_empresas <- ("../exports/empresas.shp");
+	string export_predios <- ("../exports/predios.shp");
+	string export_hogares <- ("../exports/hogares.shp");
+	string export_personas <- ("../exports/personas.shp");
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -182,33 +184,33 @@ experiment run_model type: gui until: stop_simulation = true {
 		new_init <- false;
 	}
 	//Saving pixels
-	user_command "Save Agricultural Landscape" category: "Export data" when: init_end = true color: #darkblue {
+	user_command "Save Agricultural Landscape" category: "Export data" when: step_end = true color: #darkblue {
 		save cell to: export_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 	} // Saving a simplified classif
-	user_command "Save Agricultural Landscape" category: "Export data" when: init_end = true color: #darkblue {
+	user_command "Save Agricultural Landscape" category: "Export data" when: step_end = true color: #darkblue {
 		save cell to: export_simplified_classif type: "geotiff";
 	}
 	//Saving roads
-	user_command "Save Roads" category: "Export data" when: init_end = true color: #darkblue {
+	user_command "Save Roads" category: "Export data" when: step_end = true color: #darkblue {
 		save vias to: export_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 	} //Saving oil ompagnies
-	user_command "Save oil compagnies" category: "Export data" when: init_end = true color: #darkblue {
+	user_command "Save oil compagnies" category: "Export data" when: step_end = true color: #darkblue {
 		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
 	} //Saving plots
-	user_command "Save Plots" category: "Export data" when: init_end = true color: #darkblue {
+	user_command "Save Plots" category: "Export data" when: step_end = true color: #darkblue {
 		save predios to: export_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUB_C"::subcrops_amount];
 	} //Saving households
-	user_command "Save Households" category: "Export data" when: init_end = true color: #darkblue {
+	user_command "Save Households" category: "Export data" when: step_end = true color: #darkblue {
 		save hogares to: export_hogares type: "shp" attributes:
 		["NAME"::name, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "HUNGER_W"::hunger_alert, "MONEY_W"::money_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc, "SOCIAL_NET"::social_network];
 	} //Saving people
-	user_command "Save People" category: "Export data" when: init_end = true color: #darkblue {
+	user_command "Save People" category: "Export data" when: step_end = true color: #darkblue {
 		save personas to: export_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "COWORKHOG"::co_workers_hog, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 	} //Saving all
-	user_command "Save all files" category: "Export data" when: init_end = true color: #darkred {
+	user_command "Save all files" category: "Export data" when: step_end = true color: #darkred {
 		save cell to: export_landscape type: "shp" attributes:
 		["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 		save cell to: export_simplified_classif type: "geotiff"; //Export a simplified classification
@@ -231,6 +233,7 @@ experiment run_model type: gui until: stop_simulation = true {
 	parameter "File chooser people" category: "Folders" var: export_personas;
 	//Model Parameters
 	parameter "LUCC influenced by social network choices?" category: "Global Parameters" var: social_network_inf init: false;
+	parameter "Scenarios?" category: "Global Parameters" var: scenarios init: false;
 	parameter "Number of new jobs per months" category: "Global Parameters" var: nb_new_jobs init: 3 min: 1 max: 30;
 	parameter "Amount needed to feed a person per year" category: "Global Parameters" var: $_ANFP init: 3900.0;
 	//Manpower

@@ -90,6 +90,7 @@ global { //Time aspects
 	//////UPDATE//////
 	//////////////////
 	reflex update {
+		step_end <- false;
 		ask personas {
 			do update;
 		}
@@ -168,6 +169,15 @@ global { //Time aspects
 
 		write "--END address work in progress";
 		write "END OF TURN/MONTH " + months_between(starting_date, current_date);
+	}
+	//////////////////
+	/////Scenarios////
+	//////////////////
+	reflex scenarios {
+		if scenarios {
+		}
+
+		step_end <- true;
 	}
 
 }
