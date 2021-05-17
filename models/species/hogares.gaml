@@ -70,8 +70,7 @@ species hogares {
 
 	action looking_for_job {
 		let no_more_jobs <- false;
-		loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and
-		(no_more_jobs = false) {
+		if one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false) and (oil_workers < oil_workers_max) {
 			if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) { //look for a job within 5km
 				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
 					empresa <- empresas where (each.free_jobs > 0) closest_to self;
@@ -99,6 +98,51 @@ species hogares {
 
 		}
 
+	}
+
+	action assess_income_needs { //calculation of cash income (does not include food crops)
+		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
+		if livelihood_strategy = "SP1.1" {
+			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
+			income <- gross_monthly_inc - (employees_workers * cost_employees);
+			estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect
+			each.annual_inc) - ((employees_workers * cost_employees) * 12);
+			//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production (le WIP)
+		}
+		//TODO: penser aux chèques des autorités pour le SP1
+		if livelihood_strategy = "SP1.2" {
+			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev + sum(membres_hogar collect
+			each.job_wages));
+			income <- gross_monthly_inc - (employees_workers * cost_employees);
+			estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect
+			each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+		}
+
+		if livelihood_strategy = "SP1.3" {
+			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
+			each.rev + sum(membres_hogar collect each.job_wages));
+			income <- gross_monthly_inc - (employees_workers * cost_employees);
+			estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
+			each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+		}
+
+		if livelihood_strategy = "SP2" {
+			gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
+			income <- gross_monthly_inc - (employees_workers * cost_employees);
+			estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+		}
+
+		if livelihood_strategy = "SP3" {
+			gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
+			income <- gross_monthly_inc - (employees_workers * cost_employees);
+			estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+		}
+
+		ask my_predio {
+			do crops_calc;
+		}
+
+		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 	}
 
 	action update_social_network {

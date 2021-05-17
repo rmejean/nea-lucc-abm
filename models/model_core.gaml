@@ -37,7 +37,10 @@ global { //Time aspects
 			do init_farm_jobs;
 			do init_oil_jobs;
 			do init_social_network;
-			do assess_income_needs;
+			ask hogares {
+				do assess_income_needs;
+			}
+
 			do setting_alerts;
 			init_end <- true;
 			write "END OF INITIALIZATION";
@@ -52,7 +55,10 @@ global { //Time aspects
 			do load_saved_hogares;
 			do load_saved_personas;
 			do load_saved_landscape;
-			do assess_income_needs;
+			ask hogares {
+				do assess_income_needs;
+			}
+
 			do setting_alerts;
 			init_end <- true;
 			write "END OF INITIALIZATION";
@@ -60,9 +66,9 @@ global { //Time aspects
 		}
 
 	}
-	//
-	//MODEL DYNAMICS
-	//
+	//////////////////
+	//MODEL DYNAMICS//
+	//////////////////
 	reflex time when: (stop_simulation = false) {
 		current_date <- plus_months(current_date, 1);
 		current_month <- string(current_date, "MMMM", 'es');
@@ -80,27 +86,31 @@ global { //Time aspects
 		}
 
 	}
-
+	//////////////////
+	//////UPDATE//////
+	//////////////////
 	reflex update {
 		ask personas {
 			do update;
 		}
-
+		//
 		write "---PERSONAS UPDATED";
-		ask hogares {
-			if social_network_inf {
+		//
+		if social_network_inf {
+			ask hogares {
 				do update_social_network; //Car le contrat de travail de certains est terminé donc on enlève les collègues de travail du RS
 
 			}
-
+			//
 			write "---SOCIAL NETWORKS UPDATED";
 		}
 
 		ask empresas {
 			do generate_jobs;
 		}
-
+		//
 		write "---NEW JOBS GENERATED";
+		//
 		ask cell {
 			if starting_wip {
 				starting_wip <- false;
@@ -109,33 +119,44 @@ global { //Time aspects
 			do crop_cycle;
 			do update_yields;
 		}
-
+		//
 		write "---CELLS UPDATED";
-		do assess_income_needs;
+		//
+		ask hogares {
+			do assess_income_needs;
+		}
+
 		do setting_alerts;
 	}
-
+	//////////////////
+	////////LUC///////
+	//////////////////
 	reflex LUC {
-		ask hogares {
-			if social_network_inf {
+		if social_network_inf {
+			ask hogares {
 				do update_social_network; //car il faut rajouter au RS les collègues de travail de ceux qui viennent de trouver un job
-
 			}
-
+			//
 			write "---SOCIAL NETWORKS UPDATED";
+			//
+		}
+
+		ask hogares {
 			if needs_alert = true {
 				do looking_for_job;
 			}
 
 		}
 
-		do assess_income_needs;
-		
+		ask hogares {
+			do assess_income_needs;
+		}
+
 		ask hogares {
 			if needs_alert = true {
 				do subsistence_LUC;
 			} else {
-				do profit_LUC;
+			//do profit_LUC;
 			}
 
 		}
@@ -149,54 +170,6 @@ global { //Time aspects
 
 		write "--END address work in progress";
 		write "END OF TURN/MONTH " + months_between(starting_date, current_date);
-	}
-
-	action assess_income_needs { //calculation of cash income (does not include food crops)
-		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
-		ask hogares {
-			if livelihood_strategy = "SP1.1" {
-				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect
-				each.annual_inc) - ((employees_workers * cost_employees) * 12);
-				//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production (le WIP)
-			}
-			//TODO: penser aux chèques des autorités pour le SP1
-			if livelihood_strategy = "SP1.2" {
-				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev + sum(membres_hogar collect
-				each.job_wages));
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect
-				each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			}
-
-			if livelihood_strategy = "SP1.3" {
-				gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-				each.rev + sum(membres_hogar collect each.job_wages));
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-				each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			}
-
-			if livelihood_strategy = "SP2" {
-				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			}
-
-			if livelihood_strategy = "SP3" {
-				gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
-				income <- gross_monthly_inc - (employees_workers * cost_employees);
-				estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			}
-
-			ask my_predio {
-				do crops_calc;
-			}
-
-		}
-
-		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 	}
 
 	action setting_alerts {
