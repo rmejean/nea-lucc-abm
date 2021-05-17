@@ -109,7 +109,6 @@ species hogares {
 			income <- gross_monthly_inc - (employees_workers * cost_employees);
 			estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect
 			each.annual_inc) - ((employees_workers * cost_employees) * 12);
-			//TODO: corriger la perception du revenu annuel selon les cultures qui VONT entrer en production (le WIP)
 		}
 		//TODO: penser aux chèques des autorités pour le SP1
 		if livelihood_strategy = "SP1.2" {
@@ -131,13 +130,13 @@ species hogares {
 		if livelihood_strategy = "SP2" {
 			gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
 			income <- gross_monthly_inc - (employees_workers * cost_employees);
-			estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+			estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + (count(my_predio.cells_inside, each.landuse = "wip") * ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2)) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
 		}
 
 		if livelihood_strategy = "SP3" {
 			gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
 			income <- gross_monthly_inc - (employees_workers * cost_employees);
-			estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+			estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + (count(my_predio.cells_inside, each.landuse = "wip") * ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1)) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
 		}
 
 		ask my_predio {
@@ -645,6 +644,8 @@ species hogares {
 								add landuse to: land_use_hist;
 							}
 
+							money_missing <-
+							(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2));
 						} else {
 							if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 3)) {
 								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -661,6 +662,8 @@ species hogares {
 									add landuse to: land_use_hist;
 								}
 
+								money_missing <-
+								(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2));
 							} else {
 								write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
 								stop <- true;
@@ -695,7 +698,7 @@ species hogares {
 						}
 
 						money_missing <-
-						(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_2));
+						(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1));
 					} else {
 						if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 2)) {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -712,6 +715,8 @@ species hogares {
 								add landuse to: land_use_hist;
 							}
 
+							money_missing <-
+							(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1));
 						} else {
 							if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 3)) {
 								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -728,6 +733,8 @@ species hogares {
 									add landuse to: land_use_hist;
 								}
 
+								money_missing <-
+								(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1));
 							} else {
 								write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
 								stop <- true;

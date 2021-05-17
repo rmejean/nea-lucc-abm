@@ -238,7 +238,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain) + (yld_tubercules * price_tubercules) + (yld_papayes * price_papayes) + (yld_ananas * price_ananas);
 		}
 
-		if nb_months <= 18 {
+		if between(nb_months,6,18) {
 			yld_manioc <- 10.0;
 			yld_plantain <- 33.33;
 			yld_tubercules <- 7.25;
@@ -247,7 +247,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain) + (yld_tubercules * price_tubercules) + (yld_papayes * price_papayes) + (yld_ananas * price_ananas);
 		}
 
-		if nb_months > 18 {
+		if nb_months >= 18 {
 			yld_manioc <- 7.5;
 			yld_plantain <- 29.16;
 			yld_tubercules <- 7.25;
@@ -265,13 +265,13 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain);
 		}
 
-		if nb_months <= 18 {
+		if between(nb_months,6,18) {
 			yld_manioc <- 3.0;
 			yld_plantain <- 26.25;
 			rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain);
 		}
 
-		if nb_months > 18 {
+		if nb_months >= 18 {
 			yld_manioc <- 1.5;
 			yld_plantain <- 26.25;
 			rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain);
