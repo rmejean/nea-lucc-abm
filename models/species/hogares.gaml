@@ -95,6 +95,8 @@ species hogares {
 
 				}
 
+			} else {
+				no_more_jobs <- true;
 			}
 
 		}
@@ -102,7 +104,6 @@ species hogares {
 	}
 
 	action assess_income_needs { //calculation of cash income (does not include food crops)
-		write "---START OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 		if livelihood_strategy = "SP1.1" {
 			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
 			income <- gross_monthly_inc - (employees_workers * cost_employees);
@@ -143,11 +144,9 @@ species hogares {
 			do crops_calc;
 		}
 
-		write "---END OF INIT INCOMES AND ASSESS NEEDS SATISFACTION";
 	}
 
 	action setting_alerts {
-		write "---START OF SETTING ALERTS";
 		if (subcrops_needs > my_predio.subcrops_amount) {
 			hunger_alert <- true;
 		}
@@ -160,7 +159,6 @@ species hogares {
 			needs_alert <- true;
 		}
 
-		write "---END OF SETTING ALERTS";
 	}
 
 	action update_social_network {
