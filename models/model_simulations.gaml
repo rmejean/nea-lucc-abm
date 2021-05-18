@@ -339,7 +339,7 @@ experiment run_model type: gui until: stop_simulation = true {
 		}
 
 		display "Needs" type: java2D synchronized: true {
-			chart "Households don't have their needs met" type: series series_label_position: legend y_range: {min(deforestation), max(deforestation)} style: line {
+			chart "Households don't have their needs met" type: series series_label_position: legend style: line {
 				data "Households don't have their needs met" accumulate_values: true value: [length(hogares where (each.needs_alert = true))] color: #red marker: false style: line;
 			}
 

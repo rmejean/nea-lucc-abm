@@ -71,9 +71,6 @@ global {
 	float yld_oldchicken;
 	float yld_chicken;
 	float yld_eggs;
-	//Theoretical agricultural yields of strategies LS
-	float yld_SC1_1 -> (yld_cacao1 * price_cacao) - costmaint_cacaoinputs;
-	float yld_SC1_2 -> (yld_cacao2 * price_cacao);
 }
 
 grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
