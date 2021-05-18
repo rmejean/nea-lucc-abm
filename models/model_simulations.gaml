@@ -37,6 +37,7 @@ global {
 	int nb_new_jobs;
 	bool social_network_inf <- false; //Enables the imitation of LUCC choices from the household's social network
 	bool scenarios <- false;
+	bool save_years <- false;
 	//-----------------------------
 	//Saving init------------------
 	//-----------------------------
@@ -222,6 +223,10 @@ experiment run_model type: gui until: stop_simulation = true {
 		save personas to: export_personas type: "shp" attributes:
 		["NAME"::name, "HOG_ID"::hog_id, "COWORKHOG"::co_workers_hog, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
+	}
+	
+	reflex when: every(12#cycle) and save_years {
+		save cell to: ("../exports/simplified_classif" + cycle + ".tif");
 	}
 
 	//Folders

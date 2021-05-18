@@ -35,6 +35,8 @@ species hogares {
 	float gross_monthly_inc;
 	float income;
 	float estimated_annual_inc;
+	float income_crops_annual;
+	int income_oil_annual;
 	string livelihood_strategy <- 'none';
 	bool needs_alert <- false;
 	bool hunger_alert <- false;
@@ -105,38 +107,34 @@ species hogares {
 
 	action assess_income_needs { //calculation of cash income (does not include food crops)
 		if livelihood_strategy = "SP1.1" {
-			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) + sum(membres_hogar collect each.job_wages);
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-			estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) + sum(membres_hogar collect
-			each.annual_inc) - ((employees_workers * cost_employees) * 12);
+			income_crops_annual <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) - (employees_workers * cost_employees * 12);
+			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+			estimated_annual_inc <- income_crops_annual + income_oil_annual;
 		}
-		//TODO: penser aux chèques des autorités pour le SP1
 		if livelihood_strategy = "SP1.2" {
-			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect each.rev + sum(membres_hogar collect
-			each.job_wages));
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-			estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect
-			each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+			income_crops_annual <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect
+			each.rev) * 12) - (employees_workers * cost_employees * 12);
+			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+			estimated_annual_inc <- income_crops_annual + income_oil_annual;
 		}
 
 		if livelihood_strategy = "SP1.3" {
-			gross_monthly_inc <- sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-			each.rev + sum(membres_hogar collect each.job_wages));
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-			estimated_annual_inc <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-			each.rev) * 12) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+			income_crops_annual <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
+			each.rev) * 12) - (employees_workers * cost_employees * 12);
+			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+			estimated_annual_inc <- income_crops_annual + income_oil_annual;
 		}
 
 		if livelihood_strategy = "SP2" {
-			gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-			estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + (count(my_predio.cells_inside, each.landuse = "wip") * ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2)) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+			income_crops_annual <- (sum(my_predio.cells_inside collect each.rev) * 12) - (employees_workers * cost_employees * 12);
+			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+			estimated_annual_inc <- income_crops_annual + income_oil_annual;
 		}
 
 		if livelihood_strategy = "SP3" {
-			gross_monthly_inc <- sum(my_predio.cells_inside collect each.rev) + sum(membres_hogar collect each.job_wages);
-			income <- gross_monthly_inc - (employees_workers * cost_employees);
-			estimated_annual_inc <- (sum(my_predio.cells_inside collect each.rev) * 12) + (count(my_predio.cells_inside, each.landuse = "wip") * ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1)) + sum(membres_hogar collect each.annual_inc) - ((employees_workers * cost_employees) * 12);
+			income_crops_annual <- (sum(my_predio.cells_inside collect each.rev) * 12) - (employees_workers * cost_employees * 12);
+			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+			estimated_annual_inc <- income_crops_annual + income_oil_annual;
 		}
 
 		ask my_predio {
@@ -167,6 +165,10 @@ species hogares {
 		}
 
 		add all: neighbors to: social_network;
+	}
+
+	action update_needs {
+		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////

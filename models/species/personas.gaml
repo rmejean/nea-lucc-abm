@@ -89,6 +89,7 @@ species personas parent: hogares {
 					}
 
 					do die;
+					ask hogares {do update_needs;}
 				}
 
 			}
@@ -107,6 +108,7 @@ species personas parent: hogares {
 					}
 
 					do die;
+					ask hogares {do update_needs;}
 				}
 
 			}

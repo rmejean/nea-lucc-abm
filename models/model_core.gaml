@@ -173,7 +173,7 @@ global { //Time aspects
 	//////////////////
 	/////Scenarios////
 	//////////////////
-	reflex scenarios {
+	reflex launch_scenarios {
 		if scenarios {
 		}
 
