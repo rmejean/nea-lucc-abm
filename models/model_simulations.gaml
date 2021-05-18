@@ -226,7 +226,7 @@ experiment run_model type: gui until: stop_simulation = true {
 	}
 
 	reflex when: every(12 #cycle) and save_years {
-		save cell to: ("../exports/simplified_classif" + cycle + ".tif");
+		save cell to: ("../exports/simplified_classif" + cycle + ".tif") type: "geotiff";
 	}
 
 	//Folders
@@ -360,7 +360,7 @@ experiment 'Run x simulations' type: batch repeat: 1 keep_seed: true until: stop
 	}
 
 	reflex when: every(12 #cycle) and save_years {
-		save cell to: ("../exports/simplified_classif" + cycle + ".tif");
+		save cell to: ("../exports/simplified_classif" + cycle + ".tif") type: "geotiff";
 	}
 
 }
