@@ -629,7 +629,7 @@ species hogares {
 						}
 
 						money_missing <-
-						(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2));
+						(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2))*12);
 					} else {
 						if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2)) {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -647,7 +647,7 @@ species hogares {
 							}
 
 							money_missing <-
-							(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2));
+							(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2))*12);
 						} else {
 							if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 3)) {
 								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -665,7 +665,7 @@ species hogares {
 								}
 
 								money_missing <-
-								(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2));
+								(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2))*12);
 							} else {
 								write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
 								stop <- true;
@@ -700,7 +700,7 @@ species hogares {
 						}
 
 						money_missing <-
-						(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1));
+						(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1))*12);
 					} else {
 						if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 2)) {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -718,7 +718,7 @@ species hogares {
 							}
 
 							money_missing <-
-							(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1));
+							(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1))*12);
 						} else {
 							if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 3)) {
 								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -736,7 +736,7 @@ species hogares {
 								}
 
 								money_missing <-
-								(Total_Personas * $_ANFP) - (estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1));
+								(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1))*12);
 							} else {
 								write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
 								stop <- true;

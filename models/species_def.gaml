@@ -58,12 +58,12 @@ global {
 	
 	
 	//Profits for profit LUC
-	float profit_SC1_1 <- ((yld_cacao1 * price_cacao) - costmaint_cacaoinputs) / laborcost_SC1_1 update: ((yld_cacao1 * price_cacao) - costmaint_cacaoinputs) / laborcost_SC1_1;
-	float profit_SC1_2 <- ((yld_cacao2 * price_cacao) - costmaint_cacaoinputs) / laborcost_SC1_2 update: ((yld_cacao2 * price_cacao) - costmaint_cacaoinputs) / laborcost_SC1_2;
-	float profit_SC2 <- ((yld_coffee * price_cacao) - costmaint_cacaoinputs) / laborcost_SC2 update: ((yld_coffee * price_cacao) - costmaint_cacaoinputs) / laborcost_SC2;
-	float profit_SE1_1 <- ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1) / laborcost_SE1_1 update: ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1) / laborcost_SE1_1;
-	float profit_SE1_2 <- ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2) / laborcost_SE1_2 update: ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2) / laborcost_SE1_2;
+	float profit_SC1_1 -> ((yld_cacao1 * price_cacao) - costmaint_cacaoinputs) / laborcost_SC1_1 ;
+	float profit_SC1_2 -> ((yld_cacao2 * price_cacao) - costmaint_cacaoinputs) / laborcost_SC1_2;
+	float profit_SC2 -> ((yld_coffee * price_cacao) - costmaint_cacaoinputs) / laborcost_SC2 ;
+	float profit_SE1_1 -> ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1) / laborcost_SE1_1 ;
+	float profit_SE1_2 -> ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2) / laborcost_SE1_2 ;
 	//
-	list profits_SP1_2 <- [profit_SC1_1,profit_SC1_2,profit_SC2];
-	list profits_SP1_3 <- [profit_SC1_2,profit_SC2,profit_SE1_2];
+	list profits_SP1_2 -> [profit_SC1_1,profit_SC1_2,profit_SC2];
+	list profits_SP1_3 -> [profit_SC1_2,profit_SC2,profit_SE1_2];
 }

@@ -155,7 +155,7 @@ global { //Time aspects
 			if needs_alert = true {
 				do subsistence_LUC;
 			} else {
-			//do profit_LUC;
+			do profit_LUC;
 			}
 
 		}

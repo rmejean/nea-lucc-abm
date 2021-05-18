@@ -16,6 +16,7 @@ model cells_def
 import "../species_def.gaml"
 
 global {
+	//Time to production start up
 	int timeprod_maniocmais <- 6;
 	int timeprod_fruits <- 3;
 	int timeprod_s_livetock <- 3;
@@ -23,6 +24,7 @@ global {
 	int timeprod_coffee <- 24;
 	int timeprod_cacao <- 24;
 	int timeprod_livestock <- 24;
+	//Market prices
 	int price_cacao <- 100;
 	int price_coffee <- 14;
 	int price_manioc <- 15;
@@ -40,12 +42,14 @@ global {
 	int price_oldchicken <- 17;
 	int price_chicken <- 15;
 	float price_eggs <- 0.25;
+	//Expenses
 	float costmaint_cacaoinputs <- 13.375;
 	float costmaint_cattle_1 <- 11.48; //TODO: à revoir : plus il y a d'hectares en pâture, plus c'est cher
 	float costmaint_cattle_2 <- 1.61635;
 	float buy_pig <- 12.27;
 	float costmaint_pigbreeding <- 5.375;
 	float costmaint_pigbreeding2 <- 21.1;
+	//Agricultural yields 
 	float yld_cacao1 <- 0.66;
 	float yld_cacao2 <- 0.16;
 	float yld_coffee <- 2.08;
@@ -67,6 +71,9 @@ global {
 	float yld_oldchicken;
 	float yld_chicken;
 	float yld_eggs;
+	//Theoretical agricultural yields of strategies LS
+	float yld_SC1_1 -> (yld_cacao1 * price_cacao) - costmaint_cacaoinputs;
+	float yld_SC1_2 -> (yld_cacao2 * price_cacao);
 }
 
 grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false use_neighbors_cache: false {
@@ -167,68 +174,68 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	action update_yields {
 		if landuse = 'SC1.1' {
-			do yld_SC1_1;
+			do calc_yld_SC1_1;
 		}
 
 		if landuse = 'SC1.2' {
-			do yld_SC1_2;
+			do calc_yld_SC1_2;
 		}
 
 		if landuse = 'SC2' {
-			do yld_SC2;
+			do calc_yld_SC2;
 		}
 
 		if landuse = 'SC3.1' {
-			do yld_SC3_1;
+			do calc_yld_SC3_1;
 		}
 
 		if landuse = 'SC4.1' {
-			do yld_SC4_1;
+			do calc_yld_SC4_1;
 		}
 
 		if landuse = 'SC4.2' {
-			do yld_SC4_2;
+			do calc_yld_SC4_2;
 		}
 
 		if landuse = 'SE1.1' or landuse2 = 'SE1.1' or landuse3 = 'SE1.1' {
-			do yld_SE1_1;
+			do calc_yld_SE1_1;
 		}
 
 		if landuse = 'SE1.2' or landuse2 = 'SE1.2' or landuse3 = 'SE1.2' {
-			do yld_SE1_2;
+			do calc_yld_SE1_2;
 		}
 
 		if landuse = 'SE2.1' or landuse2 = 'SE2.1' or landuse3 = 'SE2.1' {
-			do yld_SE2_1;
+			do calc_yld_SE2_1;
 		}
 
 		if landuse = 'SE2.2' or landuse2 = 'SE2.2' or landuse3 = 'SE2.2' {
-			do yld_SE2_2;
+			do calc_yld_SE2_2;
 		}
 
 		if landuse = 'SE2.3' or landuse2 = 'SE2.3' or landuse3 = 'SE2.3' {
-			do yld_SE2_3;
+			do calc_yld_SE2_3;
 		}
 
 		if landuse = 'SE3' or landuse2 = 'SE3' or landuse3 = 'SE3' {
-			do yld_SE3;
+			do calc_yld_SE3;
 		}
 
 	}
 
-	action yld_SC1_1 { //cocoa in production with inputs
+	action calc_yld_SC1_1 { //cocoa in production with inputs
 		rev <- (yld_cacao1 * price_cacao) - costmaint_cacaoinputs;
 	}
 
-	action yld_SC1_2 { //cocoa in production without inputs
+	action calc_yld_SC1_2 { //cocoa in production without inputs
 		rev <- (yld_cacao2 * price_cacao);
 	}
 
-	action yld_SC2 { //coffee plants in production
+	action calc_yld_SC2 { //coffee plants in production
 		rev <- (yld_coffee * price_coffee);
 	}
 
-	action yld_SC3_1 { //food crops for self-consumption in complex combination with long fallow land
+	action calc_yld_SC3_1 { //food crops for self-consumption in complex combination with long fallow land
 		if nb_months < 6 {
 			yld_manioc <- 0.0;
 			yld_plantain <- 0.0;
@@ -258,7 +265,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	}
 
-	action yld_SC4_1 { //food crops for self-consumption in simple association and short-term fallow land
+	action calc_yld_SC4_1 { //food crops for self-consumption in simple association and short-term fallow land
 		if nb_months < 6 {
 			yld_manioc <- 0.0;
 			yld_plantain <- 0.0;
@@ -279,7 +286,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	}
 
-	action yld_SC4_2 { //food crops for self-consumption in simple plantain/corn and short-term fallow land combinations
+	action calc_yld_SC4_2 { //food crops for self-consumption in simple plantain/corn and short-term fallow land combinations
 		if nb_months < 6 {
 			yld_mais <- 0.0;
 			yld_plantain <- 0.0;
@@ -292,33 +299,33 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	}
 
-	action yld_SE1_1 { // cattle breeding with cheese marketing (30 mothers and 70ha of pastures)
+	action calc_yld_SE1_1 { // cattle breeding with cheese marketing (30 mothers and 70ha of pastures)
 		rev <- (yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1;
 	}
 
-	action yld_SE1_2 { // cattle breeding with cheese marketing (30 mothers and 70ha of pastures)
+	action calc_yld_SE1_2 { // cattle breeding with cheese marketing (30 mothers and 70ha of pastures)
 		rev <- (yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2;
 	}
 
-	action yld_SE2_1 {
+	action calc_yld_SE2_1 {
 		yld_pig <- 0.375;
 		rev <- (yld_pig * price_pig) - buy_pig;
 	}
 
-	action yld_SE2_2 {
+	action calc_yld_SE2_2 {
 		yld_porcelets <- 1.116;
 		yld_truie <- 0.041;
 		rev <- (yld_porcelets * price_porcelet) + (yld_truie * price_truie) - costmaint_pigbreeding;
 	}
 
-	action yld_SE2_3 {
+	action calc_yld_SE2_3 {
 		yld_porcelets <- 0.8;
 		yld_pig <- 0.316;
 		yld_truie <- 0.041;
 		rev <- (yld_porcelets * price_porcelet) + (yld_truie * price_truie) + (yld_pig * price_pig) - costmaint_pigbreeding2;
 	}
 
-	action yld_SE3 {
+	action calc_yld_SE3 {
 		yld_oldchicken <- 0.41;
 		yld_chicken <- 5.83;
 		yld_eggs <- 93.33;

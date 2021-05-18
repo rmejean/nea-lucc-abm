@@ -114,7 +114,7 @@ experiment save_init type: gui until: stop_simulation = true {
 	parameter "File chooser plots" category: "Saving init" var: save_predios;
 	parameter "File chooser households" category: "Saving init" var: save_hogares;
 	parameter "File chooser people" category: "Saving init" var: save_personas;
-	
+
 	//Model Parameters
 	parameter "LUCC influenced by social network choices?" category: "Global Parameters" var: social_network_inf init: false;
 	parameter "Number of new jobs per months" category: "Global Parameters" var: nb_new_jobs init: 3 min: 1 max: 30;
@@ -224,8 +224,8 @@ experiment run_model type: gui until: stop_simulation = true {
 		["NAME"::name, "HOG_ID"::hog_id, "COWORKHOG"::co_workers_hog, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "SUB_NEED"::subcrops_needs, "HOUSEHOLD"::my_hogar, "AGE"::Age, "MES_NAC"::mes_nac, "SEXO"::Sexo, "ORDEN"::orden_en_hogar, "labor_value"::labor_value, "INC"::inc, "AUTO_ID"::auto_id, "HEAD"::chef, "WORK"::oil_worker, "EMPRESA"::empresa, "CONTRACT"::contract_term, "WORK_M"::working_months, "WORKPACE"::work_pace, "ANNUAL_INC"::annual_inc];
 		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
 	}
-	
-	reflex when: every(12#cycle) and save_years {
+
+	reflex when: every(12 #cycle) and save_years {
 		save cell to: ("../exports/simplified_classif" + cycle + ".tif");
 	}
 
@@ -316,11 +316,11 @@ experiment run_model type: gui until: stop_simulation = true {
 		monitor "Moy. déforest." value: area_deforest_mean refresh: true;
 		monitor "Moy. labor_force" value: labor_mean refresh: true;
 		//-------------------------------------
-		browse "suivi hogares" value: hogares refresh: true attributes:
-		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "labor_force", "my_predio", "my_house", "common_pot_inc", "subcrops_needs", "needs_alert"];
-		browse "suivi personas" value: personas refresh: true attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "labor_value", "my_hogar", "orden_en_hogar", "my_predio"];
-		browse "suivi predios" value: predios refresh: true attributes:
-		["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside", "subcrops_amount", "cashcrops_amount"]; //-------------------------------------
+		//		browse "suivi hogares" value: hogares refresh: true attributes:
+		//		["sec_id", "hog_id", "viv_id", "Total_Personas", "Total_Hombres", "Total_Mujeres", "labor_force", "my_predio", "my_house", "common_pot_inc", "subcrops_needs", "needs_alert"];
+		//		browse "suivi personas" value: personas refresh: true attributes: ["sec_id", "hog_id", "viv_id", "Age", "Sexo", "labor_value", "my_hogar", "orden_en_hogar", "my_predio"];
+		//		browse "suivi predios" value: predios refresh: true attributes:
+		//		["clave_cata", "is_free", "dist_via_auca", "prox_via_auca", "area_total", "area_deforest", "def_rate", "cells_inside", "subcrops_amount", "cashcrops_amount"]; //-------------------------------------
 		display Ages synchronized: true {
 			chart "Ages" type: histogram {
 				loop i from: 0 to: 110 {
@@ -339,13 +339,28 @@ experiment run_model type: gui until: stop_simulation = true {
 		}
 
 		display "Needs" type: java2D synchronized: true {
-			chart "Households don't have their needs met" type: series series_label_position: legend //y_range: (deforestation)
-			style: line {
+			chart "Households don't have their needs met" type: series series_label_position: legend y_range: {min(deforestation), max(deforestation)} style: line {
 				data "Households don't have their needs met" accumulate_values: true value: [length(hogares where (each.needs_alert = true))] color: #red marker: false style: line;
 			}
 
 		}
 
+	}
+
+}
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////// BATCH EXP //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+experiment 'Run x simulations' type: batch repeat: 1 keep_seed: true until: stop_simulation = true {
+
+	init {
+		new_init <- false;
+	}
+
+	reflex when: every(12 #cycle) and save_years {
+		save cell to: ("../exports/simplified_classif" + cycle + ".tif");
 	}
 
 }
