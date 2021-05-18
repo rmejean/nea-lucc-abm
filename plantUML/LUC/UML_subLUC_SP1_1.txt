@@ -1,0 +1,36 @@
+@startuml
+
+
+skinparam {
+activityBackgroundColor white
+activityArrowColor black
+activityBorderColor black
+activityDiamondBorderColor black
+activityMessageAlign center
+defaultTextAlignment center
+}
+
+
+start
+
+while (Au moins une cellule de forêt\nsur la parcelle ET //needs// > 0) is (yes)
+note right : Si pas assez de main d'œuvre\npour installer SC3.1 en un mois,\nvérifier si main d'œuvre\npour 1, 2, 3 ou 4 mois.
+if (Assez de main d'œuvre\npour faire du SC3.1 ?) then (true) 
+:Déforester pour faire du SC3.1;
+:Réévaluer les //needs//;
+
+else (false)
+  
+  
+
+
+endif 
+
+
+endwhile (no)
+
+
+
+stop
+
+@enduml
