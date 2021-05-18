@@ -76,7 +76,7 @@ global { //Time aspects
 		write "Current date at cycle " + cycle + ":" + current_date;
 		write "Current month is " + current_month;
 		write "Months elapsed: " + months_between(starting_date, current_date);
-		write "time (seconds): " + time;
+		write "time since the beginning of the simulation: " + total_duration;
 		write "labor mean for step is: " + labor_mean;
 		write "area deforest mean for is: " + area_deforest_mean;
 		if current_date > date("2016-01-01") {
