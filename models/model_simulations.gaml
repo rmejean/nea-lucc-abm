@@ -36,8 +36,8 @@ global {
 	//-----------------------------
 	int nb_new_jobs;
 	bool social_network_inf <- false; //Enables the imitation of LUCC choices from the household's social network
-	bool scenarios <- false;
-	bool save_years <- false;
+	bool scenarios <- false; //launch scenarios
+	bool save_years <- true; //save a classif export every 12 cycles
 	//-----------------------------
 	//Saving init------------------
 	//-----------------------------
