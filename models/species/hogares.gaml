@@ -186,7 +186,7 @@ species hogares {
 			match "SP1.1" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: length(my_predio.cells_deforest) > 0 and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajouter aussi les friches longues!
+				loop while: (length(my_predio.cells_deforest) > 0) and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajouter aussi les friches longues!
 					if available_workers > (laborcost_SC3_1 + laborcost_install_SC3) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -277,7 +277,7 @@ species hogares {
 			match "SP1.2" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: length(my_predio.cells_deforest) > 0 and (needs > 0) and (stop = false) {
+				loop while: (length(my_predio.cells_deforest) > 0) and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -446,7 +446,7 @@ species hogares {
 			match "SP1.3" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: length(my_predio.cells_deforest) > 0 and (needs > 0) and (stop = false) {
+				loop while: (length(my_predio.cells_deforest) > 0) and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -615,7 +615,7 @@ species hogares {
 			match "SP2" {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
-				loop while: length(my_predio.cells_deforest) > 0 and (money_missing > 0) and (stop = false) {
+				loop while: (length(my_predio.cells_deforest) > 0) and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_2 + laborcost_install_SE1) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -686,7 +686,7 @@ species hogares {
 			match "SP3" {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
-				loop while: length(my_predio.cells_deforest) > 0 and (money_missing > 0) and (stop = false) {
+				loop while: (length(my_predio.cells_deforest) > 0) and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_1 + laborcost_install_SE1) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
