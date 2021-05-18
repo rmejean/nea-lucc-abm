@@ -832,9 +832,9 @@ global { //Lists
 		write "---START OF INIT OIL JOBS";
 		ask hogares {
 			let no_more_jobs <- false;
-			loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and
+			loop while: (available_workers >= 14.0) and length(job_candidates) > 0 and (oil_workers < oil_workers_max) and
 			(no_more_jobs = false) {
-				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
+				ask first(job_candidates) {
 					if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) {
 						empresa <- empresas at_distance (5 #km) where (each.free_jobs > 0) closest_to self;
 						write "" + empresa.name + " found a worker";

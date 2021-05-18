@@ -24,6 +24,7 @@ species hogares {
 	list<personas> membres_hogar;
 	list<hogares> neighbors;
 	list<hogares> social_network;
+	list<personas> job_candidates -> membres_hogar where (each.Age < 40 and each.oil_worker = false);
 	personas chef_hogar;
 	string chef_auto_id;
 	float labor_force;
@@ -72,10 +73,10 @@ species hogares {
 
 	action looking_for_job {
 		let no_more_jobs <- false;
-		loop while: (available_workers >= 14.0) and (one_matches(membres_hogar, each.Age < 40 and each.oil_worker = false)) and (oil_workers < oil_workers_max) and
+		loop while: (available_workers >= 14.0) and length(job_candidates) > 0 and (oil_workers < oil_workers_max) and
 		(no_more_jobs = false) {
 			if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) { //look for a job within 5km
-				ask first(membres_hogar where (each.Age < 40 and each.oil_worker = false)) {
+				ask first(job_candidates) {
 					empresa <- empresas where (each.free_jobs > 0) closest_to self;
 					write "" + empresa.name + " found a worker";
 					oil_worker <- true;
@@ -185,7 +186,7 @@ species hogares {
 			match "SP1.1" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajouter aussi les friches longues!
+				loop while: length(my_predio.cells_deforest) > 0 and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajouter aussi les friches longues!
 					if available_workers > (laborcost_SC3_1 + laborcost_install_SC3) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -276,7 +277,7 @@ species hogares {
 			match "SP1.2" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) {
+				loop while: length(my_predio.cells_deforest) > 0 and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -445,7 +446,7 @@ species hogares {
 			match "SP1.3" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (needs > 0) and (stop = false) {
+				loop while: length(my_predio.cells_deforest) > 0 and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -614,7 +615,7 @@ species hogares {
 			match "SP2" {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (money_missing > 0) and (stop = false) {
+				loop while: length(my_predio.cells_deforest) > 0 and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_2 + laborcost_install_SE1) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -685,7 +686,7 @@ species hogares {
 			match "SP3" {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
-				loop while: (one_matches(my_predio.cells_inside, each.is_deforest = false)) and (money_missing > 0) and (stop = false) {
+				loop while: length(my_predio.cells_deforest) > 0 and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_1 + laborcost_install_SE1) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -767,7 +768,7 @@ species hogares {
 		//
 			match "SP1.2" {
 				if index_of(profits_SP1_2, max(profits_SP1_2)) = 0 { //if the most profitable cash crop is SC1_1
-					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and length(my_predio.cells_deforest) > 0 {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.1';
@@ -781,7 +782,7 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
@@ -804,7 +805,7 @@ species hogares {
 				}
 
 				if index_of(profits_SP1_2, max(profits_SP1_2)) = 1 { //if the most profitable cash crop is SC1_2
-					if (available_workers > (laborcost_SC1_2 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+					if (available_workers > (laborcost_SC1_2 + laborcost_install_SC1)) and length(my_predio.cells_deforest) > 0 {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.2';
@@ -818,7 +819,7 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC1_2 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						if (available_workers > (laborcost_SC1_2 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
@@ -841,7 +842,7 @@ species hogares {
 				}
 
 				if index_of(profits_SP1_2, max(profits_SP1_2)) = 2 { //if the most profitable cash crop is SC2
-					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and length(my_predio.cells_deforest) > 0 {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC2';
@@ -855,7 +856,7 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and length(my_predio.cells_deforest) > 0 {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
@@ -881,7 +882,7 @@ species hogares {
 
 			match "SP1.3" {
 				if index_of(profits_SP1_3, max(profits_SP1_3)) = 0 {
-					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+					if (available_workers > (laborcost_SC1_1 + laborcost_install_SC1)) and length(my_predio.cells_deforest) > 0 {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC1.2';
@@ -895,7 +896,7 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
@@ -918,7 +919,7 @@ species hogares {
 				}
 
 				if index_of(profits_SP1_3, max(profits_SP1_3)) = 1 {
-					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+					if (available_workers > (laborcost_SC2 + laborcost_install_SC2)) and length(my_predio.cells_deforest) > 0 {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SC2';
@@ -932,7 +933,7 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and length(my_predio.cells_deforest) > 0 {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
@@ -955,7 +956,7 @@ species hogares {
 				}
 
 				if index_of(profits_SP1_3, max(profits_SP1_3)) = 2 {
-					if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+					if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and length(my_predio.cells_deforest) > 0 {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.2';
@@ -969,7 +970,7 @@ species hogares {
 						}
 
 					} else {
-						if (available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2))) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+						if (available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2))) and length(my_predio.cells_deforest) > 0 {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
@@ -994,7 +995,7 @@ species hogares {
 			}
 
 			match "SP2" {
-				if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+				if (available_workers > (laborcost_SE1_2 + laborcost_install_SE1)) and length(my_predio.cells_deforest) > 0 {
 					ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 						is_deforest <- true;
 						landuse <- 'SE1.2';
@@ -1012,7 +1013,7 @@ species hogares {
 			}
 
 			match "SP3" {
-				if (available_workers > (laborcost_SE1_1 + laborcost_install_SE1)) and (one_matches(my_predio.cells_inside, each.is_deforest = false)) {
+				if (available_workers > (laborcost_SE1_1 + laborcost_install_SE1)) and length(my_predio.cells_deforest) > 0 {
 					ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 						is_deforest <- true;
 						landuse <- 'SE1.1';
