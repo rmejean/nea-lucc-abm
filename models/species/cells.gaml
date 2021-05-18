@@ -16,7 +16,7 @@ model cells_def
 import "../species_def.gaml"
 
 global {
-	//Time to production start up
+//Time to production start up
 	int timeprod_maniocmais <- 6;
 	int timeprod_fruits <- 3;
 	int timeprod_s_livetock <- 3;
@@ -242,7 +242,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain) + (yld_tubercules * price_tubercules) + (yld_papayes * price_papayes) + (yld_ananas * price_ananas);
 		}
 
-		if between(nb_months,6,18) {
+		if between(nb_months, 6, 18) {
 			yld_manioc <- 10.0;
 			yld_plantain <- 33.33;
 			yld_tubercules <- 7.25;
@@ -269,7 +269,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain);
 		}
 
-		if between(nb_months,6,18) {
+		if between(nb_months, 6, 18) {
 			yld_manioc <- 3.0;
 			yld_plantain <- 26.25;
 			rev <- (yld_manioc * price_manioc) + (yld_plantain * price_plantain);
@@ -363,8 +363,8 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			rev <- 0.0;
 			switch previous_landuse {
 				match 'SC3.1' {
-					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
-						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
+					if length(predio.reforest_candidates) > 0 {
+						ask one_of(predio.reforest_candidates) {
 							landuse <- previous_landuse;
 							grid_value <- 3.0;
 							write "resow at " + location;
@@ -373,7 +373,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 						}
 
 					} else {
-						if one_matches(predio.cells_inside, each.is_deforest = false) {
+						if length(predio.cells_deforest) > 0 {
 							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- previous_landuse;
@@ -397,8 +397,8 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 				}
 
 				match 'SC4.1' {
-					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
-						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
+					if length(predio.reforest_candidates) > 0 {
+						ask one_of(predio.reforest_candidates) {
 							landuse <- previous_landuse;
 							grid_value <- 3.0;
 							write "resow at " + location;
@@ -407,7 +407,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 						}
 
 					} else {
-						if one_matches(predio.cells_inside, each.is_deforest = false) {
+						if length(predio.cells_deforest) > 0 {
 							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- previous_landuse;
@@ -431,8 +431,8 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 				}
 
 				match 'SC4.2' {
-					if one_matches(predio.cells_inside, each.landuse = 'fallow' and each.nb_months >= 60) {
-						ask one_of(predio.cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60)) {
+					if length(predio.reforest_candidates) > 0 {
+						ask one_of(predio.reforest_candidates) {
 							landuse <- previous_landuse;
 							grid_value <- 3.0;
 							write "resow at " + location;
@@ -441,7 +441,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 						}
 
 					} else {
-						if one_matches(predio.cells_inside, each.is_deforest = false) {
+						if length(predio.cells_deforest) > 0 {
 							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- previous_landuse;

@@ -38,9 +38,10 @@ species predios {
 	rgb bool_color;
 	hogares my_hogar;
 	int subcrops_amount;
-	list<cell> cells_inside -> {cell overlapping self}; //trouver mieux que overlapping ?
+	list<cell> cells_inside -> cell overlapping self; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.is_deforest = true);
 	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
+	list<cell> reforest_candidates -> cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60);
 	//list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
 
