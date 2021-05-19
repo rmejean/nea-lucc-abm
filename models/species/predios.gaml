@@ -24,8 +24,8 @@ species predios {
 	int id_EMC_LS2 <- 0;
 	int id_EMC_LS3 <- 0;
 	int area_total <- length(cells_inside);
-	int area_deforest <- length(cells_deforest) update: length(cells_deforest);
-	int area_forest <- length(cells_forest) update: length(cells_forest);
+	int area_deforest <- length(cells_deforest);
+	int area_forest <- length(cells_forest);
 	float def_rate;
 	float forest_rate;
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //distance to via Auca (main road on the study area, original settlement and and location of oil companies)
@@ -38,7 +38,7 @@ species predios {
 	rgb bool_color;
 	hogares my_hogar;
 	int subcrops_amount;
-	list<cell> cells_inside -> cell overlapping self; //trouver mieux que overlapping ?
+	list<cell> cells_inside <- cell overlapping self; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.is_deforest = true);
 	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
 	list<cell> reforest_candidates -> cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60);
