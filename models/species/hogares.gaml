@@ -73,7 +73,7 @@ species hogares {
 
 	action looking_for_job {
 		let no_more_jobs <- false;
-		loop while: (available_workers >= 14.0) and length(job_candidates) > 0 and (oil_workers < oil_workers_max) and
+		loop while: (available_workers >= 14.0) and (length(job_candidates) > 0) and (oil_workers < oil_workers_max) and
 		(no_more_jobs = false) {
 			if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) { //look for a job within 5km
 				ask first(job_candidates) {
@@ -186,7 +186,7 @@ species hogares {
 			match "SP1.1" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: (length(my_predio.cells_deforest) > 0) and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajouter aussi les friches longues!
+				loop while: length(my_predio.cells_forest) > 0 and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajouter aussi les friches longues!
 					if available_workers > (laborcost_SC3_1 + laborcost_install_SC3) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -195,7 +195,7 @@ species hogares {
 							new_SC3 <- new_SC3 + 1;
 							predio.subcrops_amount <- predio.subcrops_amount + 1;
 							my_hogar.last_decision <- 'SC3.1';
-							write "new deforestation for SUBSISTENCE at " + location;
+							write "new SC3.1 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC3_1 + laborcost_install_SC3));
 							nb_months <- 0;
 							add landuse to: land_use_hist;
@@ -214,7 +214,7 @@ species hogares {
 								wip_laborforce <- wip_laborforce + laborcost_install_SC3;
 								predio.subcrops_amount <- predio.subcrops_amount + 1;
 								my_hogar.last_decision <- 'SC3.1';
-								write "deforestation in progress for SUBSISTENCE at " + location;
+								write "SC3.1 in progress for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
 								add landuse to: land_use_hist;
 							}
@@ -232,7 +232,7 @@ species hogares {
 									wip_laborforce <- wip_laborforce + laborcost_install_SC3;
 									predio.subcrops_amount <- predio.subcrops_amount + 1;
 									my_hogar.last_decision <- 'SC3.1';
-									write "deforestation in progress for SUBSISTENCE at " + location;
+									write "SC3.1 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
 									add landuse to: land_use_hist;
 								}
@@ -250,7 +250,7 @@ species hogares {
 										wip_laborforce <- wip_laborforce + laborcost_install_SC3;
 										predio.subcrops_amount <- predio.subcrops_amount + 1;
 										my_hogar.last_decision <- 'SC3.1';
-										write "deforestation in progress for SUBSISTENCE at " + location;
+										write "SC3.1 in progress for SUBSISTENCE at " + location;
 										myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
 										add landuse to: land_use_hist;
 									}
@@ -277,7 +277,7 @@ species hogares {
 			match "SP1.2" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: (length(my_predio.cells_deforest) > 0) and (needs > 0) and (stop = false) {
+				loop while: length(my_predio.cells_forest) > 0 and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -286,7 +286,7 @@ species hogares {
 							new_SC4 <- new_SC4 + 1;
 							predio.subcrops_amount <- predio.subcrops_amount + 1;
 							my_hogar.last_decision <- 'SC4.1';
-							write "new deforestation for SUBSISTENCE at " + location;
+							write "new SC4.1 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC4_1 + laborcost_install_SC4));
 							nb_months <- 0;
 							add landuse to: land_use_hist;
@@ -302,7 +302,7 @@ species hogares {
 								new_SC4 <- new_SC4 + 1;
 								predio.subcrops_amount <- predio.subcrops_amount + 1;
 								my_hogar.last_decision <- 'SC4.2';
-								write "new deforestation for SUBSISTENCE at " + location;
+								write "new SC4.2 for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC4_2 + laborcost_install_SC4));
 								nb_months <- 0;
 								add landuse to: land_use_hist;
@@ -321,7 +321,7 @@ species hogares {
 									wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 									predio.subcrops_amount <- predio.subcrops_amount + 1;
 									my_hogar.last_decision <- 'SC4.1';
-									write "deforestation in progress for SUBSISTENCE at " + location;
+									write "SC4.1 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 									add landuse to: land_use_hist;
 								}
@@ -339,7 +339,7 @@ species hogares {
 										wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 										predio.subcrops_amount <- predio.subcrops_amount + 1;
 										my_hogar.last_decision <- 'SC4.2';
-										write "deforestation in progress for SUBSISTENCE at " + location;
+										write "SC4.2 in progress for SUBSISTENCE at " + location;
 										myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 										add landuse to: land_use_hist;
 									}
@@ -357,7 +357,7 @@ species hogares {
 											wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 											predio.subcrops_amount <- predio.subcrops_amount + 1;
 											my_hogar.last_decision <- 'SC4.1';
-											write "deforestation in progress for SUBSISTENCE at " + location;
+											write "SC4.1 in progress for SUBSISTENCE at " + location;
 											myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 											add landuse to: land_use_hist;
 										}
@@ -375,7 +375,7 @@ species hogares {
 												wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 												predio.subcrops_amount <- predio.subcrops_amount + 1;
 												my_hogar.last_decision <- 'SC4.2';
-												write "deforestation in progress for SUBSISTENCE at " + location;
+												write "SC4.2 in progress for SUBSISTENCE at " + location;
 												myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 												add landuse to: land_use_hist;
 											}
@@ -393,7 +393,7 @@ species hogares {
 													wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 													predio.subcrops_amount <- predio.subcrops_amount + 1;
 													my_hogar.last_decision <- 'SC4.1';
-													write "deforestation in progress for SUBSISTENCE at " + location;
+													write "SC4.1 in progress for SUBSISTENCE at " + location;
 													myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 													add landuse to: land_use_hist;
 												}
@@ -411,7 +411,7 @@ species hogares {
 														wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 														predio.subcrops_amount <- predio.subcrops_amount + 1;
 														my_hogar.last_decision <- 'SC4.2';
-														write "deforestation in progress for SUBSISTENCE at " + location;
+														write "SC4.2 in progress for SUBSISTENCE at " + location;
 														myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 														add landuse to: land_use_hist;
 													}
@@ -446,7 +446,7 @@ species hogares {
 			match "SP1.3" {
 				let needs <- subcrops_needs - my_predio.subcrops_amount;
 				let stop <- false;
-				loop while: (length(my_predio.cells_deforest) > 0) and (needs > 0) and (stop = false) {
+				loop while: length(my_predio.cells_forest) > 0 and (needs > 0) and (stop = false) {
 					if available_workers > (laborcost_SC4_1 + laborcost_install_SC4) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -455,7 +455,7 @@ species hogares {
 							new_SC4 <- new_SC4 + 1;
 							predio.subcrops_amount <- predio.subcrops_amount + 1;
 							my_hogar.last_decision <- 'SC4.1';
-							write "new deforestation for SUBSISTENCE at " + location;
+							write "new SC4.1 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC4_1 + laborcost_install_SC4));
 							nb_months <- 0;
 							add landuse to: land_use_hist;
@@ -471,7 +471,7 @@ species hogares {
 								new_SC4 <- new_SC4 + 1;
 								predio.subcrops_amount <- predio.subcrops_amount + 1;
 								my_hogar.last_decision <- 'SC4.2';
-								write "new deforestation for SUBSISTENCE at " + location;
+								write "new SC4.2 for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC4_2 + laborcost_install_SC4));
 								nb_months <- 0;
 								add landuse to: land_use_hist;
@@ -490,7 +490,7 @@ species hogares {
 									wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 									predio.subcrops_amount <- predio.subcrops_amount + 1;
 									my_hogar.last_decision <- 'SC4.1';
-									write "deforestation in progress for SUBSISTENCE at " + location;
+									write "SC4.1 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 									add landuse to: land_use_hist;
 								}
@@ -508,7 +508,7 @@ species hogares {
 										wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 										predio.subcrops_amount <- predio.subcrops_amount + 1;
 										my_hogar.last_decision <- 'SC4.2';
-										write "deforestation in progress for SUBSISTENCE at " + location;
+										write "SC4.2 in progress for SUBSISTENCE at " + location;
 										myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 										add landuse to: land_use_hist;
 									}
@@ -526,7 +526,7 @@ species hogares {
 											wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 											predio.subcrops_amount <- predio.subcrops_amount + 1;
 											my_hogar.last_decision <- 'SC4.1';
-											write "deforestation in progress for SUBSISTENCE at " + location;
+											write "SC4.1 in progress for SUBSISTENCE at " + location;
 											myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 											add landuse to: land_use_hist;
 										}
@@ -544,7 +544,7 @@ species hogares {
 												wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 												predio.subcrops_amount <- predio.subcrops_amount + 1;
 												my_hogar.last_decision <- 'SC4.2';
-												write "deforestation in progress for SUBSISTENCE at " + location;
+												write "SC4.2 in progress for SUBSISTENCE at " + location;
 												myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 												add landuse to: land_use_hist;
 											}
@@ -562,7 +562,7 @@ species hogares {
 													wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 													predio.subcrops_amount <- predio.subcrops_amount + 1;
 													my_hogar.last_decision <- 'SC4.1';
-													write "deforestation in progress for SUBSISTENCE at " + location;
+													write "SC4.1 in progress for SUBSISTENCE at " + location;
 													myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 													add landuse to: land_use_hist;
 												}
@@ -580,7 +580,7 @@ species hogares {
 														wip_laborforce <- wip_laborforce + laborcost_install_SC4;
 														predio.subcrops_amount <- predio.subcrops_amount + 1;
 														my_hogar.last_decision <- 'SC4.2';
-														write "deforestation in progress for SUBSISTENCE at " + location;
+														write "SC4.2 in progress for SUBSISTENCE at " + location;
 														myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
 														add landuse to: land_use_hist;
 													}
@@ -615,7 +615,7 @@ species hogares {
 			match "SP2" {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
-				loop while: (length(my_predio.cells_deforest) > 0) and (money_missing > 0) and (stop = false) {
+				loop while: length(my_predio.cells_forest) > 0 and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_2 + laborcost_install_SE1) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -623,7 +623,7 @@ species hogares {
 							grid_value <- 3.0;
 							new_SE1_2 <- new_SE1_2 + 1;
 							my_hogar.last_decision <- 'SE1.2';
-							write "new deforestation for SUBSISTENCE at " + location;
+							write "new SE1.2 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1));
 							nb_months <- 0;
 							add landuse to: land_use_hist;
@@ -642,7 +642,7 @@ species hogares {
 								wip_division <- 2;
 								wip_laborforce <- wip_laborforce + laborcost_install_SE1;
 								my_hogar.last_decision <- 'SE1.2';
-								write "deforestation in progress for SUBSISTENCE at " + location;
+								write "SE1.2 in progress for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
 								add landuse to: land_use_hist;
 							}
@@ -660,7 +660,7 @@ species hogares {
 									wip_division <- 3;
 									wip_laborforce <- wip_laborforce + laborcost_install_SE1;
 									my_hogar.last_decision <- 'SE1.2';
-									write "deforestation in progress for SUBSISTENCE at " + location;
+									write "SE1.2 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
 									add landuse to: land_use_hist;
 								}
@@ -686,7 +686,7 @@ species hogares {
 			match "SP3" {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
-				loop while: (length(my_predio.cells_deforest) > 0) and (money_missing > 0) and (stop = false) {
+				loop while: length(my_predio.cells_forest) > 0 and (money_missing > 0) and (stop = false) {
 					if available_workers > (laborcost_SE1_1 + laborcost_install_SE1) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
@@ -694,7 +694,7 @@ species hogares {
 							grid_value <- 3.0;
 							new_SE1_1 <- new_SE1_1 + 1;
 							my_hogar.last_decision <- 'SE1.1';
-							write "new deforestation for SUBSISTENCE at " + location;
+							write "new SE1.1 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SE1_1 + laborcost_install_SE1));
 							nb_months <- 0;
 							add landuse to: land_use_hist;
@@ -713,7 +713,7 @@ species hogares {
 								wip_division <- 2;
 								wip_laborforce <- wip_laborforce + laborcost_install_SE1;
 								my_hogar.last_decision <- 'SE1.1';
-								write "deforestation in progress for SUBSISTENCE at " + location;
+								write "SE1.1 in progress for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
 								add landuse to: land_use_hist;
 							}
@@ -731,7 +731,7 @@ species hogares {
 									wip_division <- 3;
 									wip_laborforce <- wip_laborforce + laborcost_install_SE1;
 									my_hogar.last_decision <- 'SE1.1';
-									write "deforestation in progress for SUBSISTENCE at " + location;
+									write "SE1.1 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
 									add landuse to: land_use_hist;
 								}
