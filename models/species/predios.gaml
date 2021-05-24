@@ -38,11 +38,27 @@ species predios {
 	rgb bool_color;
 	hogares my_hogar;
 	int subcrops_amount;
+	//Cell lists
 	list<cell> cells_inside <- cell overlapping self; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.is_deforest = true);
 	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
 	list<cell> reforest_candidates -> cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60);
 	//list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
+	//Land use
+	list<cell> cells_SC1_1 -> cells_inside where (each.landuse = 'SC1.1');
+	list<cell> cells_SC1_2 -> cells_inside where (each.landuse = 'SC1.2');
+	list<cell> cells_SC2 -> cells_inside where (each.landuse = 'SC2');
+	list<cell> cells_SC3_1 -> cells_inside where (each.landuse = 'SC3.1');
+	list<cell> cells_SC4_1 -> cells_inside where (each.landuse = 'SC4.1');
+	list<cell> cells_SC4_2 -> cells_inside where (each.landuse = 'SC4.2');
+	list<cell> cells_SE1_1 -> cells_inside where (each.landuse = 'SE1.1' or each.landuse2 = 'SE1.1' or each.landuse3 = 'SE1.1');
+	list<cell> cells_SE1_2 -> cells_inside where (each.landuse = 'SE1.2' or each.landuse2 = 'SE1.2' or each.landuse3 = 'SE1.2');
+	list<cell> cells_SE2_1 -> cells_inside where (each.landuse = 'SE2.1' or each.landuse2 = 'SE2.1' or each.landuse3 = 'SE2.1');
+	list<cell> cells_SE2_2 -> cells_inside where (each.landuse = 'SE2.2' or each.landuse2 = 'SE2.2' or each.landuse3 = 'SE2.2');
+	list<cell> cells_SE2_3 -> cells_inside where (each.landuse = 'SE2.3' or each.landuse2 = 'SE2.3' or each.landuse3 = 'SE2.3');
+	list<cell> cells_SE3 -> cells_inside where (each.landuse = 'SE3' or each.landuse2 = 'SE3' or each.landuse3 = 'SE3');
+	
+	//
 	list<int> rankings_LS_EMC <- ([]);
 
 	action deforestation_rate_calc {

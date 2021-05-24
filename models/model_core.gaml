@@ -20,7 +20,7 @@ global { //Time aspects
 	string current_month;
 	float step <- 1 #month update: step + 1;
 	//Other variables
-	float $_ANFP <- 3900.0; //AMOUNT NEEDED TO FEED A PERSON = 3900 / 12
+	float $_ANFP <- 3900.0; //AMOUNT NEEDED TO FEED A PERSON
 	//
 	//INIT
 	//
@@ -114,11 +114,11 @@ global { //Time aspects
 		//
 		write "---NEW JOBS GENERATED";
 		//
-		ask cell {
-			if starting_wip {
-				starting_wip <- false;
-			}
+		ask cell where (each.starting_wip = true) {
+			starting_wip <- false;
+		}
 
+		ask cell where (each.grid_value = 3) {
 			do crop_cycle;
 			do update_yields;
 		}
@@ -157,7 +157,7 @@ global { //Time aspects
 			if needs_alert = true {
 				do subsistence_LUC;
 			} else {
-			do profit_LUC;
+			//do profit_LUC;
 			}
 
 		}

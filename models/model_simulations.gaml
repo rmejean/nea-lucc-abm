@@ -225,7 +225,7 @@ experiment run_model type: gui until: stop_simulation = true {
 		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
 	}
 
-	reflex when: every(12 #years) and save_years {
+	reflex when: every(12 #cycle) and save_years {
 		save cell to: ("../exports/simplified_classif" + cycle + ".tif") type: "geotiff";
 	}
 
@@ -359,7 +359,7 @@ experiment 'Run x simulations' type: batch repeat: 1 keep_seed: true until: stop
 		new_init <- false;
 	}
 
-	reflex when: every(12 #years) and save_years {
+	reflex when: every(12 #cycle) and save_years {
 		save cell to: ("../exports/simplified_classif" + cycle + ".tif") type: "geotiff";
 	}
 
