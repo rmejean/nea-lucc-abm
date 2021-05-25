@@ -165,8 +165,8 @@ experiment run_model type: gui until: stop_simulation = true {
 
 	//Saving all
 	user_command "Save all files" category: "Export data" when: step_end = true color: #darkred {
-		//save cell to: export_landscape type: "shp" attributes:
-		//["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
+	//save cell to: export_landscape type: "shp" attributes:
+	//["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 		save cell to: export_simplified_classif type: "asc"; //Export a simplified classification
 		save vias to: export_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: export_predios type: "shp" attributes:
@@ -178,8 +178,9 @@ experiment run_model type: gui until: stop_simulation = true {
 		save empresas to: export_empresas type: "shp" attributes: ["NAME"::name, "NB_JOBS"::nb_jobs, "FR_JOBS"::free_jobs, "WORKERS"::workers];
 	}
 
-	reflex when: every(12 #cycle) and save_years {
-		save cell to: ("../exports/simplified_classif" + cycle + ".tif") type: "asc";
+	reflex when: every(12 #cycles) and save_years {
+		save cell to: ("../exports/simplified_classif" + cycle + ".asc") type: "asc";
+		write "EXPORT CLASSIF";
 	}
 
 	//Folders
@@ -310,10 +311,11 @@ experiment 'Run x simulations' type: batch repeat: 1 keep_seed: true until: stop
 
 	init {
 		new_init <- false;
+		save_years <- true;
 	}
 
-	reflex when: every(12 #cycle) and save_years {
-		save cell to: ("../exports/simplified_classif" + cycle + ".tif") type: "geotiff";
+	reflex when: every(2 #cycle) and save_years {
+		save cell to: ("../exports/simplified_classif" + cycle + ".tif");
 	}
 
 }
