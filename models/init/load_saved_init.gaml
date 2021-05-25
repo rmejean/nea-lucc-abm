@@ -21,6 +21,43 @@ global {
 		saved_empresas <- file("../../includes/initGENfiles/empresas.shp");
 	}
 
+	action load_saved_cells {
+		write "---START OF INIT CELLS";
+		ask cell {
+			switch grid_value {
+				match 0.0 {
+				//do die; //TODO: peut-être pas utile, ça a l'air de perturber les charts
+				}
+
+				match 1.0 {
+					is_deforest <- nil;
+					landuse <- 'water';
+					add 'water' to: land_use_hist;
+				}
+
+				match 2.0 {
+					is_deforest <- false;
+					landuse <- 'forest';
+					add 'forest' to: land_use_hist;
+				}
+
+				match 3.0 {
+					is_deforest <- true;
+				}
+
+				match 4.0 {
+					is_deforest <- nil;
+					landuse <- 'urban';
+					add 'urban' to: land_use_hist;
+				}
+
+			}
+
+		}
+
+		write "---END OF INIT CELLS";
+	}
+
 	action load_saved_empresas {
 		write "---START OF INIT OIL COMPANIES";
 		create empresas from: saved_empresas with: [name:: string(get("NAME")), nb_jobs::int(get("NB_JOBS")), free_jobs::int(get("FR_JOBS"))];

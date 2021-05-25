@@ -10,10 +10,11 @@
 model data_import
 
 // IMPORTATION OF DATA
+import "../model_core.gaml"
 
 global {
 
-    //Importing population csv files (INEC, 2010)
+//Importing population csv files (INEC, 2010)
 	file f_PERSONAS_predios <- csv_file("../../includes/censo/Personas_des_161_locsincom.csv");
 	file f_HOGARES_predios <- csv_file("../../includes/censo/Hogares_des_161_locsincom.csv");
 	//file f_PERSONAS_comunas <- csv_file("../../includes/censo/com_personas.csv");
@@ -36,8 +37,9 @@ global {
 	file plataformas_shp <- file("../../includes/plataformas.shp");
 
 	//Importing Land Cover (MAE, 2008)
-	file MAE_2008 <- file("../../includes/MAE2008_90m.asc"); //spatial resolution: 90m
-	
+	file MAE_2008 <- new_init = true ? file("../../includes/MAE2008_90m.asc") : file("../../includes/initGENfiles/simplified_classif.asc"); //spatial resolution: 90m
+
+
 	//CORRESPONDENCE FOR MAPPING PROCESS WITH GENSTAR
 	//name of the property that contains the id of the census spatial areas in the shapefile
 	string stringOfCensusIdInShapefile <- "DPA_SECDIS";
@@ -45,7 +47,7 @@ global {
 	string stringOfCensusIdInCSVfile <- "sec_id";
 	//
 	geometry shape <- envelope(MAE_2008); //spatial extension
-	
+
 	//Importing saved files for init generator
 	file saved_cells;
 	file saved_vias;
@@ -53,5 +55,4 @@ global {
 	file saved_hogares;
 	file saved_personas;
 	file saved_empresas;
-	
 }

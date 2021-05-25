@@ -42,6 +42,11 @@ global { //Time aspects
 				do setting_alerts;
 			}
 
+			ask predios {
+				do deforestation_rate_calc;
+				do map_deforestation_rate;
+			}
+
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
@@ -49,7 +54,7 @@ global { //Time aspects
 		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
-			do init_cells;
+			do load_saved_cells;
 			do init_vias;
 			do load_saved_empresas;
 			do load_saved_predios;
@@ -59,6 +64,11 @@ global { //Time aspects
 			ask hogares {
 				do assess_income_needs;
 				do setting_alerts;
+			}
+
+			ask predios {
+				do deforestation_rate_calc;
+				do map_deforestation_rate;
 			}
 
 			init_end <- true;
@@ -114,11 +124,14 @@ global { //Time aspects
 		//
 		write "---NEW JOBS GENERATED";
 		//
-		ask cell where (each.starting_wip = true) {
-			starting_wip <- false;
+		if one_matches(cell, each.starting_wip = true) {
+			ask cell where (each.starting_wip = true) {
+				starting_wip <- false;
+			}
+
 		}
 
-		ask cell where (each.grid_value = 3) {
+		ask cell where (each.grid_value = 3.0) {
 			do crop_cycle;
 			do update_yields;
 		}

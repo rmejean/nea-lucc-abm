@@ -23,30 +23,33 @@ global { //Lists
 	action init_cells { //Cells init
 		write "---START OF INIT CELLS";
 		ask cell {
-			if grid_value = 0.0 {
-				do die; //TODO: peut-être pas utile, ça a l'air de perturber les charts
-			}
+			switch grid_value {
+				match 0.0 {
+				//do die; //TODO: peut-être pas utile, ça a l'air de perturber les charts
+				}
 
-			if grid_value = 2 {
-				is_deforest <- false;
-				landuse <- 'forest';
-				add 'forest' to: land_use_hist;
-			}
+				match 1.0 {
+					is_deforest <- nil;
+					landuse <- 'water';
+					add 'water' to: land_use_hist;
+				}
 
-			if grid_value = 3 {
-				is_deforest <- true;
-			}
+				match 2.0 {
+					is_deforest <- false;
+					landuse <- 'forest';
+					add 'forest' to: land_use_hist;
+				}
 
-			if grid_value = 4 {
-				is_deforest <- nil;
-				landuse <- 'urban';
-				add 'urban' to: land_use_hist;
-			}
+				match 3.0 {
+					is_deforest <- true;
+				}
 
-			if grid_value = 1 {
-				is_deforest <- nil;
-				landuse <- 'water';
-				add 'water' to: land_use_hist;
+				match 4.0 {
+					is_deforest <- nil;
+					landuse <- 'urban';
+					add 'urban' to: land_use_hist;
+				}
+
 			}
 
 		}
@@ -61,8 +64,6 @@ global { //Lists
 				do die;
 			}
 
-			do deforestation_rate_calc;
-			do map_deforestation_rate;
 		}
 
 		write "---END OF INIT PLOTS";
@@ -183,9 +184,8 @@ global { //Lists
 		}
 
 		//ask sectores {
-			//do carto_pop;
+		//do carto_pop;
 		//}
-
 		write "---END OF INIT POPULATION";
 	}
 
@@ -832,8 +832,7 @@ global { //Lists
 		write "---START OF INIT OIL JOBS";
 		ask hogares {
 			let no_more_jobs <- false;
-			loop while: (available_workers >= 14.0) and length(job_candidates) > 0 and (oil_workers < oil_workers_max) and
-			(no_more_jobs = false) {
+			loop while: (available_workers >= 14.0) and length(job_candidates) > 0 and (oil_workers < oil_workers_max) and (no_more_jobs = false) {
 				ask first(job_candidates) {
 					if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) {
 						empresa <- empresas at_distance (5 #km) where (each.free_jobs > 0) closest_to self;

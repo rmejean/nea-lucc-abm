@@ -23,9 +23,9 @@ species predios {
 	int id_EMC_LS1_3 <- 0;
 	int id_EMC_LS2 <- 0;
 	int id_EMC_LS3 <- 0;
-	int area_total <- length(cells_inside);
-	int area_deforest <- length(cells_deforest);
-	int area_forest <- length(cells_forest);
+	int area_total -> length(cells_inside);
+	int area_deforest -> length(cells_deforest);
+	int area_forest -> length(cells_forest);
 	float def_rate;
 	float forest_rate;
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //distance to via Auca (main road on the study area, original settlement and and location of oil companies)
@@ -44,21 +44,6 @@ species predios {
 	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
 	list<cell> reforest_candidates -> cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60);
 	//list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
-	//Land use
-	list<cell> cells_SC1_1 -> cells_inside where (each.landuse = 'SC1.1');
-	list<cell> cells_SC1_2 -> cells_inside where (each.landuse = 'SC1.2');
-	list<cell> cells_SC2 -> cells_inside where (each.landuse = 'SC2');
-	list<cell> cells_SC3_1 -> cells_inside where (each.landuse = 'SC3.1');
-	list<cell> cells_SC4_1 -> cells_inside where (each.landuse = 'SC4.1');
-	list<cell> cells_SC4_2 -> cells_inside where (each.landuse = 'SC4.2');
-	list<cell> cells_SE1_1 -> cells_inside where (each.landuse = 'SE1.1' or each.landuse2 = 'SE1.1' or each.landuse3 = 'SE1.1');
-	list<cell> cells_SE1_2 -> cells_inside where (each.landuse = 'SE1.2' or each.landuse2 = 'SE1.2' or each.landuse3 = 'SE1.2');
-	list<cell> cells_SE2_1 -> cells_inside where (each.landuse = 'SE2.1' or each.landuse2 = 'SE2.1' or each.landuse3 = 'SE2.1');
-	list<cell> cells_SE2_2 -> cells_inside where (each.landuse = 'SE2.2' or each.landuse2 = 'SE2.2' or each.landuse3 = 'SE2.2');
-	list<cell> cells_SE2_3 -> cells_inside where (each.landuse = 'SE2.3' or each.landuse2 = 'SE2.3' or each.landuse3 = 'SE2.3');
-	list<cell> cells_SE3 -> cells_inside where (each.landuse = 'SE3' or each.landuse2 = 'SE3' or each.landuse3 = 'SE3');
-	
-	//
 	list<int> rankings_LS_EMC <- ([]);
 
 	action deforestation_rate_calc {
