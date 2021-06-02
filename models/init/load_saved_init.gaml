@@ -88,6 +88,7 @@ global {
 			my_house <- first(cell overlapping self);
 			ask my_house {
 				landuse <- "house";
+				grid_value <- 4.0;
 				is_free <- false;
 				is_deforest <- nil;
 			}
@@ -125,8 +126,11 @@ global {
 			ask my_hogar {
 				add myself to: membres_hogar;
 				chef_hogar <- membres_hogar with_min_of each.orden_en_hogar;
-				neighbors <- hogares closest_to (self, 5);
-				add all: neighbors to: social_network;
+				if social_network_inf {
+					neighbors <- hogares closest_to (self, 5);
+					add all: neighbors to: social_network;
+				}
+
 			}
 
 			if oil_worker = true {
@@ -134,12 +138,15 @@ global {
 					add myself to: workers;
 				}
 
-				co_workers_hog <- empresa.workers collect each.my_hogar;
-				co_workers_hog <- remove_duplicates(co_workers_hog);
-				remove all: my_hogar from: co_workers_hog;
+				if social_network_inf {
+					co_workers_hog <- empresa.workers collect each.my_hogar;
+					co_workers_hog <- remove_duplicates(co_workers_hog);
+					remove all: my_hogar from: co_workers_hog;
+					add all: co_workers_hog to: my_hogar.social_network;
+				}
+
 			}
 
-			add all: co_workers_hog to: my_hogar.social_network;
 		}
 
 		write "---END OF INIT PEOPLE";
@@ -162,7 +169,6 @@ global {
 					ask pxl_cible {
 						landuse <- myself.type;
 						nb_months <- myself.months;
-						add landuse to: land_use_hist;
 					}
 
 				}
@@ -187,7 +193,6 @@ global {
 						ask pxl_cible {
 							landuse <- myself.type;
 							nb_months <- myself.months;
-							add landuse to: land_use_hist;
 						}
 
 					}
@@ -200,7 +205,6 @@ global {
 							location <- pxl_cible.location;
 							ask pxl_cible {
 								landuse2 <- myself.type;
-								add landuse2 to: land_use_hist;
 							}
 
 						}
@@ -214,7 +218,6 @@ global {
 							location <- pxl_cible.location;
 							ask pxl_cible {
 								landuse3 <- myself.type;
-								add landuse3 to: land_use_hist;
 							}
 
 						}
@@ -243,7 +246,6 @@ global {
 						ask pxl_cible {
 							landuse <- myself.type;
 							nb_months <- myself.months;
-							add landuse to: land_use_hist;
 						}
 
 					}
@@ -256,7 +258,6 @@ global {
 							location <- pxl_cible.location;
 							ask pxl_cible {
 								landuse2 <- myself.type;
-								add landuse2 to: land_use_hist;
 							}
 
 						}
@@ -270,7 +271,6 @@ global {
 							location <- pxl_cible.location;
 							ask pxl_cible {
 								landuse3 <- myself.type;
-								add landuse3 to: land_use_hist;
 							}
 
 						}
@@ -299,7 +299,6 @@ global {
 						ask pxl_cible {
 							landuse <- myself.type;
 							nb_months <- myself.months;
-							add landuse to: land_use_hist;
 						}
 
 					}
@@ -311,7 +310,6 @@ global {
 						location <- pxl_cible.location;
 						ask pxl_cible {
 							landuse2 <- myself.type;
-							add landuse2 to: land_use_hist;
 						}
 
 					}
@@ -337,7 +335,6 @@ global {
 					ask pxl_cible {
 						landuse <- myself.type;
 						nb_months <- myself.months;
-						add landuse to: land_use_hist;
 					}
 
 				}

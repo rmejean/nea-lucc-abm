@@ -113,6 +113,7 @@ global { //Lists
 			location <- my_house.location;
 			ask my_house {
 				landuse <- 'house';
+				grid_value <- 4.0;
 				is_free <- false;
 				is_deforest <- nil;
 			}
@@ -214,9 +215,9 @@ global { //Lists
 		}
 
 		write "---END OF INIT LS WITH EMC";
-		ask predios where (each.is_free = false) {
-			do map_livelihood_strategies;
-		}
+//		ask predios where (each.is_free = false) {
+//			do map_livelihood_strategies;
+//		}
 
 	}
 
@@ -836,7 +837,7 @@ global { //Lists
 						write "" + empresa.name + " found a worker";
 						oil_worker <- true;
 						work_pace <- 14;
-						job_wages <- 350;
+						job_wages <- job_wages;
 						contract_term <- rnd(5, 7);
 						working_months <- rnd(0, contract_term);
 						annual_inc <- contract_term * job_wages;

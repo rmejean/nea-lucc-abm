@@ -195,6 +195,10 @@ global { //Time aspects
 		step_end <- true;
 	}
 	
+	//////////////////
+	/////Outputs//////
+	//////////////////
+	
 	reflex when: every(5 #cycles) and save_years {
 		save cell to: ("../exports/simu_month" + cycle + ".asc") type: "asc";
 		write "EXPORT CLASSIF";

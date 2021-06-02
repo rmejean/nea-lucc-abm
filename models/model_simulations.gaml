@@ -35,6 +35,9 @@ global {
 	//Parameters-------------------
 	//-----------------------------
 	int nb_new_jobs;
+	float wages_min;
+	float wages_max;
+	float job_wages <- rnd(wages_min, wages_max);
 	bool social_network_inf <- false; //Enables the imitation of LUCC choices from the household's social network
 	bool scenarios <- false; //launch scenarios
 	bool save_years <- true; //save a classif export every 12 cycles
@@ -99,23 +102,8 @@ experiment save_init type: gui until: stop_simulation = true {
 	parameter "Amount needed to feed a person per year" category: "Global Parameters" var: $_ANFP init: 3900.0;
 	//Manpower
 	parameter "Employees cost" category: "Manpower" var: cost_employees init: 250;
-	parameter "Labor cost SC1.1" category: "Manpower" var: laborcost_SC1_1 init: 3.7; //rapporté à 90m*90m
-	parameter "Labor cost SC1.2" category: "Manpower" var: laborcost_SC1_2 init: 1.575;
-	parameter "Labor cost SC2" category: "Manpower" var: laborcost_SC2 init: 2.55;
-	parameter "Labor cost SC3.1" category: "Manpower" var: laborcost_SC3_1 init: 15.64;
-	parameter "Labor cost SC4.1" category: "Manpower" var: laborcost_SC4_1 init: 2.32;
-	parameter "Labor cost SC4.2" category: "Manpower" var: laborcost_SC4_2 init: 1.87;
-	parameter "Labor cost SE1.1" category: "Manpower" var: laborcost_SE1_1 init: 0.8113; //pour 70 px= 56.79;
-	parameter "Labor cost SE1.2" category: "Manpower" var: laborcost_SE1_2 init: 0.6278; //pour 15px = 9.417;
-	parameter "Labor cost SE2.1" category: "Manpower" var: laborcost_SE2_1 init: 1.6875;
-	parameter "Labor cost SE2.2" category: "Manpower" var: laborcost_SE2_2 init: 4.03;
-	parameter "Labor cost SE2.3" category: "Manpower" var: laborcost_SE2_3 init: 7.28;
-	parameter "Labor cost SE3" category: "Manpower" var: laborcost_SE3 init: 2.589;
-	parameter "Labor cost install SC1" category: "Manpower" var: laborcost_install_SC1 init: 29.25;
-	parameter "Labor cost install SC2" category: "Manpower" var: laborcost_install_SC2 init: 19.35;
-	parameter "Labor cost install SC3" category: "Manpower" var: laborcost_install_SC3 init: 8.5; //TODO: à vérifier...
-	parameter "Labor cost install SC4" category: "Manpower" var: laborcost_install_SC4 init: 8.5; //TODO: à vérifier...
-	parameter "Labor cost install SE1" category: "Manpower" var: laborcost_install_SE1 init: 32.5;
+	parameter "Job wages min" category: "Manpower" var: wages_min init: 250.0;
+	parameter "Job wages max" category: "Manpower" var: wages_max init: 350.0;
 	//Agronomy
 	parameter "Price cacao" category: "Agronomy" var: price_cacao init: 100;
 	parameter "Price Coffee" category: "Agronomy" var: price_coffee init: 14;
@@ -139,16 +127,6 @@ experiment save_init type: gui until: stop_simulation = true {
 	parameter "Buy a pig" category: "Agronomy" var: buy_pig init: 12.27;
 	parameter "Maintenance cost of pig breeding 1" category: "Agronomy" var: costmaint_pigbreeding init: 5.375;
 	parameter "Maintenance cost of pig breeding 2" category: "Agronomy" var: costmaint_pigbreeding2 init: 21.1;
-	//Yields
-	parameter "Yield cacao 1" category: "Yields" var: yld_cacao1 init: 0.66;
-	parameter "Yield cacao 2" category: "Yields" var: yld_cacao2 init: 0.16;
-	parameter "Price coffee" category: "Yields" var: yld_coffee init: 2.08;
-	parameter "Yield veaux 1" category: "Yields" var: yld_veaux1 init: 0.079875;
-	parameter "Yield vachereforme 1" category: "Yields" var: yld_vachereforme1 init: 0.027;
-	parameter "Yield cheese 1" category: "Yields" var: yld_cheese1 init: 11.43;
-	parameter "Yield veaux 2" category: "Yields" var: yld_veaux2 init: 0.04;
-	parameter "Price vachereforme 2" category: "Yields" var: yld_vachereforme2 init: 0.022;
-	parameter "Yield cheese 2" category: "Yields" var: yld_cheese2 init: 1.2;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -198,23 +176,8 @@ experiment run_model type: gui until: stop_simulation = true {
 	parameter "Amount needed to feed a person per year" category: "Global Parameters" var: $_ANFP init: 3900.0;
 	//Manpower
 	parameter "Employees cost" category: "Manpower" var: cost_employees init: 250;
-	parameter "Labor cost SC1.1" category: "Manpower" var: laborcost_SC1_1 init: 3.7; //rapporté à 90m*90m
-	parameter "Labor cost SC1.2" category: "Manpower" var: laborcost_SC1_2 init: 1.575;
-	parameter "Labor cost SC2" category: "Manpower" var: laborcost_SC2 init: 2.55;
-	parameter "Labor cost SC3.1" category: "Manpower" var: laborcost_SC3_1 init: 15.64;
-	parameter "Labor cost SC4.1" category: "Manpower" var: laborcost_SC4_1 init: 2.32;
-	parameter "Labor cost SC4.2" category: "Manpower" var: laborcost_SC4_2 init: 1.87;
-	parameter "Labor cost SE1.1" category: "Manpower" var: laborcost_SE1_1 init: 0.8113; //pour 70 px= 56.79;
-	parameter "Labor cost SE1.2" category: "Manpower" var: laborcost_SE1_2 init: 0.6278; //pour 15px = 9.417;
-	parameter "Labor cost SE2.1" category: "Manpower" var: laborcost_SE2_1 init: 1.6875;
-	parameter "Labor cost SE2.2" category: "Manpower" var: laborcost_SE2_2 init: 4.03;
-	parameter "Labor cost SE2.3" category: "Manpower" var: laborcost_SE2_3 init: 7.28;
-	parameter "Labor cost SE3" category: "Manpower" var: laborcost_SE3 init: 2.589;
-	parameter "Labor cost install SC1" category: "Manpower" var: laborcost_install_SC1 init: 29.25;
-	parameter "Labor cost install SC2" category: "Manpower" var: laborcost_install_SC2 init: 19.35;
-	parameter "Labor cost install SC3" category: "Manpower" var: laborcost_install_SC3 init: 8.5; //TODO: à vérifier...
-	parameter "Labor cost install SC4" category: "Manpower" var: laborcost_install_SC4 init: 8.5; //TODO: à vérifier...
-	parameter "Labor cost install SE1" category: "Manpower" var: laborcost_install_SE1 init: 32.5;
+	parameter "Job wages min" category: "Manpower" var: wages_min init: 250.0;
+	parameter "Job wages max" category: "Manpower" var: wages_max init: 350.0;
 	//Agronomy
 	parameter "Price cacao" category: "Agronomy" var: price_cacao init: 100;
 	parameter "Price Coffee" category: "Agronomy" var: price_coffee init: 14;
@@ -238,16 +201,6 @@ experiment run_model type: gui until: stop_simulation = true {
 	parameter "Buy a pig" category: "Agronomy" var: buy_pig init: 12.27;
 	parameter "Maintenance cost of pig breeding 1" category: "Agronomy" var: costmaint_pigbreeding init: 5.375;
 	parameter "Maintenance cost of pig breeding 2" category: "Agronomy" var: costmaint_pigbreeding2 init: 21.1;
-	//Yields
-	parameter "Yield cacao 1" category: "Yields" var: yld_cacao1 init: 0.66;
-	parameter "Yield cacao 2" category: "Yields" var: yld_cacao2 init: 0.16;
-	parameter "Price coffee" category: "Yields" var: yld_coffee init: 2.08;
-	parameter "Yield veaux 1" category: "Yields" var: yld_veaux1 init: 0.079875;
-	parameter "Yield vachereforme 1" category: "Yields" var: yld_vachereforme1 init: 0.027;
-	parameter "Yield cheese 1" category: "Yields" var: yld_cheese1 init: 11.43;
-	parameter "Yield veaux 2" category: "Yields" var: yld_veaux2 init: 0.04;
-	parameter "Price vachereforme 2" category: "Yields" var: yld_vachereforme2 init: 0.022;
-	parameter "Yield cheese 2" category: "Yields" var: yld_cheese2 init: 1.2;
 	output {
 		display map_ALG type: opengl {
 			grid cell;
