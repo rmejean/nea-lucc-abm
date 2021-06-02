@@ -151,15 +151,7 @@ global {
 		//------------------------------------------------------------------
 		write "------START OF INIT ALG SP1.1";
 		ask predios where (each.LS = 'SP1.1') {
-			gen_population_generator AL_genSP1_1;
-			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
-			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
-			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("months", int, []);
-			create patches from: AL_genSP1_1 {
+			create patches from: csv_file("/init/ALG/" + name + "_ldsp.csv", true) with: [type:: string(get("type")), months::int(get("months"))] {
 				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
 					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
 					ask pxl_cible {
@@ -183,15 +175,7 @@ global {
 		write "------END OF INIT ALG SP1.1";
 		write "------START OF INIT ALG SP1.2";
 		ask predios where (each.LS = 'SP1.2') {
-			gen_population_generator AL_genSP1_2;
-			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "US";
-			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
-			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("months", int, []);
-			create patches from: AL_genSP1_2 {
+			create patches from: csv_file("/init/ALG/" + name + "_ldsp.csv", true) with: [type:: string(get("type")), months::int(get("months"))] {
 				if type != "SE3" and type != "SE2.1" {
 					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
 						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
@@ -247,15 +231,7 @@ global {
 		write "------END OF INIT ALG SP1.2";
 		write "------START OF INIT ALG SP1.3";
 		ask predios where (each.LS = 'SP1.3') {
-			gen_population_generator AL_genSP1_3;
-			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "US";
-			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
-			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("months", int, []);
-			create patches from: AL_genSP1_3 {
+			create patches from: csv_file("/init/ALG/" + name + "_ldsp.csv", true) with: [type:: string(get("type")), months::int(get("months"))] {
 				if type != "SE3" and type != "SE2.3" {
 					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
 						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
@@ -311,15 +287,7 @@ global {
 		write "------END OF INIT ALG SP1.2";
 		write "------START OF INIT ALG SP2";
 		ask predios where (each.LS = 'SP2') {
-			gen_population_generator AL_genSP2;
-			AL_genSP2 <- AL_genSP2 with_generation_algo "US";
-			AL_genSP2 <- add_census_file(AL_genSP2, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
-			// --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
-			AL_genSP2 <- AL_genSP2 add_attribute ("months", int, []);
-			create patches from: AL_genSP2 {
+			create patches from: csv_file("/init/ALG/" + name + "_ldsp.csv", true) with: [type:: string(get("type")), months::int(get("months"))] {
 				if type != "SE3" {
 					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
 						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
@@ -358,14 +326,7 @@ global {
 		write "------END OF INIT ALG SP2";
 		write "------START OF INIT ALG SP3";
 		ask predios where (each.LS = 'SP3') {
-			gen_population_generator AL_genSP3;
-			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
-			AL_genSP3 <- add_census_file(AL_genSP3, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
-			// Setup Attributs
-			// --------------------------	
-			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
-			AL_genSP3 <- AL_genSP3 add_attribute ("months", int, []);
-			create patches from: AL_genSP3 {
+			create patches from: csv_file("/init/ALG/" + name + "_ldsp.csv", true) with: [type:: string(get("type")), months::int(get("months"))] {
 				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
 					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
 					ask pxl_cible {

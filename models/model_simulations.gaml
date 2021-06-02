@@ -98,6 +98,7 @@ experiment save_init type: gui until: stop_simulation = true {
 	parameter "Number of new jobs per months" category: "Global Parameters" var: nb_new_jobs init: 3 min: 1 max: 30;
 	parameter "Amount needed to feed a person per year" category: "Global Parameters" var: $_ANFP init: 3900.0;
 	//Manpower
+	parameter "Employees cost" category: "Manpower" var: cost_employees init: 250;
 	parameter "Labor cost SC1.1" category: "Manpower" var: laborcost_SC1_1 init: 3.7; //rapporté à 90m*90m
 	parameter "Labor cost SC1.2" category: "Manpower" var: laborcost_SC1_2 init: 1.575;
 	parameter "Labor cost SC2" category: "Manpower" var: laborcost_SC2 init: 2.55;
@@ -196,6 +197,7 @@ experiment run_model type: gui until: stop_simulation = true {
 	parameter "Number of new jobs per months" category: "Global Parameters" var: nb_new_jobs init: 3 min: 1 max: 30;
 	parameter "Amount needed to feed a person per year" category: "Global Parameters" var: $_ANFP init: 3900.0;
 	//Manpower
+	parameter "Employees cost" category: "Manpower" var: cost_employees init: 250;
 	parameter "Labor cost SC1.1" category: "Manpower" var: laborcost_SC1_1 init: 3.7; //rapporté à 90m*90m
 	parameter "Labor cost SC1.2" category: "Manpower" var: laborcost_SC1_2 init: 1.575;
 	parameter "Labor cost SC2" category: "Manpower" var: laborcost_SC2 init: 2.55;
