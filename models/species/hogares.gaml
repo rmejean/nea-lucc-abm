@@ -73,8 +73,7 @@ species hogares {
 
 	action looking_for_job {
 		let no_more_jobs <- false;
-		loop while: (available_workers >= 14.0) and (length(job_candidates) > 0) and (oil_workers < oil_workers_max) and
-		(no_more_jobs = false) {
+		loop while: (available_workers >= 14.0) and (length(job_candidates) > 0) and (oil_workers < oil_workers_max) and (no_more_jobs = false) {
 			if one_matches(empresas at_distance (5 #km), each.free_jobs > 0) { //look for a job within 5km
 				ask first(job_candidates) {
 					empresa <- empresas where (each.free_jobs > 0) closest_to self;
@@ -110,35 +109,37 @@ species hogares {
 		switch livelihood_strategy {
 			match "SP1.1" {
 				income_crops_annual <- (sum(my_predio.cells_inside where (each.landuse = "SC2") collect each.rev) * 12) - (employees_workers * cost_employees * 12);
-			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
-			estimated_annual_inc <- income_crops_annual + income_oil_annual;
+				income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+				estimated_annual_inc <- income_crops_annual + income_oil_annual;
 			}
+
 			match "SP1.2" {
 				income_crops_annual <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.1" or each.landuse = "SC1.2") collect
-			each.rev) * 12) - (employees_workers * cost_employees * 12);
-			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
-			estimated_annual_inc <- income_crops_annual + income_oil_annual;
+				each.rev) * 12) - (employees_workers * cost_employees * 12);
+				income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+				estimated_annual_inc <- income_crops_annual + income_oil_annual;
 			}
+
 			match "SP1.3" {
 				income_crops_annual <- (sum(my_predio.cells_inside where (each.landuse = "SC2" or each.landuse = "SC1.2" or each.landuse = "SE1.2" or each.landuse = "SE2.3") collect
-			each.rev) * 12) - (employees_workers * cost_employees * 12);
-			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
-			estimated_annual_inc <- income_crops_annual + income_oil_annual;
+				each.rev) * 12) - (employees_workers * cost_employees * 12);
+				income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+				estimated_annual_inc <- income_crops_annual + income_oil_annual;
 			}
+
 			match "SP2" {
 				income_crops_annual <- (sum(my_predio.cells_inside collect each.rev) * 12) - (employees_workers * cost_employees * 12);
-			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
-			estimated_annual_inc <- income_crops_annual + income_oil_annual;
+				income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+				estimated_annual_inc <- income_crops_annual + income_oil_annual;
 			}
+
 			match "SP3" {
-			income_crops_annual <- (sum(my_predio.cells_inside collect each.rev) * 12) - (employees_workers * cost_employees * 12);
-			income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
-			estimated_annual_inc <- income_crops_annual + income_oil_annual;	
+				income_crops_annual <- (sum(my_predio.cells_inside collect each.rev) * 12) - (employees_workers * cost_employees * 12);
+				income_oil_annual <- sum(membres_hogar collect (each.job_wages * each.contract_term));
+				estimated_annual_inc <- income_crops_annual + income_oil_annual;
 			}
-			
-			
+
 		}
-		
 
 		ask my_predio {
 			do crops_calc;
@@ -200,7 +201,6 @@ species hogares {
 							write "new SC3.1 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC3_1 + laborcost_install_SC3));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 						needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -218,7 +218,6 @@ species hogares {
 								my_hogar.last_decision <- 'SC3.1';
 								write "SC3.1 in progress for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
-								add landuse to: land_use_hist;
 							}
 
 							needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -236,7 +235,6 @@ species hogares {
 									my_hogar.last_decision <- 'SC3.1';
 									write "SC3.1 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
-									add landuse to: land_use_hist;
 								}
 
 								needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -254,7 +252,6 @@ species hogares {
 										my_hogar.last_decision <- 'SC3.1';
 										write "SC3.1 in progress for SUBSISTENCE at " + location;
 										myself.available_workers <- (myself.available_workers - (laborcost_install_SC3 / wip_division));
-										add landuse to: land_use_hist;
 									}
 
 									needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -291,7 +288,6 @@ species hogares {
 							write "new SC4.1 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC4_1 + laborcost_install_SC4));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 						needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -307,7 +303,6 @@ species hogares {
 								write "new SC4.2 for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC4_2 + laborcost_install_SC4));
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 							needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -325,7 +320,6 @@ species hogares {
 									my_hogar.last_decision <- 'SC4.1';
 									write "SC4.1 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-									add landuse to: land_use_hist;
 								}
 
 								needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -343,7 +337,6 @@ species hogares {
 										my_hogar.last_decision <- 'SC4.2';
 										write "SC4.2 in progress for SUBSISTENCE at " + location;
 										myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-										add landuse to: land_use_hist;
 									}
 
 									needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -361,7 +354,6 @@ species hogares {
 											my_hogar.last_decision <- 'SC4.1';
 											write "SC4.1 in progress for SUBSISTENCE at " + location;
 											myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-											add landuse to: land_use_hist;
 										}
 
 										needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -379,7 +371,6 @@ species hogares {
 												my_hogar.last_decision <- 'SC4.2';
 												write "SC4.2 in progress for SUBSISTENCE at " + location;
 												myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-												add landuse to: land_use_hist;
 											}
 
 											needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -397,7 +388,6 @@ species hogares {
 													my_hogar.last_decision <- 'SC4.1';
 													write "SC4.1 in progress for SUBSISTENCE at " + location;
 													myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-													add landuse to: land_use_hist;
 												}
 
 												needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -415,7 +405,6 @@ species hogares {
 														my_hogar.last_decision <- 'SC4.2';
 														write "SC4.2 in progress for SUBSISTENCE at " + location;
 														myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-														add landuse to: land_use_hist;
 													}
 
 													needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -460,7 +449,6 @@ species hogares {
 							write "new SC4.1 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC4_1 + laborcost_install_SC4));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 						needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -476,7 +464,6 @@ species hogares {
 								write "new SC4.2 for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC4_2 + laborcost_install_SC4));
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 							needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -494,7 +481,6 @@ species hogares {
 									my_hogar.last_decision <- 'SC4.1';
 									write "SC4.1 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-									add landuse to: land_use_hist;
 								}
 
 								needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -512,7 +498,6 @@ species hogares {
 										my_hogar.last_decision <- 'SC4.2';
 										write "SC4.2 in progress for SUBSISTENCE at " + location;
 										myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-										add landuse to: land_use_hist;
 									}
 
 									needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -530,7 +515,6 @@ species hogares {
 											my_hogar.last_decision <- 'SC4.1';
 											write "SC4.1 in progress for SUBSISTENCE at " + location;
 											myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-											add landuse to: land_use_hist;
 										}
 
 										needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -548,7 +532,6 @@ species hogares {
 												my_hogar.last_decision <- 'SC4.2';
 												write "SC4.2 in progress for SUBSISTENCE at " + location;
 												myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-												add landuse to: land_use_hist;
 											}
 
 											needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -566,7 +549,6 @@ species hogares {
 													my_hogar.last_decision <- 'SC4.1';
 													write "SC4.1 in progress for SUBSISTENCE at " + location;
 													myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-													add landuse to: land_use_hist;
 												}
 
 												needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -584,7 +566,6 @@ species hogares {
 														my_hogar.last_decision <- 'SC4.2';
 														write "SC4.2 in progress for SUBSISTENCE at " + location;
 														myself.available_workers <- (myself.available_workers - (laborcost_install_SC4 / wip_division));
-														add landuse to: land_use_hist;
 													}
 
 													needs <- subcrops_needs - my_predio.subcrops_amount;
@@ -628,11 +609,10 @@ species hogares {
 							write "new SE1.2 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 						money_missing <-
-						(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2))*12);
+						(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2)) * 12);
 					} else {
 						if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2)) {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -646,11 +626,10 @@ species hogares {
 								my_hogar.last_decision <- 'SE1.2';
 								write "SE1.2 in progress for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
-								add landuse to: land_use_hist;
 							}
 
 							money_missing <-
-							(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2))*12);
+							(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2)) * 12);
 						} else {
 							if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 3)) {
 								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -664,11 +643,10 @@ species hogares {
 									my_hogar.last_decision <- 'SE1.2';
 									write "SE1.2 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
-									add landuse to: land_use_hist;
 								}
 
 								money_missing <-
-								(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2))*12);
+								(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2)) * 12);
 							} else {
 								write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
 								stop <- true;
@@ -699,11 +677,10 @@ species hogares {
 							write "new SE1.1 for SUBSISTENCE at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SE1_1 + laborcost_install_SE1));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 						money_missing <-
-						(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1))*12);
+						(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1)) * 12);
 					} else {
 						if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 2)) {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -717,11 +694,10 @@ species hogares {
 								my_hogar.last_decision <- 'SE1.1';
 								write "SE1.1 in progress for SUBSISTENCE at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
-								add landuse to: land_use_hist;
 							}
 
 							money_missing <-
-							(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1))*12);
+							(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1)) * 12);
 						} else {
 							if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 3)) {
 								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
@@ -735,11 +711,10 @@ species hogares {
 									my_hogar.last_decision <- 'SE1.1';
 									write "SE1.1 in progress for SUBSISTENCE at " + location;
 									myself.available_workers <- (myself.available_workers - (laborcost_install_SE1 / wip_division));
-									add landuse to: land_use_hist;
 								}
 
 								money_missing <-
-								(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1))*12);
+								(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1)) * 12);
 							} else {
 								write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC";
 								stop <- true;
@@ -780,7 +755,6 @@ species hogares {
 							write "new deforestation for PROFIT at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 					} else {
@@ -797,7 +771,6 @@ species hogares {
 								write "deforestation in progress for PROFIT at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1 / wip_division));
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 						}
@@ -817,7 +790,6 @@ species hogares {
 							write "new deforestation for PROFIT at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC1_2 + laborcost_install_SC1));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 					} else {
@@ -834,7 +806,6 @@ species hogares {
 								write "deforestation in progress for PROFIT at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC1_2 + laborcost_install_SC1 / wip_division));
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 						}
@@ -854,7 +825,6 @@ species hogares {
 							write "new deforestation for PROFIT at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 					} else {
@@ -871,7 +841,6 @@ species hogares {
 								write "deforestation in progress for PROFIT at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2 / wip_division));
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 						}
@@ -894,7 +863,6 @@ species hogares {
 							write "new deforestation for PROFIT at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC1_2 + laborcost_install_SC1));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 					} else {
@@ -911,7 +879,6 @@ species hogares {
 								write "deforestation in progress for PROFIT at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1 / wip_division));
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 						}
@@ -931,7 +898,6 @@ species hogares {
 							write "new deforestation for PROFIT at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 					} else {
@@ -948,7 +914,6 @@ species hogares {
 								write "deforestation in progress for PROFIT at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2 / wip_division));
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 						}
@@ -968,7 +933,6 @@ species hogares {
 							write "new deforestation for PROFIT at " + location;
 							myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1));
 							nb_months <- 0;
-							add landuse to: land_use_hist;
 						}
 
 					} else {
@@ -985,7 +949,6 @@ species hogares {
 								write "deforestation in progress for PROFIT at " + location;
 								myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1 / wip_division));
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 						}
@@ -1007,7 +970,6 @@ species hogares {
 						write "new deforestation for PROFIT at " + location;
 						myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1));
 						nb_months <- 0;
-						add landuse to: land_use_hist;
 					}
 
 				}
@@ -1025,7 +987,6 @@ species hogares {
 						write "new deforestation for PROFIT at " + location;
 						myself.available_workers <- (myself.available_workers - (laborcost_SE1_1 + laborcost_install_SE1));
 						nb_months <- 0;
-						add landuse to: land_use_hist;
 					}
 
 				}

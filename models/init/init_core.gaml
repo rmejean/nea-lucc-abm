@@ -31,13 +31,11 @@ global { //Lists
 				match 1.0 {
 					is_deforest <- nil;
 					landuse <- 'water';
-					add 'water' to: land_use_hist;
 				}
 
 				match 2.0 {
 					is_deforest <- false;
 					landuse <- 'forest';
-					add 'forest' to: land_use_hist;
 				}
 
 				match 3.0 {
@@ -47,7 +45,6 @@ global { //Lists
 				match 4.0 {
 					is_deforest <- nil;
 					landuse <- 'urban';
-					add 'urban' to: land_use_hist;
 				}
 
 			}
@@ -267,34 +264,34 @@ global { //Lists
 				}
 
 			} //generate the pixels from the written file
-//			gen_population_generator AL_genSP1_1;
-//			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
-//			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
-//			// --------------------------
-//			// Setup Attributs
-//			// --------------------------	
-//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
-//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("months", int, []);
-//			create patches from: AL_genSP1_1 {
-//				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
-//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-//					ask pxl_cible {
-//						is_free <- false;
-//					}
-//
-//					location <- pxl_cible.location;
-//					ask pxl_cible {
-//						landuse <- myself.type;
-//						nb_months <- myself.months;
-//						add landuse to: land_use_hist;
-//						do color_activities; //TODO: pas à répéter à chaque fois!
-//						do update_yields; //TODO: idem!
-//					}
-//
-//				}
-//
-//				do die;
-//			}
+			//			gen_population_generator AL_genSP1_1;
+			//			AL_genSP1_1 <- AL_genSP1_1 with_generation_algo "US";
+			//			AL_genSP1_1 <- add_census_file(AL_genSP1_1, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP1_1 <- AL_genSP1_1 add_attribute ("months", int, []);
+			//			create patches from: AL_genSP1_1 {
+			//				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+			//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//					ask pxl_cible {
+			//						is_free <- false;
+			//					}
+			//
+			//					location <- pxl_cible.location;
+			//					ask pxl_cible {
+			//						landuse <- myself.type;
+			//						nb_months <- myself.months;
+			//						add landuse to: land_use_hist;
+			//						do color_activities; //TODO: pas à répéter à chaque fois!
+			//						do update_yields; //TODO: idem!
+			//					}
+			//
+			//				}
+			//
+			//				do die;
+			//			}
 
 		}
 
@@ -419,70 +416,70 @@ global { //Lists
 				}
 
 			} //generate the pixels from the written file
-//			gen_population_generator AL_genSP1_2;
-//			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "US";
-//			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
-//			// --------------------------
-//			// Setup Attributs
-//			// --------------------------	
-//			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
-//			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("months", int, []);
-//			create patches from: AL_genSP1_2 {
-//				if type != "SE3" and type != "SE2.1" {
-//					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
-//						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-//						ask pxl_cible {
-//							is_free <- false;
-//						}
-//
-//						location <- pxl_cible.location;
-//						ask pxl_cible {
-//							landuse <- myself.type;
-//							nb_months <- myself.months;
-//							add landuse to: land_use_hist;
-//							do color_activities;
-//							do update_yields;
-//						}
-//
-//					}
-//
-//					do die;
-//				} else {
-//					if type = "SE3" { //chicken farming on the house pixel
-//						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
-//							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
-//							location <- pxl_cible.location;
-//							ask pxl_cible {
-//								landuse2 <- myself.type;
-//								add landuse2 to: land_use_hist;
-//								do color_activities;
-//								do update_yields;
-//							}
-//
-//						}
-//
-//						do die;
-//					}
-//
-//					if type = "SE2.1" { //chicken farming on the house pixel
-//						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
-//							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
-//							location <- pxl_cible.location;
-//							ask pxl_cible {
-//								landuse3 <- myself.type;
-//								add landuse3 to: land_use_hist;
-//								do color_activities;
-//								do update_yields;
-//							}
-//
-//						}
-//
-//						do die;
-//					}
-//
-//				}
-//
-//			}
+			//			gen_population_generator AL_genSP1_2;
+			//			AL_genSP1_2 <- AL_genSP1_2 with_generation_algo "US";
+			//			AL_genSP1_2 <- add_census_file(AL_genSP1_2, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP1_2 <- AL_genSP1_2 add_attribute ("months", int, []);
+			//			create patches from: AL_genSP1_2 {
+			//				if type != "SE3" and type != "SE2.1" {
+			//					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+			//						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//						ask pxl_cible {
+			//							is_free <- false;
+			//						}
+			//
+			//						location <- pxl_cible.location;
+			//						ask pxl_cible {
+			//							landuse <- myself.type;
+			//							nb_months <- myself.months;
+			//							add landuse to: land_use_hist;
+			//							do color_activities;
+			//							do update_yields;
+			//						}
+			//
+			//					}
+			//
+			//					do die;
+			//				} else {
+			//					if type = "SE3" { //chicken farming on the house pixel
+			//						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
+			//							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
+			//							location <- pxl_cible.location;
+			//							ask pxl_cible {
+			//								landuse2 <- myself.type;
+			//								add landuse2 to: land_use_hist;
+			//								do color_activities;
+			//								do update_yields;
+			//							}
+			//
+			//						}
+			//
+			//						do die;
+			//					}
+			//
+			//					if type = "SE2.1" { //chicken farming on the house pixel
+			//						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
+			//							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
+			//							location <- pxl_cible.location;
+			//							ask pxl_cible {
+			//								landuse3 <- myself.type;
+			//								add landuse3 to: land_use_hist;
+			//								do color_activities;
+			//								do update_yields;
+			//							}
+			//
+			//						}
+			//
+			//						do die;
+			//					}
+			//
+			//				}
+			//
+			//			}
 
 		}
 
@@ -588,70 +585,70 @@ global { //Lists
 				}
 
 			} //generate the pixels from the written file
-//			gen_population_generator AL_genSP1_3;
-//			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "US";
-//			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
-//			// --------------------------
-//			// Setup Attributs
-//			// --------------------------	
-//			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
-//			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("months", int, []);
-//			create patches from: AL_genSP1_3 {
-//				if type != "SE3" and type != "SE2.3" {
-//					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
-//						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-//						ask pxl_cible {
-//							is_free <- false;
-//						}
-//
-//						location <- pxl_cible.location;
-//						ask pxl_cible {
-//							landuse <- myself.type;
-//							nb_months <- myself.months;
-//							add landuse to: land_use_hist;
-//							do color_activities;
-//							do update_yields;
-//						}
-//
-//					}
-//
-//					do die;
-//				} else {
-//					if type = "SE3" {
-//						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
-//							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
-//							location <- pxl_cible.location;
-//							ask pxl_cible {
-//								landuse2 <- myself.type;
-//								add landuse2 to: land_use_hist;
-//								do color_activities;
-//								do update_yields;
-//							}
-//
-//						}
-//
-//						do die;
-//					}
-//
-//					if type = "SE2.3" {
-//						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
-//							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
-//							location <- pxl_cible.location;
-//							ask pxl_cible {
-//								landuse3 <- myself.type;
-//								add landuse3 to: land_use_hist;
-//								do color_activities;
-//								do update_yields;
-//							}
-//
-//						}
-//
-//						do die;
-//					}
-//
-//				}
-//
-//			}
+			//			gen_population_generator AL_genSP1_3;
+			//			AL_genSP1_3 <- AL_genSP1_3 with_generation_algo "US";
+			//			AL_genSP1_3 <- add_census_file(AL_genSP1_3, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP1_3 <- AL_genSP1_3 add_attribute ("months", int, []);
+			//			create patches from: AL_genSP1_3 {
+			//				if type != "SE3" and type != "SE2.3" {
+			//					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+			//						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//						ask pxl_cible {
+			//							is_free <- false;
+			//						}
+			//
+			//						location <- pxl_cible.location;
+			//						ask pxl_cible {
+			//							landuse <- myself.type;
+			//							nb_months <- myself.months;
+			//							add landuse to: land_use_hist;
+			//							do color_activities;
+			//							do update_yields;
+			//						}
+			//
+			//					}
+			//
+			//					do die;
+			//				} else {
+			//					if type = "SE3" {
+			//						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
+			//							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
+			//							location <- pxl_cible.location;
+			//							ask pxl_cible {
+			//								landuse2 <- myself.type;
+			//								add landuse2 to: land_use_hist;
+			//								do color_activities;
+			//								do update_yields;
+			//							}
+			//
+			//						}
+			//
+			//						do die;
+			//					}
+			//
+			//					if type = "SE2.3" {
+			//						if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
+			//							cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
+			//							location <- pxl_cible.location;
+			//							ask pxl_cible {
+			//								landuse3 <- myself.type;
+			//								add landuse3 to: land_use_hist;
+			//								do color_activities;
+			//								do update_yields;
+			//							}
+			//
+			//						}
+			//
+			//						do die;
+			//					}
+			//
+			//				}
+			//
+			//			}
 
 		}
 
@@ -695,51 +692,51 @@ global { //Lists
 				}
 
 			} //generate the pixels from the written file
-//			gen_population_generator AL_genSP2;
-//			AL_genSP2 <- AL_genSP2 with_generation_algo "US";
-//			AL_genSP2 <- add_census_file(AL_genSP2, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
-//			// --------------------------
-//			// Setup Attributs
-//			// --------------------------	
-//			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
-//			AL_genSP2 <- AL_genSP2 add_attribute ("months", int, []);
-//			create patches from: AL_genSP2 {
-//				if type != "SE3" {
-//					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
-//						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-//						ask pxl_cible {
-//							is_free <- false;
-//						}
-//
-//						location <- pxl_cible.location;
-//						ask pxl_cible {
-//							landuse <- myself.type;
-//							nb_months <- myself.months;
-//							add landuse to: land_use_hist;
-//							do color_activities;
-//							do update_yields;
-//						}
-//
-//					}
-//
-//					do die;
-//				} else { //chicken farming on the house pixel
-//					if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
-//						cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
-//						location <- pxl_cible.location;
-//						ask pxl_cible {
-//							landuse2 <- myself.type;
-//							add landuse2 to: land_use_hist;
-//							do color_activities;
-//							do update_yields;
-//						}
-//
-//					}
-//
-//					do die;
-//				}
-//
-//			}
+			//			gen_population_generator AL_genSP2;
+			//			AL_genSP2 <- AL_genSP2 with_generation_algo "US";
+			//			AL_genSP2 <- add_census_file(AL_genSP2, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0);
+			//			// --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP2 <- AL_genSP2 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP2 <- AL_genSP2 add_attribute ("months", int, []);
+			//			create patches from: AL_genSP2 {
+			//				if type != "SE3" {
+			//					if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+			//						cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//						ask pxl_cible {
+			//							is_free <- false;
+			//						}
+			//
+			//						location <- pxl_cible.location;
+			//						ask pxl_cible {
+			//							landuse <- myself.type;
+			//							nb_months <- myself.months;
+			//							add landuse to: land_use_hist;
+			//							do color_activities;
+			//							do update_yields;
+			//						}
+			//
+			//					}
+			//
+			//					do die;
+			//				} else { //chicken farming on the house pixel
+			//					if length(myself.cells_deforest where (each.landuse = "house")) != 0 {
+			//						cell pxl_cible <- one_of(myself.cells_deforest where (each.landuse = "house"));
+			//						location <- pxl_cible.location;
+			//						ask pxl_cible {
+			//							landuse2 <- myself.type;
+			//							add landuse2 to: land_use_hist;
+			//							do color_activities;
+			//							do update_yields;
+			//						}
+			//
+			//					}
+			//
+			//					do die;
+			//				}
+			//
+			//			}
 
 		}
 
@@ -772,33 +769,33 @@ global { //Lists
 				}
 
 			} //generate the pixels from the written file
-//			gen_population_generator AL_genSP3;
-//			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
-//			AL_genSP3 <- add_census_file(AL_genSP3, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
-//			// Setup Attributs
-//			// --------------------------	
-//			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
-//			AL_genSP3 <- AL_genSP3 add_attribute ("months", int, []);
-//			create patches from: AL_genSP3 {
-//				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
-//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
-//					ask pxl_cible {
-//						is_free <- false;
-//					}
-//
-//					location <- pxl_cible.location;
-//					ask pxl_cible {
-//						landuse <- myself.type;
-//						nb_months <- myself.months;
-//						add landuse to: land_use_hist;
-//						do color_activities;
-//						do update_yields;
-//					}
-//
-//				}
-//
-//				do die;
-//			}
+			//			gen_population_generator AL_genSP3;
+			//			AL_genSP3 <- AL_genSP3 with_generation_algo "US";
+			//			AL_genSP3 <- add_census_file(AL_genSP3, ("/init/ALG/" + name + "_ldsp.csv"), "Sample", ",", 1, 0); // --------------------------
+			//			// Setup Attributs
+			//			// --------------------------	
+			//			AL_genSP3 <- AL_genSP3 add_attribute ("type", string, list_farming_activities);
+			//			AL_genSP3 <- AL_genSP3 add_attribute ("months", int, []);
+			//			create patches from: AL_genSP3 {
+			//				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+			//					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+			//					ask pxl_cible {
+			//						is_free <- false;
+			//					}
+			//
+			//					location <- pxl_cible.location;
+			//					ask pxl_cible {
+			//						landuse <- myself.type;
+			//						nb_months <- myself.months;
+			//						add landuse to: land_use_hist;
+			//						do color_activities;
+			//						do update_yields;
+			//					}
+			//
+			//				}
+			//
+			//				do die;
+			//			}
 
 		}
 
