@@ -886,6 +886,10 @@ global { //Lists
 
 		write "---END OF INIT SOCIAL NETWORKS";
 	}
+	
+	action init_control {
+		
+	}
 
 }
 

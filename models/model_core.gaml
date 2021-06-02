@@ -37,20 +37,20 @@ global { //Time aspects
 			do init_farm_jobs;
 			do init_oil_jobs;
 			do init_social_network;
-			ask hogares {
-				do assess_income_needs;
-				do setting_alerts;
-			}
+//			ask hogares {
+//				do assess_income_needs;
+//				do setting_alerts;
+//			}
 
-			ask predios {
-				do deforestation_rate_calc;
-				do map_deforestation_rate;
-			}
-
+//			ask predios {
+//				do deforestation_rate_calc;
+//				do map_deforestation_rate;
+//			}
+			do init_control;
 			init_end <- true;
 			write "END OF INITIALIZATION";
-			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-			write "time to generate the init: " + total_duration;
+//			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
+//			write "time to generate the init: " + total_duration;
 		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
@@ -74,7 +74,7 @@ global { //Time aspects
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-			write "time to generate the init: " + total_duration;
+			//write "time to generate the init: " + total_duration;
 		}
 
 	}

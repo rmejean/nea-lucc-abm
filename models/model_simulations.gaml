@@ -18,6 +18,11 @@ global {
 	int nb_personas -> length(personas);
 	int nb_predios -> length(predios);
 	int nb_patches -> length(patches);
+	int nb_LS1_1 -> length (hogares where (each.livelihood_strategy="SP1.1"));
+	int nb_LS1_2 -> length (hogares where (each.livelihood_strategy="SP1.2"));
+	int nb_LS1_3 -> length (hogares where (each.livelihood_strategy="SP1.3"));
+	int nb_LS2 -> length (hogares where (each.livelihood_strategy="SP2"));
+	int nb_LS3 -> length (hogares where (each.livelihood_strategy="SP3"));
 	int total_jobs -> sum(empresas collect (each.nb_jobs));
 	int total_free_jobs -> sum(empresas collect (each.free_jobs));
 	int deforestation -> sum(predios collect (each.area_deforest));
@@ -46,7 +51,7 @@ global {
 	//-----------------------------
 	bool init_end <- false;
 	string save_landscape <- ("../includes/initGENfiles/agricultural_landscape.shp");
-	string save_simplified_classif <- ("../includes/initGENfiles/simplified_classif.asc");
+	string save_simplified_classif <- ("../includes/initGENfiles/simplified_classif.tif");
 	string save_vias <- ("../includes/initGENfiles/vias.shp");
 	string save_empresas <- ("../includes/initGENfiles/empresas.shp");
 	string save_predios <- ("../includes/initGENfiles/predios.shp");
@@ -55,7 +60,7 @@ global {
 	//
 	bool step_end <- false;
 	string export_landscape <- ("../exports/agricultural_landscape.shp");
-	string export_simplified_classif <- ("../exports/simplified_classif.asc");
+	string export_simplified_classif <- ("../exports/simplified_classif.tif");
 	string export_vias <- ("../exports/vias.shp");
 	string export_empresas <- ("../exports/empresas.shp");
 	string export_predios <- ("../exports/predios.shp");
@@ -77,7 +82,7 @@ experiment save_init type: gui until: stop_simulation = true {
 	user_command "Save all files" category: "Saving init" when: init_end = true color: #darkred {
 	//save cell to: save_landscape type: "shp" attributes:
 	//["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
-		save cell to: save_simplified_classif type: "asc"; //Export a simplified classification
+		save cell to: save_simplified_classif type: "geotiff"; //Export a simplified classification
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: save_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUB_C"::subcrops_amount, "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];
@@ -146,7 +151,7 @@ experiment run_model type: gui until: stop_simulation = true {
 	user_command "Save all files" category: "Export data" when: step_end = true color: #darkred {
 	//save cell to: export_landscape type: "shp" attributes:
 	//["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
-		save cell to: export_simplified_classif type: "asc"; //Export a simplified classification
+		save cell to: export_simplified_classif type: "geotiff"; //Export a simplified classification
 		save vias to: export_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: export_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUB_C"::subcrops_amount, "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];
@@ -213,6 +218,11 @@ experiment run_model type: gui until: stop_simulation = true {
 		monitor "Total parcelles" value: nb_predios;
 		monitor "Total oil_jobs" value: total_jobs;
 		monitor "Total free_oil_jobs" value: total_free_jobs;
+		monitor "Total LS1.1" value: nb_LS1_1;
+		monitor "Total LS1.2" value: nb_LS1_2;
+		monitor "Total LS1.3" value: nb_LS1_3;
+		monitor "Total LS2" value: nb_LS2;
+		monitor "Total LS3" value: nb_LS3;
 		monitor "Total patches" value: nb_patches;
 		monitor "Ratio deforest min" value: ratio_deforest_min;
 		monitor "Ratio deforest max" value: ratio_deforest_max;

@@ -37,7 +37,7 @@ global {
 	file plataformas_shp <- file("../../includes/plataformas.shp");
 
 	//Importing Land Cover (MAE, 2008)
-	file MAE_2008 <- new_init = true ? file("../../includes/MAE2008_90m.asc") : file("../../includes/initGENfiles/simplified_classif.asc"); //spatial resolution: 90m
+	file MAE_2008 <- new_init = true ? file("../../includes/MAE2008_90m.tif") : file("../../includes/initGENfiles/simplified_classif.tif"); //spatial resolution: 90m
 
 
 	//CORRESPONDENCE FOR MAPPING PROCESS WITH GENSTAR
