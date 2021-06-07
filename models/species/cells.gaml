@@ -39,7 +39,7 @@ global {
 	float price_cheese <- 2.5;
 	int price_pig <- 250;
 	int price_porcelet <- 80;
-	int price_truie <- 2;
+	int price_truie <- 500;
 	int price_oldchicken <- 17;
 	int price_chicken <- 15;
 	float price_eggs <- 0.25;
@@ -47,7 +47,6 @@ global {
 	float costmaint_cacaoinputs <- 13.375;
 	float costmaint_cattle_1 <- 11.48; //TODO: à revoir : plus il y a d'hectares en pâture, plus c'est cher
 	float costmaint_cattle_2 <- 1.61635;
-	float buy_pig <- 12.27;
 	float costmaint_pigbreeding <- 5.375;
 	float costmaint_pigbreeding2 <- 21.1;
 	//Agricultural yields 
@@ -306,7 +305,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	action calc_yld_SE2_1 {
 		yld_pig <- 0.375;
-		rev <- (yld_pig * price_pig) - buy_pig;
+		rev <- (yld_pig * price_pig);
 	}
 
 	action calc_yld_SE2_2 {

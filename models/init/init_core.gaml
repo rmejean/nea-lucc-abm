@@ -606,7 +606,7 @@ global { //Lists
 						oil_worker <- true;
 						work_pace <- 14;
 						job_wages <- job_wages;
-						contract_term <- rnd(4, 12);//biblio : Morin (2015) p.76 "4 mois à une année"
+						contract_term <- rnd(4, 12); //biblio : Morin (2015) p.76 "4 mois à une année"
 						working_months <- rnd(0, contract_term);
 						annual_inc <- contract_term * job_wages;
 						ask empresa {

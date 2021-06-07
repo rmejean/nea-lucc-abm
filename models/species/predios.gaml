@@ -38,11 +38,18 @@ species predios {
 	rgb bool_color;
 	hogares my_hogar;
 	int subcrops_amount;
+	//Labor costs for livestock
+	//float my_labor_cost_SE1_1 -> laborcost_SE1_1 * length(cells_SE1_1);//parce que le laborcost SE1.1 est défini pour un seul px ! Donc on multiplie cette valeur par le nb de px qu'on en a
+	//float my_labor_cost_SE1_2 -> laborcost_SE1_2 * length(cells_SE1_2);//idem
 	//Cell lists
 	list<cell> cells_inside <- cell overlapping self; //trouver mieux que overlapping ?
 	list<cell> cells_deforest -> cells_inside where (each.is_deforest = true);
 	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
 	list<cell> reforest_candidates -> cells_inside where (each.landuse = 'fallow' and each.nb_months >= 60);
+	list<cell> cells_SE1_1 -> cells_inside where (each.landuse = 'SE1.1');
+	list<cell> cells_SE1_2 -> cells_inside where (each.landuse = 'SE1.2');
+	int nb_cells_SE1_1 -> length(cells_SE1_1);
+	int nb_cells_SE1_2 -> length(cells_SE1_2);
 	//list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
 

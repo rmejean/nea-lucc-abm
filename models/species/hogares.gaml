@@ -159,6 +159,7 @@ species hogares {
 		}
 
 	}
+
 	action update_needs {
 		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
 	}

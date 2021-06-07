@@ -38,16 +38,16 @@ global {
 
 //MOF -------------------------
 	int cost_employees <- 250;
-	float laborcost_SC1_1 <- 3.7; //rapporté à 90m*90m
+	float laborcost_SC1_1 <- 3.77; //rapporté à 90m*90m
 	float laborcost_SC1_2 <- 1.575;
 	float laborcost_SC2 <- 2.55;
 	float laborcost_SC3_1 <- 15.64;
 	float laborcost_SC4_1 <- 2.32;
 	float laborcost_SC4_2 <- 1.87;
-	float laborcost_SE1_1 <- 0.8113; //pour 70 px= 56.79;
-	float laborcost_SE1_2 <- 0.6278; //pour 15px = 9.417;
-	float laborcost_SE2_1 <- 1.6875;
-	float laborcost_SE2_2 <- 4.03;
+	float laborcost_SE1_1 <- 0.8113; //pour 1 px, à multiplier par le nb de px SE1.1
+	float laborcost_SE1_2 <- 0.62; //idem, à multiplier par le nb de px SE1.2
+	float laborcost_SE2_1 <- 1.51;
+	float laborcost_SE2_2 <- 3.63;
 	float laborcost_SE2_3 <- 7.28;
 	float laborcost_SE3 <- 2.589;
 	float laborcost_install_SC1 <- 29.25;
