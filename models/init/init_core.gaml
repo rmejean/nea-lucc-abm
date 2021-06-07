@@ -505,7 +505,7 @@ global { //Lists
 		ask predios where (each.LS = 'SP2') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
-			let pxl_cash <- 0;
+			let pxl_livestock <- 0;
 			let pxl_chicken <- 0;
 			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
@@ -522,14 +522,15 @@ global { //Lists
 				if flip(0.05) = false {
 					save ("SE1.2" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
-					ask my_hogar {
-						available_workers <- available_workers - laborcost_SE1_2;
-						occupied_workers <- occupied_workers + laborcost_SE1_2;
-					}
-
+					pxl_livestock <- pxl_livestock + 1;
 				} else {
 					save ("fallow" + "," + rnd(60)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
+				}
+
+				ask my_hogar {
+					available_workers <- available_workers - (pxl_livestock * (pxl_livestock * laborcost_SE1_2 / 15)); //car calculs pour 15ha dans le mémoire de Lucie. Donc on adapte en fonction des ha générés
+					occupied_workers <- occupied_workers + (pxl_livestock * (pxl_livestock * laborcost_SE1_2 / 15)); //donc on cherche le coût d'un pixel, qui dépend des pixels totaux qu'on a, puis ensuite on multiplie ce coût pour 1 px au nb de px qu'on a 
 				}
 
 			}
@@ -548,20 +549,21 @@ global { //Lists
 		ask predios where (each.LS = 'SP3') {
 			let pxl_generated <- 0;
 			let pxl_subcrops <- 0;
-			let pxl_cash <- 0;
+			let pxl_livestock <- 0;
 			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if flip(0.05) = false {
 					save ("SE1.1" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
-					ask my_hogar {
-						available_workers <- available_workers - laborcost_SE1_1;
-						occupied_workers <- occupied_workers + laborcost_SE1_1;
-					}
-
+					pxl_livestock <- pxl_livestock + 1;
 				} else {
 					save ("fallow" + "," + rnd(60)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
+				}
+
+				ask my_hogar {
+					available_workers <- available_workers - (pxl_livestock * (pxl_livestock * laborcost_SE1_1 / 70));//idem
+					occupied_workers <- occupied_workers + (pxl_livestock * (pxl_livestock * laborcost_SE1_1 / 70));//idem
 				}
 
 			}
@@ -628,23 +630,14 @@ global { //Lists
 
 			}
 
-			if social_network_inf {
-				ask personas where (each.oil_worker = true) { //co-worker's households (to be added to the social network)
-					co_workers_hog <- empresa.workers collect each.my_hogar;
-					co_workers_hog <- remove_duplicates(co_workers_hog);
-					remove all: my_hogar from: co_workers_hog;
-				}
-
-			}
-
 		}
 
 		write "---END OF INIT OIL JOBS";
 	}
 
 	action init_control {
-		save ("nbLS1.1,nbLS1.2,nbLS1.3,nbLS2,nbLS3") to: ("/exports/init_report") rewrite: false;
-		save [nb_LS1_1, nb_LS1_2, nb_LS1_3, nb_LS2, nb_LS3] to: ("/exports/init_report") rewrite: false header: true;
+		save ("nbLS1.1,nbLS1.2,nbLS1.3,nbLS2,nbLS3") to: ("../exports/init_report") rewrite: false;
+		save [nb_LS1_1, nb_LS1_2, nb_LS1_3, nb_LS2, nb_LS3] to: ("../exports/init_report") rewrite: false header: true;
 	}
 
 }

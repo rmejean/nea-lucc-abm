@@ -45,6 +45,9 @@ species hogares {
 	int oil_workers_max <- round(Total_Personas / 3);
 	list best_profit_LUC;
 	string last_decision;
+	//Labor costs for livestock
+	float my1px_labor_cost_SE1_1 -> length(my_predio.cells_SE1_1) * laborcost_SE1_1 / 70;//parce que le laborcost SE1.1 est défini pour un seul px ! Donc on multiplie cette valeur par le nb de px qu'on en a
+	float my1px_labor_cost_SE1_2 -> length(my_predio.cells_SE1_2) * laborcost_SE1_2 / 15 ;//idem
 
 	action init_values {
 		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
@@ -493,7 +496,7 @@ species hogares {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
 				loop while: length(my_predio.cells_forest) > 0 and (money_missing > 0) and (stop = false) {
-					if available_workers > (laborcost_SE1_2 + laborcost_install_SE1) {
+					if available_workers > (my1px_labor_cost_SE1_2 + laborcost_install_SE1) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.2';
@@ -508,7 +511,7 @@ species hogares {
 						money_missing <-
 						(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2)) * 12);
 					} else {
-						if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2)) {
+						if available_workers > (my1px_labor_cost_SE1_2 + (laborcost_install_SE1 / 2)) {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
@@ -525,7 +528,7 @@ species hogares {
 							money_missing <-
 							(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2)) * 12);
 						} else {
-							if available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 3)) {
+							if available_workers > (my1px_labor_cost_SE1_2 + (laborcost_install_SE1 / 3)) {
 								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 									is_deforest <- true;
 									landuse <- 'wip';
@@ -561,7 +564,7 @@ species hogares {
 				let money_missing <- (Total_Personas * $_ANFP) - estimated_annual_inc;
 				let stop <- false;
 				loop while: length(my_predio.cells_forest) > 0 and (money_missing > 0) and (stop = false) {
-					if available_workers > (laborcost_SE1_1 + laborcost_install_SE1) {
+					if available_workers > (my1px_labor_cost_SE1_1 + laborcost_install_SE1) {
 						ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 							is_deforest <- true;
 							landuse <- 'SE1.1';
@@ -576,7 +579,7 @@ species hogares {
 						money_missing <-
 						(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1)) * 12);
 					} else {
-						if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 2)) {
+						if available_workers > (my1px_labor_cost_SE1_1 + (laborcost_install_SE1 / 2)) {
 							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 								is_deforest <- true;
 								landuse <- 'wip';
@@ -593,7 +596,7 @@ species hogares {
 							money_missing <-
 							(Total_Personas * $_ANFP) - ((estimated_annual_inc + ((yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1)) * 12);
 						} else {
-							if available_workers > (laborcost_SE1_1 + (laborcost_install_SE1 / 3)) {
+							if available_workers > (my1px_labor_cost_SE1_1 + (laborcost_install_SE1 / 3)) {
 								ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
 									is_deforest <- true;
 									landuse <- 'wip';
