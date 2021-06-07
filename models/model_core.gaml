@@ -1,7 +1,7 @@
 /*
 * Name: Northern Ecuadorian Amazon Land Use & Cover Change Agent-Based Model
-* Version: 0.1
-* Year : 2020
+* Version: 1.0
+* Year : 2020-2021
 * Author: Romain Mejean, PhD student in Geography @t UMR 5602 GEODE CNRS/Université Toulouse 2 Jean Jaurès
 * Contact : romain.mejean@univ-tlse2.fr
 * Description: a LUCC model in Northern Ecuadorian Amazon (parroquia de Dayuma)
@@ -36,7 +36,6 @@ global { //Time aspects
 			do init_ALG;
 			do init_farm_jobs;
 			do init_oil_jobs;
-			do init_social_network;
 //			ask hogares {
 //				do assess_income_needs;
 //				do setting_alerts;
@@ -50,7 +49,6 @@ global { //Time aspects
 			init_end <- true;
 			write "END OF INITIALIZATION";
 //			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-//			write "time to generate the init: " + total_duration;
 		} else {
 			write "START OF INITIALIZATION FROM A SAVED INIT";
 			do init_saved_files;
@@ -70,11 +68,10 @@ global { //Time aspects
 				do deforestation_rate_calc;
 				do map_deforestation_rate;
 			}
-
+			do init_control;
 			init_end <- true;
 			write "END OF INITIALIZATION";
 			write "Households don't have their needs met:" + length(hogares where (each.needs_alert = true));
-			//write "time to generate the init: " + total_duration;
 		}
 
 	}
@@ -109,15 +106,6 @@ global { //Time aspects
 		//
 		write "---PERSONAS UPDATED";
 		//
-		if social_network_inf {
-			ask hogares {
-				do update_social_network; //Car le contrat de travail de certains est terminé donc on enlève les collègues de travail du RS
-
-			}
-			//
-			write "---SOCIAL NETWORKS UPDATED";
-		}
-
 		ask empresas {
 			do generate_jobs;
 		}
@@ -148,14 +136,6 @@ global { //Time aspects
 	////////LUC///////
 	//////////////////
 	reflex LUC {
-		if social_network_inf {
-			ask hogares {
-				do update_social_network; //car il faut rajouter au RS les collègues de travail de ceux qui viennent de trouver un job
-			}
-			//
-			write "---SOCIAL NETWORKS UPDATED";
-			//
-		}
 
 		ask hogares {
 			if needs_alert = true {

@@ -1,7 +1,7 @@
 /*
 * Name: Northern Ecuadorian Amazon Land Use & Cover Change Agent-Based Model
-* Version: 0.1
-* Year : 2020
+* Version: 1.0
+* Year : 2020-2021
 * Author: Romain Mejean, PhD student in Geography @t UMR 5602 GEODE CNRS/Université Toulouse 2 Jean Jaurès
 * Contact : romain.mejean@univ-tlse2.fr
 * Description: a LUCC model in Northern Ecuadorian Amazon (parroquia de Dayuma)
@@ -16,7 +16,8 @@ model cells_def
 import "../species_def.gaml"
 
 global {
-//Time to production start up
+	float soil_depletion_proba <- 0.2;
+	//Time to production start up
 	int timeprod_maniocmais <- 6;
 	int timeprod_fruits <- 3;
 	int timeprod_s_livetock <- 3;
@@ -84,7 +85,6 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	int wip_division;
 	float wip_laborforce <- 0.0;
 	bool starting_wip;
-	list<string> land_use_hist; //history: pasts land uses
 	int nb_months;
 	float rev;
 	float yld; //yield
@@ -355,39 +355,104 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	action fallow_and_resow {
 		if (landuse = 'SC3.1' or 'SC4.1' or 'SC4.2') and (nb_months >= 24) {
-			write "fallow & resow!";
-			let previous_landuse <- landuse;
-			landuse <- 'fallow';
-			nb_months <- 0;
-			add landuse to: land_use_hist;
-			rev <- 0.0;
-			switch previous_landuse {
-				match 'SC3.1' {
-					if length(predio.reforest_candidates) > 0 {
-						ask one_of(predio.reforest_candidates) {
-							landuse <- previous_landuse;
-							grid_value <- 3.0;
-							write "resow at " + location;
-							nb_months <- 0;
-							add landuse to: land_use_hist;
-						}
-
-					} else {
-						if length(predio.cells_deforest) > 0 {
-							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
-								is_deforest <- true;
+			if flip(soil_depletion_proba) { //they don't always deforest anew, they often replant in the same place when the 
+			//cycle is over! in fact it depends on the quality of the soil...
+				write "fallow & resow!";
+				let previous_landuse <- landuse;
+				landuse <- 'fallow';
+				nb_months <- 0;
+				rev <- 0.0;
+				switch previous_landuse {
+					match 'SC3.1' {
+						if length(predio.reforest_candidates) > 0 {
+							ask one_of(predio.reforest_candidates) {
 								landuse <- previous_landuse;
 								grid_value <- 3.0;
-								write "deforest to resow at " + location;
+								write "resow at " + location;
 								nb_months <- 0;
-								add landuse to: land_use_hist;
 							}
 
 						} else {
-							write "" + my_hogar.name + " cannot re-sow SC3.1";
-							ask my_hogar { //alors, libérer la MOF correspondante
-								occupied_workers <- occupied_workers - laborcost_SC3_1;
-								available_workers <- available_workers + laborcost_SC3_1;
+							if length(predio.cells_deforest) > 0 {
+								ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
+									is_deforest <- true;
+									landuse <- previous_landuse;
+									grid_value <- 3.0;
+									write "deforest to resow at " + location;
+									nb_months <- 0;
+								}
+
+							} else {
+								write "" + my_hogar.name + " cannot re-sow SC3.1";
+								ask my_hogar { //alors, libérer la MOF correspondante
+									occupied_workers <- occupied_workers - laborcost_SC3_1;
+									available_workers <- available_workers + laborcost_SC3_1;
+								}
+
+							}
+
+						}
+
+					}
+
+					match 'SC4.1' {
+						if length(predio.reforest_candidates) > 0 {
+							ask one_of(predio.reforest_candidates) {
+								landuse <- previous_landuse;
+								grid_value <- 3.0;
+								write "resow at " + location;
+								nb_months <- 0;
+							}
+
+						} else {
+							if length(predio.cells_deforest) > 0 {
+								ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
+									is_deforest <- true;
+									landuse <- previous_landuse;
+									grid_value <- 3.0;
+									write "deforest to resow at " + location;
+									nb_months <- 0;
+								}
+
+							} else {
+								write "" + my_hogar.name + " cannot re-sow SC4.1";
+								ask my_hogar { //alors, libérer la MOF correspondante
+									occupied_workers <- occupied_workers - laborcost_SC4_1;
+									available_workers <- available_workers + laborcost_SC4_1;
+								}
+
+							}
+
+						}
+
+					}
+
+					match 'SC4.2' {
+						if length(predio.reforest_candidates) > 0 {
+							ask one_of(predio.reforest_candidates) {
+								landuse <- previous_landuse;
+								grid_value <- 3.0;
+								write "resow at " + location;
+								nb_months <- 0;
+							}
+
+						} else {
+							if length(predio.cells_deforest) > 0 {
+								ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
+									is_deforest <- true;
+									landuse <- previous_landuse;
+									grid_value <- 3.0;
+									write "deforest to resow at " + location;
+									nb_months <- 0;
+								}
+
+							} else {
+								write "" + my_hogar.name + " cannot re-sow SC4.2";
+								ask my_hogar { //alors, libérer la MOF correspondante
+									occupied_workers <- occupied_workers - laborcost_SC4_2;
+									available_workers <- available_workers + laborcost_SC4_2;
+								}
+
 							}
 
 						}
@@ -396,74 +461,9 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 				}
 
-				match 'SC4.1' {
-					if length(predio.reforest_candidates) > 0 {
-						ask one_of(predio.reforest_candidates) {
-							landuse <- previous_landuse;
-							grid_value <- 3.0;
-							write "resow at " + location;
-							nb_months <- 0;
-							add landuse to: land_use_hist;
-						}
-
-					} else {
-						if length(predio.cells_deforest) > 0 {
-							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
-								is_deforest <- true;
-								landuse <- previous_landuse;
-								grid_value <- 3.0;
-								write "deforest to resow at " + location;
-								nb_months <- 0;
-								add landuse to: land_use_hist;
-							}
-
-						} else {
-							write "" + my_hogar.name + " cannot re-sow SC4.1";
-							ask my_hogar { //alors, libérer la MOF correspondante
-								occupied_workers <- occupied_workers - laborcost_SC4_1;
-								available_workers <- available_workers + laborcost_SC4_1;
-							}
-
-						}
-
-					}
-
-				}
-
-				match 'SC4.2' {
-					if length(predio.reforest_candidates) > 0 {
-						ask one_of(predio.reforest_candidates) {
-							landuse <- previous_landuse;
-							grid_value <- 3.0;
-							write "resow at " + location;
-							nb_months <- 0;
-							add landuse to: land_use_hist;
-						}
-
-					} else {
-						if length(predio.cells_deforest) > 0 {
-							ask closest_to(predio.cells_deforest, one_of(predio.cells_deforest), 1) {
-								is_deforest <- true;
-								landuse <- previous_landuse;
-								grid_value <- 3.0;
-								write "deforest to resow at " + location;
-								nb_months <- 0;
-								add landuse to: land_use_hist;
-							}
-
-						} else {
-							write "" + my_hogar.name + " cannot re-sow SC4.2";
-							ask my_hogar { //alors, libérer la MOF correspondante
-								occupied_workers <- occupied_workers - laborcost_SC4_2;
-								available_workers <- available_workers + laborcost_SC4_2;
-							}
-
-						}
-
-					}
-
-				}
-
+			} else {
+				nb_months <- 0;
+				write "replant";
 			}
 
 		}
@@ -480,7 +480,6 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			landuse <- future_landuse;
 			grid_value <- 3.0;
 			future_landuse <- nil;
-			add landuse to: land_use_hist;
 			nb_months <- 0;
 			my_hogar.available_workers <- (my_hogar.available_workers + (wip_laborforce / wip_division));
 			wip_division <- nil;

@@ -1,7 +1,7 @@
 /*
 * Name: Northern Ecuadorian Amazon Land Use & Cover Change Agent-Based Model
-* Version: 0.1
-* Year : 2020
+* Version: 1.0
+* Year : 2020-2021
 * Author: Romain Mejean, PhD student in Geography @t UMR 5602 GEODE CNRS/Université Toulouse 2 Jean Jaurès
 * Contact : romain.mejean@univ-tlse2.fr
 * Description: a LUCC model in Northern Ecuadorian Amazon (parroquia de Dayuma)
@@ -28,7 +28,7 @@ global {
 	file f_FREQ_SP3 <- csv_file("../../includes/LS_patchwork_frequencies/SP3.csv");
 
 	//Importing GIS files
-	file buildings_shp <- file("../../includes/constructions_dayuma_SIGTIERRAS.shp");
+	//file buildings_shp <- file("../../includes/constructions_dayuma_SIGTIERRAS.shp");
 	file sectores_shp <- file("../../includes/sectores_entiers.shp");
 	file predios_con_def_shp <- file("../../includes/predios_con_def_noborder.shp");
 	//file predios_sin_def_shp <- file("../../includes/predios_sin_def.shp");

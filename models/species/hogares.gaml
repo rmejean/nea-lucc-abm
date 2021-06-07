@@ -1,7 +1,7 @@
 /*
 * Name: Northern Ecuadorian Amazon Land Use & Cover Change Agent-Based Model
-* Version: 0.1
-* Year : 2020
+* Version: 1.0
+* Year : 2020-2021
 * Author: Romain Mejean, PhD student in Geography @t UMR 5602 GEODE CNRS/Université Toulouse 2 Jean Jaurès
 * Contact : romain.mejean@univ-tlse2.fr
 * Description: a LUCC model in Northern Ecuadorian Amazon (parroquia de Dayuma)
@@ -22,8 +22,6 @@ species hogares {
 	predios my_predio;
 	cell my_house;
 	list<personas> membres_hogar;
-	list<hogares> neighbors;
-	list<hogares> social_network;
 	list<personas> job_candidates -> membres_hogar where (each.Age < 40 and each.oil_worker = false);
 	personas chef_hogar;
 	string chef_auto_id;
@@ -161,16 +159,6 @@ species hogares {
 		}
 
 	}
-
-	action update_social_network {
-		ask personas {
-			my_hogar.social_network <- nil;
-			add all: co_workers_hog to: my_hogar.social_network;
-		}
-
-		add all: neighbors to: social_network;
-	}
-
 	action update_needs {
 		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
 	}
