@@ -30,159 +30,121 @@ species LS_agents {
 	}
 	//MULTICRITERIA ANALYSIS TO RANK LS
 	action ranking_MCA {
-		
-//		loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
-//			list<list> cands <- predios_eval();
-//			int choice <- code_LS = "SP1.1" ? weighted_means_DM(cands, criteria_WM_SP1_1) : (code_LS = "SP1.2" ? weighted_means_DM(cands, criteria_WM_SP1_2) : (code_LS = "SP1.3" ?
-//			weighted_means_DM(cands, criteria_WM_SP1_3) : (code_LS = "SP2" ? weighted_means_DM(cands, criteria_WM_SP2) : weighted_means_DM(cands, criteria_WM_SP3))));
-//			if choice >= 0 {
-//				ask predios where (each.is_free_MCA = true) at choice {
-//					LS <- myself.code_LS;
-//					is_free_MCA <- false;
-//					my_hogar.livelihood_strategy <- LS;
-//					write "LS" + LS + "affectée";
-//				}
-//
-//			}
-//
-//		}
-				
-//				ask predios {
-//				
-//				if is_free = true { //TODO: pourquoi j'ai besoin de forcer en rajoutant cette instruction ??
-//				LS <- "none";
-//			}
-//			
-//			}
-				
-			
-				
-//				ask hogares {
-//					livelihood_strategy <- my_predio.LS;
-//				}
-				
-
-		
-		
-		
-		switch code_LS {
-			match "1.1" {
-				write "------START OF RANKING FOR LS 1.1";
-				loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
-					list<list> cands <- predios_eval();
-					int choice <- weighted_means_DM(cands, criteria_WM_SP1_1);
-					if choice >= 0 {
-						ask predios where (each.is_free_MCA = true) at choice {
-							id_EMC_LS1_1 <- predios max_of (each.id_EMC_LS1_1) + 1;
-							add id_EMC_LS1_1 to: rankings_LS_EMC;
-							is_free_MCA <- false;
-							write "---------Ranking of a plot for the LS 1.1";
-						}
-
-					}
-
-				}
-
-				ask hogares {
-					ask my_predio {
-						is_free_MCA <- true;
+		if code_LS = '1.1' {
+			write "------START OF RANKING FOR LS 1.1";
+			loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP1_1);
+				if choice >= 0 {
+					ask predios where (each.is_free_MCA = true) at choice {
+						id_EMC_LS1_1 <- predios max_of (each.id_EMC_LS1_1) + 1;
+						add id_EMC_LS1_1 to: rankings_LS_EMC;
+						is_free_MCA <- false;
+						write "---------Ranking of a plot for the LS 1.1";
 					}
 
 				}
 
 			}
 
-			match "1.2" {
-				write "------START OF RANKING FOR LS 1.2";
-				loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
-					list<list> cands <- predios_eval();
-					int choice <- weighted_means_DM(cands, criteria_WM_SP1_2);
-					if choice >= 0 {
-						ask predios where (each.is_free_MCA = true) at choice {
-							id_EMC_LS1_2 <- predios max_of (each.id_EMC_LS1_2) + 1;
-							add id_EMC_LS1_2 to: rankings_LS_EMC;
-							is_free_MCA <- false;
-							write "---------Ranking of a plot for the LS 1.2";
-						}
-
-					}
-
+			ask hogares {
+				ask my_predio {
+					is_free_MCA <- true;
 				}
 
-				ask hogares {
-					ask my_predio {
-						is_free_MCA <- true;
+			}
+
+		}
+
+		if code_LS = '1.2' {
+			write "------START OF RANKING FOR LS 1.2";
+			loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP1_2);
+				if choice >= 0 {
+					ask predios where (each.is_free_MCA = true) at choice {
+						id_EMC_LS1_2 <- predios max_of (each.id_EMC_LS1_2) + 1;
+						add id_EMC_LS1_2 to: rankings_LS_EMC;
+						is_free_MCA <- false;
+						write "---------Ranking of a plot for the LS 1.2";
 					}
 
 				}
 
 			}
 
-			match "1.3" {
-				write "------START OF RANKING FOR LS 1.3";
-				loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
-					list<list> cands <- predios_eval();
-					int choice <- weighted_means_DM(cands, criteria_WM_SP1_3);
-					if choice >= 0 {
-						ask predios where (each.is_free_MCA = true) at choice {
-							id_EMC_LS1_3 <- predios max_of (each.id_EMC_LS1_3) + 1;
-							add id_EMC_LS1_3 to: rankings_LS_EMC;
-							is_free_MCA <- false;
-							write "---------Ranking of a plot for the LS 1.3";
-						}
-
-					}
-
+			ask hogares {
+				ask my_predio {
+					is_free_MCA <- true;
 				}
 
-				ask hogares {
-					ask my_predio {
-						is_free_MCA <- true;
+			}
+
+		}
+
+		if code_LS = '1.3' {
+			write "------START OF RANKING FOR LS 1.3";
+			loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP1_3);
+				if choice >= 0 {
+					ask predios where (each.is_free_MCA = true) at choice {
+						id_EMC_LS1_3 <- predios max_of (each.id_EMC_LS1_3) + 1;
+						add id_EMC_LS1_3 to: rankings_LS_EMC;
+						is_free_MCA <- false;
+						write "---------Ranking of a plot for the LS 1.3";
 					}
 
 				}
 
 			}
 
-			match "2" {
-				write "------START OF RANKING FOR LS 2";
-				loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
-					list<list> cands <- predios_eval();
-					int choice <- weighted_means_DM(cands, criteria_WM_SP2);
-					if choice >= 0 {
-						ask predios where (each.is_free_MCA = true) at choice {
-							id_EMC_LS2 <- predios max_of (each.id_EMC_LS2) + 1;
-							add id_EMC_LS2 to: rankings_LS_EMC;
-							is_free_MCA <- false;
-							write "---------Ranking of a plot for the LS 2";
-						}
-
-					}
-
+			ask hogares {
+				ask my_predio {
+					is_free_MCA <- true;
 				}
 
-				ask hogares {
-					ask my_predio {
-						is_free_MCA <- true;
+			}
+
+		}
+
+		if code_LS = '2' {
+			write "------START OF RANKING FOR LS 2";
+			loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP2);
+				if choice >= 0 {
+					ask predios where (each.is_free_MCA = true) at choice {
+						id_EMC_LS2 <- predios max_of (each.id_EMC_LS2) + 1;
+						add id_EMC_LS2 to: rankings_LS_EMC;
+						is_free_MCA <- false;
+						write "---------Ranking of a plot for the LS 2";
 					}
 
 				}
 
 			}
 
-			match "3" {
-				write "------START OF RANKING FOR LS 3";
-				loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
-					list<list> cands <- predios_eval();
-					int choice <- weighted_means_DM(cands, criteria_WM_SP3);
-					if choice >= 0 {
-						ask predios where (each.is_free_MCA = true) at choice {
-							id_EMC_LS3 <- predios max_of (each.id_EMC_LS3) + 1;
-							add id_EMC_LS3 to: rankings_LS_EMC;
-							is_free_MCA <- false;
-							write "---------Ranking of a plot for the LS 3";
-						}
+			ask hogares {
+				ask my_predio {
+					is_free_MCA <- true;
+				}
 
+			}
+
+		}
+
+		if code_LS = '3' {
+			write "------START OF RANKING FOR LS 3";
+			loop while: (length(predios where (each.is_free_MCA = true)) != 0) {
+				list<list> cands <- predios_eval();
+				int choice <- weighted_means_DM(cands, criteria_WM_SP3);
+				if choice >= 0 {
+					ask predios where (each.is_free_MCA = true) at choice {
+						id_EMC_LS3 <- predios max_of (each.id_EMC_LS3) + 1;
+						add id_EMC_LS3 to: rankings_LS_EMC;
+						is_free_MCA <- false;
+						write "---------Ranking of a plot for the LS 3";
 					}
 
 				}
@@ -227,7 +189,7 @@ species LS_agents {
 				write "---------LS 3 assigned to a plot.";
 			}
 
-			if is_empty = true { //TODO: pourquoi j'ai besoin de forcer en rajoutant cette instruction ??
+			if is_free = true { //TODO: pourquoi j'ai besoin de forcer en rajoutant cette instruction ??
 				LS <- "none";
 			}
 

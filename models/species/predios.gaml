@@ -16,14 +16,13 @@ model predios_def
 import "../species_def.gaml"
 species predios {
 	string clave_cata;
-	bool is_empty;
-	bool is_free_MCA;
+	bool is_free <- true;
+	bool is_free_MCA <- false;
 	int id_EMC_LS1_1 <- 0;
 	int id_EMC_LS1_2 <- 0;
 	int id_EMC_LS1_3 <- 0;
 	int id_EMC_LS2 <- 0;
 	int id_EMC_LS3 <- 0;
-	int id_EMC <- 0;
 	int area_total -> length(cells_inside);
 	int area_deforest -> length(cells_deforest);
 	int area_forest -> length(cells_forest);
@@ -56,7 +55,7 @@ species predios {
 			def_rate <- (area_deforest / area_total) * 100;
 			forest_rate <- (area_forest / area_total) * 100;
 		} else {
-			def_rate <- nil;
+			def_rate <- 0.0;
 		}
 
 	}

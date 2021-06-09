@@ -115,11 +115,11 @@ global { //Lists
 				landuse <- 'house';
 				grid_value <- 4.0;
 				is_free <- false;
-				is_deforest <- true;
+				is_deforest <- nil;
 			}
 
 			ask my_predio {
-				is_empty <- false;
+				is_free <- false;
 				is_free_MCA <- true;
 				my_hogar <- myself;
 			}
@@ -171,9 +171,9 @@ global { //Lists
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
 			do head_and_ethnicity;
 			do init_values;
-//			ask my_predio.cells_inside { //inutile ? je m'en sers pas !
-//				my_hogar <- myself;
-//			}
+			ask my_predio.cells_inside {
+				my_hogar <- myself;
+			}
 
 		}
 
@@ -186,28 +186,28 @@ global { //Lists
 	action init_LS_EMC { //Création des 5 agents-LS
 		write "---START OF INIT LS with EMC";
 		create LS_agents number: 1 {
-			code_LS <- 'SP1.1';
+			code_LS <- '1.1';
 		}
 
 		create LS_agents number: 1 {
-			code_LS <- 'SP1.2';
+			code_LS <- '1.2';
 		}
 
 		create LS_agents number: 1 {
-			code_LS <- 'SP1.3';
+			code_LS <- '1.3';
 		}
 
 		create LS_agents number: 1 {
-			code_LS <- 'SP2';
+			code_LS <- '2';
 		}
 
 		create LS_agents number: 1 {
-			code_LS <- 'SP3';
+			code_LS <- '3';
 		}
 
 		ask LS_agents {
 			do ranking_MCA;
-			//do apply_MCA;
+			do apply_MCA;
 		}
 
 		write "---END OF INIT LS WITH EMC";
@@ -440,7 +440,7 @@ global { //Lists
 
 					}
 
-					if my_hogar.available_workers >= laborcost_SE2_3 and pxl_pig < 1 { //pigs farming TODO: attribution à revoir (pas forcément prioritaire sur café/cacao et/ou gros élevage
+					if my_hogar.available_workers >= laborcost_SE2_3 and pxl_pig < 1 { //pigs farming TODO: attribution à revoir (pas frocément prioritaire sur café/cacao et/ou gros élevage
 						save ("SE2.3" + "," + "0") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 						pxl_pig <- pxl_pig + 1;
 						ask my_hogar {
