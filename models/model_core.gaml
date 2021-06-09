@@ -43,11 +43,11 @@ global { //Time aspects
 
 			ask predios {
 				do deforestation_rate_calc;
-<<<<<<< HEAD
+
 				//do map_deforestation_rate;
-=======
+
 //				do map_deforestation_rate;
->>>>>>> new_stable
+
 			}
 			do init_control;
 			init_end <- true;
