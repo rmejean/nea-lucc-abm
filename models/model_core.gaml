@@ -41,10 +41,10 @@ global { //Time aspects
 //				do setting_alerts;
 //			}
 
-//			ask predios {
-//				do deforestation_rate_calc;
-//				do map_deforestation_rate;
-//			}
+			ask predios {
+				do deforestation_rate_calc;
+				//do map_deforestation_rate;
+			}
 			do init_control;
 			init_end <- true;
 			write "END OF INITIALIZATION";

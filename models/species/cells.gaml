@@ -299,7 +299,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		rev <- (yld_veaux1 * price_veaux) + (yld_vachereforme1 * price_vachereforme) + (yld_cheese1 * price_cheese) - costmaint_cattle_1;
 	}
 
-	action calc_yld_SE1_2 { // cattle breeding with cheese marketing (30 mothers and 70ha of pastures)
+	action calc_yld_SE1_2 { // 15ha of pastures
 		rev <- (yld_veaux2 * price_veaux) + (yld_vachereforme2 * price_vachereforme) + (yld_cheese2 * price_cheese) - costmaint_cattle_2;
 	}
 
