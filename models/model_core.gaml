@@ -41,10 +41,10 @@ global { //Time aspects
 //				do setting_alerts;
 //			}
 
-//			ask predios {
-//				do deforestation_rate_calc;
+			ask predios {
+				do deforestation_rate_calc;
 //				do map_deforestation_rate;
-//			}
+			}
 			do init_control;
 			init_end <- true;
 			write "END OF INITIALIZATION";
@@ -180,7 +180,7 @@ global { //Time aspects
 	//////////////////
 	
 	reflex when: every(5 #cycles) and save_years {
-		save cell to: ("../exports/simu_month" + cycle + ".asc") type: "asc";
+		save cell to: ("../exports/simu_month" + cycle + ".tif") type: "geotiff";
 		write "EXPORT CLASSIF";
 	}
 
