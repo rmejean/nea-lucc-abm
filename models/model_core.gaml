@@ -43,7 +43,6 @@ global { //Time aspects
 
 			ask predios {
 				do deforestation_rate_calc;
-
 				//do map_deforestation_rate;
 
 //				do map_deforestation_rate;
@@ -184,7 +183,7 @@ global { //Time aspects
 	//////////////////
 	
 	reflex when: every(5 #cycles) and save_years {
-		save cell to: ("../exports/simu_month" + cycle + ".tif") type: "geotiff";
+		save cell to: ("../exports/simu_month" + cycle + ".asc") type: "asc";
 		write "EXPORT CLASSIF";
 	}
 
