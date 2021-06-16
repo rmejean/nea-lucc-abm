@@ -65,6 +65,13 @@ global { //Lists
 
 		write "---END OF INIT PLOTS";
 	}
+	
+	action init_comunas { //Comunas init
+		write "---START OF INIT COMUNAS";
+		create comunas from: comunas_shp with: [clave_cata::string(read('clave_cata'))];
+
+		write "---END OF INIT COMUNAS";
+	}
 
 	action init_vias { //Roads init
 		write "---START OF INIT ROADS";
@@ -84,9 +91,9 @@ global { //Lists
 
 	action init_pop_predios { //Population init with GENSTAR
 		write "---START OF INIT PREDIOS POPULATION";
-		write "------START OF SETUP HOUSEHOLDS";
+		write "------START OF SETUP PREDIOS HOUSEHOLDS";
 		// --------------------------
-		// Setup HOGARES
+		// Setup PREDIOS HOGARES
 		// --------------------------
 		gen_population_generator hog_gen;
 		hog_gen <- hog_gen with_generation_algo "US";
@@ -130,10 +137,10 @@ global { //Lists
 
 		}
 
-		write "------END OF SETUP HOUSEHOLDS";
-		write "------START OF SETUP PEOPLE"; //
+		write "------END OF SETUP PREDIOS HOUSEHOLDS";
+		write "------START OF SETUP PREDIOS PEOPLE"; //
 		// --------------------------
-		// Setup PERSONAS
+		// Setup PREDIOS PERSONAS
 		// --------------------------
 		gen_population_generator pop_gen;
 		pop_gen <- pop_gen with_generation_algo "US";
@@ -163,7 +170,7 @@ global { //Lists
 
 		}
 
-		write "------END OF SETUP PEOPLE";
+		write "------END OF SETUP PREDIOS PEOPLE";
 		// --------------------------
 		// Instructions post-génération
 		// --------------------------
@@ -184,10 +191,10 @@ global { //Lists
 	}
 	
 	action init_pop_comunas {
-		write "---START OF INIT PREDIOS POPULATION";
-		write "------START OF SETUP HOUSEHOLDS";
+		write "---START OF INIT COMUNAS POPULATION";
+		write "------START OF SETUP COMUNAS HOUSEHOLDS";
 		// --------------------------
-		// Setup HOGARES
+		// Setup COMUNAS HOGARES
 		// --------------------------
 		gen_population_generator hog_com_gen;
 		hog_com_gen <- hog_com_gen with_generation_algo "US";
@@ -204,12 +211,12 @@ global { //Lists
 		// -------------------------
 		// Spatialization 
 		// -------------------------
-		hog_com_gen <- hog_com_gen localize_on_geometries (predios_con_def_shp.path);
-		hog_com_gen <- hog_com_gen add_capacity_constraint (1);
+		hog_com_gen <- hog_com_gen localize_on_geometries (comunas_shp.path);
+		//hog_com_gen <- hog_com_gen add_capacity_constraint (1);//les comunas ne sont pas limitées à 1 ménage
 		hog_com_gen <- hog_com_gen localize_on_census (sectores_shp.path);
 		hog_com_gen <- hog_com_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_com_gen {
-			my_predio <- first(predios overlapping self);
+			my_comuna <- first(comunas overlapping self);
 			my_house <- first(my_predio.cells_deforest closest_to (vias closest_to self));
 			location <- my_house.location;
 			ask my_house {
@@ -219,17 +226,26 @@ global { //Lists
 				is_deforest <- nil;
 			}
 
-			ask my_predio {
-				is_free <- false;
-				is_free_MCA <- true;
-				my_hogar <- myself;
-			}
-
-			ask my_predio.cells_inside {
-				predio <- myself.my_predio;
-			}
-
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 	}
 

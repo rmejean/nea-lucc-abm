@@ -11,11 +11,16 @@ model comunas_def
 //
 // DEFINITION OF COMUNAS (community plots)
 //
-
+import "../species_def.gaml"
+//
 species comunas {
-	int area_total;
-	int area_deforest;
-	float ratio_deforest;
+	string clave_cata;
+	int area_total -> length(cells_inside);
+	int area_deforest -> length(cells_deforest);
+	int area_forest -> length(cells_forest);
+	list<cell> cells_inside <- cell overlapping self; //trouver mieux que overlapping ?
+	list<cell> cells_deforest -> cells_inside where (each.is_deforest = true);
+	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
 
 	aspect default {
 		draw shape color: #black border: #black;

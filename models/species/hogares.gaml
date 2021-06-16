@@ -20,6 +20,7 @@ species hogares {
 	int Total_Hombres;
 	int Total_Mujeres;
 	predios my_predio;
+	comunas my_comuna;
 	cell my_house;
 	list<personas> membres_hogar;
 	list<personas> job_candidates -> membres_hogar where (each.Age < 40 and each.oil_worker = false);
