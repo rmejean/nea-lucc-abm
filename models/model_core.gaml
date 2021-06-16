@@ -30,8 +30,10 @@ global { //Time aspects
 			do init_cells;
 			do init_vias;
 			do init_empresas;
-			do init_predios; //do init_comunas;
+			do init_predios; 
+			do init_comunas;
 			do init_pop_predios;
+			do init_pop_comunas;
 			do init_LS_EMC;
 			do init_ALG;
 			do init_farm_jobs;
@@ -43,11 +45,12 @@ global { //Time aspects
 
 			ask predios {
 				do deforestation_rate_calc;
-				//do map_deforestation_rate;
-
-//				do map_deforestation_rate;
-
+				}
+			ask comunas {
+				do deforestation_rate_calc;
 			}
+				
+				
 			do init_control;
 			init_end <- true;
 			write "END OF INITIALIZATION";
@@ -59,6 +62,7 @@ global { //Time aspects
 			do init_vias;
 			do load_saved_empresas;
 			do load_saved_predios;
+			do load_saved_comunas;
 			do load_saved_hogares;
 			do load_saved_personas;
 			do load_saved_landscape;
@@ -66,10 +70,17 @@ global { //Time aspects
 				do assess_income_needs;
 				do setting_alerts;
 			}
+			ask comunas {
+				do assess_income_needs;
+				do setting_alerts;
+			}
 
 			ask predios {
 				do deforestation_rate_calc;
-				do map_deforestation_rate;
+				//do map_deforestation_rate;
+			}
+			ask comunas {
+				do deforestation_rate_calc;
 			}
 			do init_control;
 			init_end <- true;

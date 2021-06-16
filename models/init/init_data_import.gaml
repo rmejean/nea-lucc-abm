@@ -52,6 +52,7 @@ global {
 	file saved_cells;
 	file saved_vias;
 	file saved_predios;
+	file saved_comunas;
 	file saved_hogares;
 	file saved_personas;
 	file saved_empresas;

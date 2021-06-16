@@ -13,6 +13,7 @@
 //
 import "../species_def.gaml"
 species hogares {
+	string type;
 	string sec_id;
 	string hog_id;
 	string viv_id;
@@ -47,13 +48,23 @@ species hogares {
 	list best_profit_LUC;
 	string last_decision;
 	//Labor costs for livestock
-	float my1px_labor_cost_SE1_1 -> length(my_predio.cells_SE1_1) * laborcost_SE1_1 / 70;//parce que le laborcost SE1.1 est défini pour un seul px ! Donc on multiplie cette valeur par le nb de px qu'on en a
-	float my1px_labor_cost_SE1_2 -> length(my_predio.cells_SE1_2) * laborcost_SE1_2 / 15 ;//idem
-
+	float my1px_labor_cost_SE1_1 -> length(my_predio.cells_SE1_1) * laborcost_SE1_1 / 70; //parce que le laborcost SE1.1 est défini pour un seul px ! Donc on multiplie cette valeur par le nb de px qu'on en a
+	float my1px_labor_cost_SE1_2 -> length(my_predio.cells_SE1_2) * laborcost_SE1_2 / 15; //idem
+	//
 	action init_values {
-		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
-		available_workers <- labor_force;
-		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
+		switch type {
+			match "predio" {
+				labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
+				available_workers <- labor_force;
+				subcrops_needs <- (sum(membres_hogar collect each.food_needs));
+			}
+
+			match "comuna" {
+				my_comuna.comuna_subcrops_needs <- (sum(my_comuna.membres_comuna collect each.food_needs));
+			}
+
+		}
+
 	}
 
 	action head_and_ethnicity {
@@ -165,7 +176,17 @@ species hogares {
 	}
 
 	action update_needs {
-		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
+		switch type {
+			match "predios" {
+				subcrops_needs <- (sum(membres_hogar collect each.food_needs));
+			}
+
+			match "comuna" {
+				my_comuna.comuna_subcrops_needs <- (sum(my_comuna.membres_comuna collect each.food_needs));
+			}
+
+		}
+
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////

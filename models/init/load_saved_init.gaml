@@ -16,6 +16,7 @@ global {
 
 	action init_saved_files {
 		saved_predios <- file("../../includes/initGENfiles/predios.shp");
+		saved_comunas <- file("../../includes/initGENfiles/comunas.shp");
 		saved_hogares <- file("../../includes/initGENfiles/hogares.shp");
 		saved_personas <- file("../../includes/initGENfiles/personas.shp");
 		saved_empresas <- file("../../includes/initGENfiles/empresas.shp");
@@ -75,12 +76,19 @@ global {
 		write "---END OF INIT PLOTS";
 	}
 
+	action load_saved_comunas {
+		write "---START OF INIT COMUNAS";
+		create comunas from: saved_comunas with:
+		[clave_cata::string(get("CLAVE")), area_total::int(get("AREA_TOTAL")), area_deforest::int(get("AREA_DEF")), area_forest::int(get("AREA_F")), def_rate::float(get("DEF_RATE")), forest_rate::float(get("FOREST_R")), income_crops_annual::float(get("SUBCROPS_INC")), comuna_subcrops_needs::float(get("SUB_NEEDS")), comuna_subcrops_amount::float(get("SUB_AMOUNT"))];
+		write "---END OF INIT COMUNAS";
+	}
+
 	action load_saved_hogares {
 		write "---START OF INIT HOUSEHOLDS";
 		create hogares from: saved_hogares with:
-		[name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")), my_predio::(first(predios
-		where
-		(each.name = get("PLOT")))), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")), livelihood_strategy::string(get("LS")), available_workers::float(get("MOF_A")), occupied_workers::float(get("MOF_O")), employees_workers::float(get("MOF_E")), labor_alert::bool(get("MOF_W")), subcrops_needs::(float(get("SUB_NEED"))), oil_workers::(int(get("NB_OIL_W")))];
+		[name:: string(get("NAME")), type:: string(get("type")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), Total_Personas::int(get("TOTAL_P")), Total_Hombres::int(get("TOTAL_M")), Total_Mujeres::int(get("TOTAL_F")), my_predio::(first(predios
+		where (each.name = get("PLOT")))), my_comuna::(first(comunas where
+		(each.name = get("comuna")))), chef_auto_id::string(get("HEAD_AUTOI")), labor_force::float(get("LABOR_F")), livelihood_strategy::string(get("LS")), available_workers::float(get("MOF_A")), occupied_workers::float(get("MOF_O")), employees_workers::float(get("MOF_E")), labor_alert::bool(get("MOF_W")), subcrops_needs::(float(get("SUB_NEED"))), oil_workers::(int(get("NB_OIL_W")))];
 		ask hogares {
 			my_house <- first(cell overlapping self);
 			ask my_house {
@@ -107,13 +115,17 @@ global {
 		write "---START OF INIT PEOPLE";
 		create personas from: saved_personas with: [name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), my_predio::(first(predios where
 		(each.name = get("PLOT")))), my_hogar::(first(hogares where
-		(each.name = get("HOUSEHOLD")))), income::float(get("INC")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")), oil_worker::bool(get("WORK")), empresa::(first(empresas
+		(each.name = get("HOUSEHOLD")))), my_comuna::(first(comunas where
+		(each.name = get("comuna")))), income::float(get("INC")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")), oil_worker::bool(get("WORK")), empresa::(first(empresas
 		where
 		(each.name = get("EMPRESA")))), contract_term::int(get("CONTRACT")), working_months::int(get("WORK_M")), work_pace::int(get("WORKPACE")), annual_inc::int(get("ANNUAL_INC"))] {
 			my_house <- my_hogar.my_house;
 			ask my_predio {
 				my_hogar <- myself.my_hogar;
 			}
+			ask my_comuna {
+					add myself to: membres_comuna;
+				}
 
 			ask my_predio.cells_inside {
 				predio <- myself.my_predio;
@@ -330,9 +342,39 @@ global {
 		}
 
 		write "------END OF INIT ALG SP3";
+		write "------START OF INIT ALG COMUNAS";
+		ask comunas {
+			create patches from: csv_file("/init/ALG/" + "comuna" + name + "_ldsp.csv", true) with: [type:: string(get("type")), months::int(get("months"))] {
+				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
+					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
+					ask pxl_cible {
+						is_free <- false;
+					}
+
+					location <- pxl_cible.location;
+					ask pxl_cible {
+						landuse <- myself.type;
+						nb_months <- myself.months;
+					}
+
+				}
+
+				do die;
+			}
+
+		}
+
+		write "------END OF INIT ALG COMUNAS";
 		ask predios {
 			ask cells_inside {
 				do color_activities;
+				do update_yields;
+			}
+
+		}
+
+		ask comunas {
+			ask cells_inside {
 				do update_yields;
 			}
 

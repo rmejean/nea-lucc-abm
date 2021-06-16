@@ -65,11 +65,10 @@ global { //Lists
 
 		write "---END OF INIT PLOTS";
 	}
-	
+
 	action init_comunas { //Comunas init
 		write "---START OF INIT COMUNAS";
 		create comunas from: comunas_shp with: [clave_cata::string(read('clave_cata'))];
-
 		write "---END OF INIT COMUNAS";
 	}
 
@@ -115,6 +114,7 @@ global { //Lists
 		hog_gen <- hog_gen localize_on_census (sectores_shp.path);
 		hog_gen <- hog_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_gen {
+			type <- "predio";
 			my_predio <- first(predios overlapping self);
 			my_house <- first(my_predio.cells_deforest closest_to (vias closest_to self));
 			location <- my_house.location;
@@ -171,25 +171,9 @@ global { //Lists
 		}
 
 		write "------END OF SETUP PREDIOS PEOPLE";
-		// --------------------------
-		// Instructions post-génération
-		// --------------------------
-		ask hogares {
-			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			do head_and_ethnicity;
-			do init_values;
-			ask my_predio.cells_inside {
-				my_hogar <- myself;
-			}
-
-		}
-
-		//ask sectores {
-		//do carto_pop;
-		//}
 		write "---END OF INIT PREDIOS POPULATION";
 	}
-	
+
 	action init_pop_comunas {
 		write "---START OF INIT COMUNAS POPULATION";
 		write "------START OF SETUP COMUNAS HOUSEHOLDS";
@@ -216,8 +200,10 @@ global { //Lists
 		hog_com_gen <- hog_com_gen localize_on_census (sectores_shp.path);
 		hog_com_gen <- hog_com_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_com_gen {
+			type <- "comuna";
+			livelihood_strategy <- "SP1.1";
 			my_comuna <- first(comunas overlapping self);
-			my_house <- first(my_predio.cells_deforest closest_to (vias closest_to self));
+			my_house <- first(my_comuna.cells_deforest);
 			location <- my_house.location;
 			ask my_house {
 				landuse <- 'house';
@@ -227,26 +213,56 @@ global { //Lists
 			}
 
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+		write "------END OF SETUP COMUNAS HOUSEHOLDS";
+		write "------START OF SETUP COMUNAS PEOPLE"; //
+
+		// --------------------------
+		// Setup COMUNAS PERSONAS
+		// --------------------------
+		gen_population_generator pop_com_gen;
+		pop_com_gen <- pop_com_gen with_generation_algo "US";
+		pop_com_gen <- add_census_file(pop_com_gen, f_PERSONAS_comunas.path, "Sample", ",", 1, 1);
+		// --------------------------
+		// Setup Attributs
+		// --------------------------	
+		//pop_gen <- pop_gen add_attribute ("sec_id", string, list_id);
+		pop_com_gen <- pop_com_gen add_attribute ("hog_id", string, list_id);
+		//pop_gen <- pop_gen add_attribute ("viv_id", string, list_id);
+		pop_com_gen <- pop_com_gen add_attribute ("Sexo", string, ["Hombre", "Mujer"]);
+		pop_com_gen <- pop_com_gen add_attribute ("Age", int, echelle_ages);
+		pop_com_gen <- pop_com_gen add_attribute ("mes_nac", string, []);
+		pop_com_gen <- pop_com_gen add_attribute ("orden_en_hogar", int, echelle_GLOBALE);
+		pop_com_gen <- pop_com_gen add_attribute ("auto_id", string, []);
+		// --------------------------
+		create personas from: pop_com_gen {
+			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
+			my_house <- my_hogar.my_house;
+			if my_hogar != nil {
+				location <- my_hogar.location;
+				my_comuna <- my_hogar.my_comuna;
+				ask my_comuna {
+					add myself to: membres_comuna;
+				}
+
+				do labour_value_and_needs;
+			} else {
+				do die;
+			}
+
+		}
+
+		write "------END OF SETUP COMUNAS PEOPLE";
+		write "---END OF INIT COMUNAS POPULATION";
+		// --------------------------
+		// Instructions post-génération
+		// --------------------------
+		ask hogares {
+			membres_hogar <- personas where (each.hog_id = self.hog_id);
+			do head_and_ethnicity;
+			do init_values;
+		}
+
 	}
 
 	action init_LS_EMC { //Création des 5 agents-LS
@@ -284,7 +300,7 @@ global { //Lists
 	}
 
 	action init_ALG {
-		write "---START OF INIT ALG";
+		write "---START OF INIT PREDIOS ALG";
 		list<string> list_farming_activities <- (["SC1.1", "SC1.2", "SC2", "SC3.1", "SC4.1", "SC4.2", "SE1.1", "SE1.2", "SE2.1", "SE2.2", "SE2.3", "SE3", "fallow"]); //------------------------------------------------------------------
 		//------------------------------------------------------------------
 		//------------------------------------------------------------------
@@ -628,8 +644,8 @@ global { //Lists
 				}
 
 				ask my_hogar {
-					available_workers <- available_workers - (pxl_livestock * (pxl_livestock * laborcost_SE1_1 / 70));//idem
-					occupied_workers <- occupied_workers + (pxl_livestock * (pxl_livestock * laborcost_SE1_1 / 70));//idem
+					available_workers <- available_workers - (pxl_livestock * (pxl_livestock * laborcost_SE1_1 / 70)); //idem
+					occupied_workers <- occupied_workers + (pxl_livestock * (pxl_livestock * laborcost_SE1_1 / 70)); //idem
 				}
 
 			}
@@ -637,12 +653,36 @@ global { //Lists
 		}
 
 		write "------END OF INIT ALG SP3";
-		write "---END OF INIT ALG";
+		write "---END OF INIT PREDIOS ALG";
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//--------------------------- COMUNAS ------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		//------------------------------------------------------------------
+		write "---START OF INIT COMUNAS ALG";
+		ask comunas {
+			let pxl_generated <- 0;
+			loop while: pxl_generated != length(cells_deforest) {
+				if flip(0.8) {
+					save ("SC3.1" + "," + rnd(30)) to: ("/init/ALG/" + "comuna" + name + "_ldsp.csv") rewrite: true;
+					pxl_generated <- pxl_generated + 1;
+				} else {
+					save ("SC2" + "," + 0) to: ("/init/ALG/" + "comuna" + name + "_ldsp.csv") rewrite: true;
+					pxl_generated <- pxl_generated + 1;
+				}
+
+			}
+
+		}
+
+		write "---END OF INIT COMUNAS ALG";
 	}
 
 	action init_farm_jobs {
 		write "---START OF INIT FARM JOBS";
-		ask hogares {
+		ask hogares where (each.type ="predio") {
 			if available_workers < 0 { //manage the employed labor force
 				if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
 					employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
@@ -664,7 +704,7 @@ global { //Lists
 
 	action init_oil_jobs {
 		write "---START OF INIT OIL JOBS";
-		ask hogares {
+		ask hogares where (each.type ="predio") {
 			let no_more_jobs <- false;
 			loop while: (available_workers >= 14.0) and length(job_candidates) > 0 and (oil_workers < oil_workers_max) and (no_more_jobs = false) {
 				ask first(job_candidates) {
