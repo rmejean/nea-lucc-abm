@@ -82,8 +82,8 @@ global { //Lists
 		write "---END OF INIT OIL COMPANIES";
 	}
 
-	action init_pop { //Population init with GENSTAR
-		write "---START OF INIT POPULATION";
+	action init_pop_predios { //Population init with GENSTAR
+		write "---START OF INIT PREDIOS POPULATION";
 		write "------START OF SETUP HOUSEHOLDS";
 		// --------------------------
 		// Setup HOGARES
@@ -180,7 +180,57 @@ global { //Lists
 		//ask sectores {
 		//do carto_pop;
 		//}
-		write "---END OF INIT POPULATION";
+		write "---END OF INIT PREDIOS POPULATION";
+	}
+	
+	action init_pop_comunas {
+		write "---START OF INIT PREDIOS POPULATION";
+		write "------START OF SETUP HOUSEHOLDS";
+		// --------------------------
+		// Setup HOGARES
+		// --------------------------
+		gen_population_generator hog_com_gen;
+		hog_com_gen <- hog_com_gen with_generation_algo "US";
+		hog_com_gen <- add_census_file(hog_com_gen, f_HOGARES_comunas.path, "Sample", ",", 1, 1);
+		// --------------------------
+		// Setup Attributs
+		// --------------------------	
+		hog_com_gen <- hog_com_gen add_attribute ("sec_id", string, list_id);
+		hog_com_gen <- hog_com_gen add_attribute ("hog_id", string, list_id);
+		hog_com_gen <- hog_com_gen add_attribute ("viv_id", string, list_id);
+		hog_com_gen <- hog_com_gen add_attribute ("Total_Personas", int, echelle_pop);
+		hog_com_gen <- hog_com_gen add_attribute ("Total_Hombres", int, echelle_pop);
+		hog_com_gen <- hog_com_gen add_attribute ("Total_Mujeres", int, echelle_pop);
+		// -------------------------
+		// Spatialization 
+		// -------------------------
+		hog_com_gen <- hog_com_gen localize_on_geometries (predios_con_def_shp.path);
+		hog_com_gen <- hog_com_gen add_capacity_constraint (1);
+		hog_com_gen <- hog_com_gen localize_on_census (sectores_shp.path);
+		hog_com_gen <- hog_com_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
+		create hogares from: hog_com_gen {
+			my_predio <- first(predios overlapping self);
+			my_house <- first(my_predio.cells_deforest closest_to (vias closest_to self));
+			location <- my_house.location;
+			ask my_house {
+				landuse <- 'house';
+				grid_value <- 4.0;
+				is_free <- false;
+				is_deforest <- nil;
+			}
+
+			ask my_predio {
+				is_free <- false;
+				is_free_MCA <- true;
+				my_hogar <- myself;
+			}
+
+			ask my_predio.cells_inside {
+				predio <- myself.my_predio;
+			}
+
+		}
+		
 	}
 
 	action init_LS_EMC { //Création des 5 agents-LS

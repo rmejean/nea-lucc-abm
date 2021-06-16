@@ -31,7 +31,7 @@ global { //Time aspects
 			do init_vias;
 			do init_empresas;
 			do init_predios; //do init_comunas;
-			do init_pop;
+			do init_pop_predios;
 			do init_LS_EMC;
 			do init_ALG;
 			do init_farm_jobs;

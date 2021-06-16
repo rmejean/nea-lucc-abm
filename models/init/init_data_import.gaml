@@ -18,7 +18,7 @@ global {
 	file f_PERSONAS_predios <- csv_file("../../includes/censo/Personas_des_161_locsincom.csv");
 	file f_HOGARES_predios <- csv_file("../../includes/censo/Hogares_des_161_locsincom.csv");
 	//file f_PERSONAS_comunas <- csv_file("../../includes/censo/com_personas.csv");
-	//file f_HOGARES_comunas <- csv_file("../../includes/censo/com_hogares.csv");
+	file f_HOGARES_comunas <- csv_file("../../includes/censo/Hogares_des_28_loccom.csv");
 
 	//Import csv frequency tables for the landscape generator
 	file f_FREQ_SP1_1 <- csv_file("../../includes/LS_patchwork_frequencies/SP1_1.csv");
