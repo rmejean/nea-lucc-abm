@@ -760,8 +760,8 @@ global { //Lists
 	}
 
 	action init_control {
-		save ("nbLS1.1,nbLS1.2,nbLS1.3,nbLS2,nbLS3") to: ("../exports/init_report.csv") rewrite: false;
-		save [nb_LS1_1, nb_LS1_2, nb_LS1_3, nb_LS2, nb_LS3] to: ("../exports/init_report.csv") rewrite: true header: true;
+		save ("nbLS1.1,nbLS1.2,nbLS1.3,nbLS2,nbLS3") to: ("../exports/init_report") rewrite: false;
+		save [nb_LS1_1, nb_LS1_2, nb_LS1_3, nb_LS2, nb_LS3] to: ("../exports/init_report") rewrite: true header: true;
 	}
 
 }
