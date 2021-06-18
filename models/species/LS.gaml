@@ -47,7 +47,7 @@ species LS_agents {
 
 			}
 
-			ask hogares {
+			ask hogares where (each.type = "predio") {
 				ask my_predio {
 					is_free_MCA <- true;
 				}
@@ -73,7 +73,7 @@ species LS_agents {
 
 			}
 
-			ask hogares {
+			ask hogares where (each.type = "predio") {
 				ask my_predio {
 					is_free_MCA <- true;
 				}
@@ -99,7 +99,7 @@ species LS_agents {
 
 			}
 
-			ask hogares {
+			ask hogares where (each.type = "predio") {
 				ask my_predio {
 					is_free_MCA <- true;
 				}
@@ -125,7 +125,7 @@ species LS_agents {
 
 			}
 
-			ask hogares {
+			ask hogares where (each.type = "predio") {
 				ask my_predio {
 					is_free_MCA <- true;
 				}
@@ -153,7 +153,7 @@ species LS_agents {
 
 		}
 
-		ask hogares {
+		ask hogares where (each.type = "predio") {
 			ask my_predio {
 				is_free_MCA <- true;
 			}
@@ -195,7 +195,7 @@ species LS_agents {
 
 		}
 
-		ask hogares {
+		ask hogares where (each.type = "predio") {
 			livelihood_strategy <- my_predio.LS;
 		}
 

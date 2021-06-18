@@ -98,12 +98,11 @@ global {
 				is_deforest <- nil;
 			}
 
-			ask my_predio {
-				my_hogar <- myself;
-			}
+			if type = "predio" {
+				ask my_predio {
+					my_hogar <- myself;
+				}
 
-			ask my_predio.cells_inside {
-				my_hogar <- myself;
 			}
 
 		}
@@ -114,22 +113,25 @@ global {
 	action load_saved_personas {
 		write "---START OF INIT PEOPLE";
 		create personas from: saved_personas with: [name:: string(get("NAME")), sec_id::string(get("SEC_ID")), hog_id::string(get("HOG_ID")), my_predio::(first(predios where
-		(each.name = get("PLOT")))), my_hogar::(first(hogares where
-		(each.name = get("HOUSEHOLD")))), my_comuna::(first(comunas where
+		(each.name = get("PLOT")))), my_hogar::(first(hogares where (each.name = get("HOUSEHOLD")))), my_comuna::(first(comunas where
 		(each.name = get("comuna")))), income::float(get("INC")), Age::int(get("AGE")), mes_nac::string(get("MES_NAC")), Sexo::string(get("SEXO")), orden_en_hogar::int(get("ORDEN")), labor_value::float(get("labor_value")), inc::float(get("INC")), auto_id::string(get("AUTO_ID")), chef::bool(get("HEAD")), oil_worker::bool(get("WORK")), empresa::(first(empresas
 		where
 		(each.name = get("EMPRESA")))), contract_term::int(get("CONTRACT")), working_months::int(get("WORK_M")), work_pace::int(get("WORKPACE")), annual_inc::int(get("ANNUAL_INC"))] {
 			my_house <- my_hogar.my_house;
-			ask my_predio {
-				my_hogar <- myself.my_hogar;
-			}
-			ask my_comuna {
-					add myself to: membres_comuna;
+			switch my_hogar.type {
+				match "predio" {
+					ask my_predio {
+						my_hogar <- myself.my_hogar;
+					}
 				}
 
-			ask my_predio.cells_inside {
-				predio <- myself.my_predio;
-				my_hogar <- myself.my_hogar;
+				match "comuna" {
+					ask my_comuna {
+						add myself to: membres_comuna;
+					}
+
+				}
+
 			}
 
 			ask my_hogar {
@@ -344,7 +346,7 @@ global {
 		write "------END OF INIT ALG SP3";
 		write "------START OF INIT ALG COMUNAS";
 		ask comunas {
-			create patches from: csv_file("/init/ALG/" + "comuna" + name + "_ldsp.csv", true) with: [type:: string(get("type")), months::int(get("months"))] {
+			create patches from: csv_file("/init/ALG/" + name + "_ldsp.csv", true) with: [type:: string(get("type")), months::int(get("months"))] {
 				if length(myself.cells_deforest where (each.is_free = true)) != 0 {
 					cell pxl_cible <- one_of(myself.cells_deforest where (each.is_free = true));
 					ask pxl_cible {

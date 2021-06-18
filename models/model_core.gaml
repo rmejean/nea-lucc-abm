@@ -66,7 +66,7 @@ global { //Time aspects
 			do load_saved_hogares;
 			do load_saved_personas;
 			do load_saved_landscape;
-			ask hogares {
+			ask hogares where (each.type = "predio") {
 				do assess_income_needs;
 				do setting_alerts;
 			}

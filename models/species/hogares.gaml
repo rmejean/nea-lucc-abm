@@ -154,8 +154,21 @@ species hogares {
 
 		}
 
-		ask my_predio {
-			do crops_calc;
+		switch type {
+			match "predio" {
+				ask my_predio {
+					do crops_calc;
+				}
+
+			}
+
+			match "comuna" {
+				ask my_comuna {
+					do crops_calc;
+				}
+
+			}
+
 		}
 
 	}

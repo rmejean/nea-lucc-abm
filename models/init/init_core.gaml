@@ -56,12 +56,7 @@ global { //Lists
 
 	action init_predios { //Plots init
 		write "---START OF INIT PLOTS";
-		create predios from: predios_con_def_shp with: [clave_cata::string(read('clave_cata'))] {
-			if length(cells_deforest) = 0 { //Delete any plots with no deforestation
-				do die;
-			}
-
-		}
+		create predios from: predios_con_def_shp ;
 
 		write "---END OF INIT PLOTS";
 	}
@@ -159,8 +154,9 @@ global { //Lists
 		// --------------------------
 		create personas from: pop_gen {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
-			my_house <- my_hogar.my_house;
+			
 			if my_hogar != nil {
+				my_house <- my_hogar.my_house;
 				location <- my_hogar.location;
 				my_predio <- my_hogar.my_predio;
 				do labour_value_and_needs;
@@ -196,7 +192,7 @@ global { //Lists
 		// Spatialization 
 		// -------------------------
 		hog_com_gen <- hog_com_gen localize_on_geometries (comunas_shp.path);
-		hog_com_gen <- hog_com_gen add_capacity_constraint (1);//les comunas ne sont pas limitées à 1 ménage
+		//hog_com_gen <- hog_com_gen add_capacity_constraint (1);//les comunas ne sont pas limitées à 1 ménage
 		hog_com_gen <- hog_com_gen localize_on_census (sectores_shp.path);
 		hog_com_gen <- hog_com_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_com_gen {
@@ -237,8 +233,9 @@ global { //Lists
 		// --------------------------
 		create personas from: pop_com_gen {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
-			my_house <- my_hogar.my_house;
+			
 			if my_hogar != nil {
+				my_house <- my_hogar.my_house;
 				location <- my_hogar.location;
 				my_comuna <- my_hogar.my_comuna;
 				ask my_comuna {
@@ -259,7 +256,7 @@ global { //Lists
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			do head_and_ethnicity;
+			if type = "predio" {do head_and_ethnicity;}
 			do init_values;
 		}
 
@@ -664,12 +661,13 @@ global { //Lists
 		write "---START OF INIT COMUNAS ALG";
 		ask comunas {
 			let pxl_generated <- 0;
+			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
 				if flip(0.8) {
-					save ("SC3.1" + "," + rnd(30)) to: ("/init/ALG/" + "comuna" + name + "_ldsp.csv") rewrite: true;
+					save ("SC3.1" + "," + rnd(30)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 				} else {
-					save ("SC2" + "," + 0) to: ("/init/ALG/" + "comuna" + name + "_ldsp.csv") rewrite: true;
+					save ("SC2" + "," + 0) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 				}
 

@@ -32,9 +32,6 @@ species comunas {
 	bool needs_alert;
 	list<personas> membres_comuna;
 	//
-	float unforest_based <- 50.0;//  %de subsistance hors produits de la forêt
-
-
 	action deforestation_rate_calc {
 		if area_total > 0 {
 			def_rate <- (area_deforest / area_total) * 100;
@@ -45,20 +42,18 @@ species comunas {
 
 	}
 
-
 	action assess_income_needs {
 		income_crops_annual <- (sum(cells_inside where (each.landuse = "SC2") collect each.rev) * 12);
 	}
-	
+
 	action crops_calc {
 		comuna_subcrops_amount <- (length(cells_deforest where (each.landuse = "SC3.1" or each.landuse = "SC4.1" or each.landuse = "SC4.2" or each.landuse = "SE3")));
 	}
 
 	action setting_alerts {
-		if (unforest_based*comuna_subcrops_needs/100 > comuna_subcrops_amount) {//dépend de la part de subsistance due à la forêt
+		if (unforest_based * comuna_subcrops_needs / 100 > comuna_subcrops_amount) { //dépend de la part de subsistance due à la forêt
 			hunger_alert <- true;
 		}
-
 
 		if hunger_alert {
 			needs_alert <- true;

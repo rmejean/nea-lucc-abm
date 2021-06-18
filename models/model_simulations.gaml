@@ -39,6 +39,7 @@ global {
 	float wages_min;
 	float wages_max;
 	float job_wages <- rnd(wages_min, wages_max);
+	float unforest_based <- 50.0; //  %de subsistance hors produits de la forêt
 	bool social_network_inf <- false; //Enables the imitation of LUCC choices from the household's social network
 	bool scenarios <- false; //launch scenarios
 	bool save_years <- true; //save a classif export every 12 cycles
@@ -93,7 +94,7 @@ experiment save_init type: gui until: stop_simulation = true {
 	}
 
 	parameter "Generate a new init?" category: "Parameters" var: new_init init: true;
-	//Model Parameters
+	//Global Parameters
 	parameter "LUCC influenced by social network choices?" category: "Global Parameters" var: social_network_inf init: false;
 	parameter "Number of new jobs per months" category: "Global Parameters" var: nb_new_jobs init: 3 min: 1 max: 30;
 	parameter "Amount needed to feed a person per year" category: "Global Parameters" var: $_ANFP init: 3900.0;
@@ -103,6 +104,7 @@ experiment save_init type: gui until: stop_simulation = true {
 	parameter "Job wages max" category: "Manpower" var: wages_max init: 400.0;//biblio : Morin (2015) p. 79
 	//Agronomy
 	parameter "Soil depletion probability" category: "Agronomy" var: soil_depletion_proba init: 0.2;
+	parameter "% non-forest ressources for comunas" category: "Agronomy" var: unforest_based init: 50.0;
 	parameter "Price cacao" category: "Agronomy" var: price_cacao init: 100;
 	parameter "Price Coffee" category: "Agronomy" var: price_coffee init: 14;
 	parameter "Price_manioc" category: "Agronomy" var: price_manioc init: 15;
@@ -166,6 +168,7 @@ experiment run_model type: gui until: stop_simulation = true {
 	parameter "Job wages max" category: "Manpower" var: wages_max init: 350.0;
 	//Agronomy
 	parameter "Soil depletion probability" category: "Agronomy" var: soil_depletion_proba init: 0.2;
+	parameter "% non-forest ressources for comunas" category: "Agronomy" var: unforest_based init: 50.0;
 	parameter "Price cacao" category: "Agronomy" var: price_cacao init: 100;
 	parameter "Price Coffee" category: "Agronomy" var: price_coffee init: 14;
 	parameter "Price_manioc" category: "Agronomy" var: price_manioc init: 15;
