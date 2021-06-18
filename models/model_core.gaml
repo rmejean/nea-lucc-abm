@@ -49,8 +49,6 @@ global { //Time aspects
 			ask comunas {
 				do deforestation_rate_calc;
 			}
-				
-				
 			do init_control;
 			init_end <- true;
 			write "END OF INITIALIZATION";

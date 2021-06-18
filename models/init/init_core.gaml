@@ -194,7 +194,7 @@ global { //Lists
 		hog_com_gen <- hog_com_gen localize_on_geometries (comunas_shp.path);
 		//hog_com_gen <- hog_com_gen add_capacity_constraint (1);//les comunas ne sont pas limitées à 1 ménage
 		hog_com_gen <- hog_com_gen localize_on_census (sectores_shp.path);
-		hog_com_gen <- hog_com_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
+		hog_com_gen <- hog_com_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 10 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_com_gen {
 			type <- "comuna";
 			livelihood_strategy <- "SP1.1";
@@ -663,7 +663,7 @@ global { //Lists
 			let pxl_generated <- 0;
 			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
-				if flip(0.8) {
+				if flip(0.9) {
 					save ("SC3.1" + "," + rnd(30)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
 				} else {
@@ -740,8 +740,8 @@ global { //Lists
 	}
 
 	action init_control {
-		save ("nbLS1.1,nbLS1.2,nbLS1.3,nbLS2,nbLS3") to: ("../exports/init_report") rewrite: false;
-		save [nb_LS1_1, nb_LS1_2, nb_LS1_3, nb_LS2, nb_LS3] to: ("../exports/init_report") rewrite: false header: true;
+		save ("nbLS1.1,nbLS1.2,nbLS1.3,nbLS2,nbLS3") to: ("../exports/init_report.csv") rewrite: false;
+		save [nb_LS1_1, nb_LS1_2, nb_LS1_3, nb_LS2, nb_LS3] to: ("../exports/init_report.csv") rewrite: true header: true;
 	}
 
 }

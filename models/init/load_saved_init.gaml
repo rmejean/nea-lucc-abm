@@ -118,18 +118,9 @@ global {
 		where
 		(each.name = get("EMPRESA")))), contract_term::int(get("CONTRACT")), working_months::int(get("WORK_M")), work_pace::int(get("WORKPACE")), annual_inc::int(get("ANNUAL_INC"))] {
 			my_house <- my_hogar.my_house;
-			switch my_hogar.type {
-				match "predio" {
-					ask my_predio {
-						my_hogar <- myself.my_hogar;
-					}
-				}
-
-				match "comuna" {
-					ask my_comuna {
-						add myself to: membres_comuna;
-					}
-
+			if type = "comuna" {
+				ask my_comuna {
+					add myself to: membres_comuna;
 				}
 
 			}
@@ -342,7 +333,6 @@ global {
 			}
 
 		}
-
 		write "------END OF INIT ALG SP3";
 		write "------START OF INIT ALG COMUNAS";
 		ask comunas {
