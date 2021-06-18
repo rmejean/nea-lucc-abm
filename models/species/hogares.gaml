@@ -60,6 +60,8 @@ species hogares {
 			}
 
 			match "comuna" {
+				labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
+				available_workers <- labor_force;
 				my_comuna.comuna_subcrops_needs <- (sum(my_comuna.membres_comuna collect each.food_needs));
 			}
 
@@ -154,21 +156,8 @@ species hogares {
 
 		}
 
-		switch type {
-			match "predio" {
-				ask my_predio {
-					do crops_calc;
-				}
-
-			}
-
-			match "comuna" {
-				ask my_comuna {
-					do crops_calc;
-				}
-
-			}
-
+		ask my_predio {
+			do crops_calc;
 		}
 
 	}

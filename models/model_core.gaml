@@ -138,10 +138,14 @@ global { //Time aspects
 		//
 		write "---CELLS UPDATED";
 		//
-		ask hogares {
+		ask hogares where (each.type = "predio") {
 			do assess_income_needs;
 			do setting_alerts;
 		}
+		ask comunas {
+				do assess_income_needs;
+				do setting_alerts;
+			}
 
 	}
 	//////////////////
@@ -149,7 +153,7 @@ global { //Time aspects
 	//////////////////
 	reflex LUC {
 
-		ask hogares {
+		ask hogares where (each.type = "predio") {
 			if needs_alert = true {
 				do looking_for_job;
 				do assess_income_needs;
@@ -158,13 +162,19 @@ global { //Time aspects
 
 		}
 
-		ask hogares {
+		ask hogares where (each.type = "predio") {
 			if needs_alert = true {
 				do subsistence_LUC;
 			} else {
 			//do profit_LUC;
 			}
 
+		}
+		
+		ask comunas {
+			if needs_alert = true {
+				do subsistence_LUC;
+			}
 		}
 
 		write "--START address work in progress";

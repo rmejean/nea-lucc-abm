@@ -79,7 +79,11 @@ global {
 	action load_saved_comunas {
 		write "---START OF INIT COMUNAS";
 		create comunas from: saved_comunas with:
-		[clave_cata::string(get("CLAVE")), area_total::int(get("AREA_TOTAL")), area_deforest::int(get("AREA_DEF")), area_forest::int(get("AREA_F")), def_rate::float(get("DEF_RATE")), forest_rate::float(get("FOREST_R")), income_crops_annual::float(get("SUBCROPS_INC")), comuna_subcrops_needs::float(get("SUB_NEEDS")), comuna_subcrops_amount::float(get("SUB_AMOUNT"))];
+		[clave_cata::string(get("CLAVE")), area_total::int(get("AREA_TOTAL")), area_deforest::int(get("AREA_DEF")), area_forest::int(get("AREA_F")), def_rate::float(get("DEF_RATE")), forest_rate::float(get("FOREST_R")), income_crops_annual::float(get("SUBCROPS_INC")), comuna_subcrops_needs::float(get("SUB_NEEDS")), comuna_subcrops_amount::float(get("SUB_AMOUNT"))]{
+			ask cells_inside {
+					my_comuna <- myself;
+			}
+		}
 		write "---END OF INIT COMUNAS";
 	}
 
@@ -102,6 +106,9 @@ global {
 				ask my_predio {
 					my_hogar <- myself;
 				}
+				ask my_predio.cells_inside {
+					my_hogar <- myself;
+			}
 
 			}
 

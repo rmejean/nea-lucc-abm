@@ -23,12 +23,16 @@ species comunas {
 	list<cell> cells_forest -> cells_inside where (each.is_deforest = false);
 	int nb_hogares;
 	int nb_personas;
+	float com_available_workers;
+	float com_occupied_workers;
+	float com_labor_force;
 	float def_rate;
 	float income_crops_annual;
 	float comuna_subcrops_needs;
 	int comuna_subcrops_amount;
 	float forest_rate;
 	bool hunger_alert;
+	bool money_alert;
 	bool needs_alert;
 	list<personas> membres_comuna;
 	//
@@ -44,10 +48,11 @@ species comunas {
 
 	action assess_income_needs {
 		income_crops_annual <- (sum(cells_inside where (each.landuse = "SC2") collect each.rev) * 12);
+		do crops_calc;
 	}
 
 	action crops_calc {
-		comuna_subcrops_amount <- (length(cells_deforest where (each.landuse = "SC3.1" or each.landuse = "SC4.1" or each.landuse = "SC4.2" or each.landuse = "SE3")));
+		comuna_subcrops_amount <- (length(cells_deforest where (each.landuse = "SC3.1")));
 	}
 
 	action setting_alerts {
@@ -55,8 +60,38 @@ species comunas {
 			hunger_alert <- true;
 		}
 
+		if ((unforest_based * ($_ANFP * length(membres_comuna) / 100)) > income_crops_annual) {
+			money_alert <- true;
+		}
+
 		if hunger_alert {
 			needs_alert <- true;
+		}
+
+	}
+
+	action subsistence_LUC {
+		let needs <- (unforest_based * comuna_subcrops_needs / 100) - comuna_subcrops_amount;
+		let stop <- false;
+		loop while: length(cells_forest) > 0 and (needs > 0) and (stop = false) { //TODO: s'il y a au moins un pixel à déforester mais rajouter aussi les friches longues!
+			if com_available_workers > (laborcost_SC3_1 + laborcost_install_SC3) {
+				ask closest_to(cells_forest, one_of(cells_deforest), 1) {
+					is_deforest <- true;
+					landuse <- 'SC3.1';
+					grid_value <- 3.0;
+					new_SC3 <- new_SC3 + 1;
+					predio.subcrops_amount <- predio.subcrops_amount + 1;
+					write "new SC3.1 for SUBSISTENCE at " + location;
+					my_comuna.com_available_workers <- (my_comuna.com_available_workers - (laborcost_SC3_1 + laborcost_install_SC3));
+					nb_months <- 0;
+				}
+
+				needs <- comuna_subcrops_needs - comuna_subcrops_amount;
+			} else {
+				write "pas assez de main d'oeuvre pour faire du SUBSISTENCE LUC en comuna";
+				stop <- true;
+			}
+
 		}
 
 	}

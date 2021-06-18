@@ -56,8 +56,7 @@ global { //Lists
 
 	action init_predios { //Plots init
 		write "---START OF INIT PLOTS";
-		create predios from: predios_con_def_shp ;
-
+		create predios from: predios_con_def_shp;
 		write "---END OF INIT PLOTS";
 	}
 
@@ -154,7 +153,6 @@ global { //Lists
 		// --------------------------
 		create personas from: pop_gen {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
-			
 			if my_hogar != nil {
 				my_house <- my_hogar.my_house;
 				location <- my_hogar.location;
@@ -233,7 +231,6 @@ global { //Lists
 		// --------------------------
 		create personas from: pop_com_gen {
 			my_hogar <- first(hogares where (each.hog_id = self.hog_id));
-			
 			if my_hogar != nil {
 				my_house <- my_hogar.my_house;
 				location <- my_hogar.location;
@@ -256,8 +253,17 @@ global { //Lists
 		// --------------------------
 		ask hogares {
 			membres_hogar <- personas where (each.hog_id = self.hog_id);
-			if type = "predio" {do head_and_ethnicity;}
+			if type = "predio" {
+				do head_and_ethnicity;
+			}
+
 			do init_values;
+		}
+
+		ask comunas {
+			com_labor_force <- (sum(membres_comuna collect each.labor_force));
+			com_available_workers <- com_labor_force;
+			com_occupied_workers <- com_labor_force - com_available_workers;
 		}
 
 	}
@@ -661,14 +667,28 @@ global { //Lists
 		write "---START OF INIT COMUNAS ALG";
 		ask comunas {
 			let pxl_generated <- 0;
+			let pxl_subcrops <- 0;
+			let pxl_coffee <- 0;
 			save ("type,months") to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: true;
 			loop while: pxl_generated != length(cells_deforest) {
-				if flip(0.9) {
+				if comuna_subcrops_needs > pxl_subcrops and com_available_workers >= laborcost_SC3_1 {
 					save ("SC3.1" + "," + rnd(30)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
 					pxl_generated <- pxl_generated + 1;
+					pxl_subcrops <- pxl_subcrops + 1;
+					com_available_workers <- com_available_workers - laborcost_SC3_1;
+					com_occupied_workers <- com_occupied_workers + laborcost_SC3_1;
 				} else {
-					save ("SC2" + "," + 0) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
-					pxl_generated <- pxl_generated + 1;
+					if com_available_workers > laborcost_SC2 {
+						save ("SC2" + "," + 0) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
+						pxl_generated <- pxl_generated + 1;
+						pxl_coffee <- pxl_coffee + 1;
+						com_available_workers <- com_available_workers - laborcost_SC2;
+						com_occupied_workers <- com_occupied_workers + laborcost_SC2;
+					} else {
+						save ("fallow" + "," + rnd(60)) to: ("/init/ALG/" + name + "_ldsp.csv") rewrite: false;
+						pxl_generated <- pxl_generated + 1;
+					}
+
 				}
 
 			}
@@ -680,7 +700,7 @@ global { //Lists
 
 	action init_farm_jobs {
 		write "---START OF INIT FARM JOBS";
-		ask hogares where (each.type ="predio") {
+		ask hogares where (each.type = "predio") {
 			if available_workers < 0 { //manage the employed labor force
 				if (livelihood_strategy = "SP2") or (livelihood_strategy = "SP3") {
 					employees_workers <- round(((0 - available_workers) / 30) + 0.5); //rounded up to the nearest whole number because workers are indivisible
@@ -702,7 +722,7 @@ global { //Lists
 
 	action init_oil_jobs {
 		write "---START OF INIT OIL JOBS";
-		ask hogares where (each.type ="predio") {
+		ask hogares where (each.type = "predio") {
 			let no_more_jobs <- false;
 			loop while: (available_workers >= 14.0) and length(job_candidates) > 0 and (oil_workers < oil_workers_max) and (no_more_jobs = false) {
 				ask first(job_candidates) {
