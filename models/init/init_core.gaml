@@ -196,7 +196,7 @@ global { //Lists
 		// Spatialization 
 		// -------------------------
 		hog_com_gen <- hog_com_gen localize_on_geometries (comunas_shp.path);
-		//hog_com_gen <- hog_com_gen add_capacity_constraint (1);//les comunas ne sont pas limitées à 1 ménage
+		hog_com_gen <- hog_com_gen add_capacity_constraint (1);//les comunas ne sont pas limitées à 1 ménage
 		hog_com_gen <- hog_com_gen localize_on_census (sectores_shp.path);
 		hog_com_gen <- hog_com_gen add_spatial_match (stringOfCensusIdInCSVfile, stringOfCensusIdInShapefile, 35 #km, 1 #km, 1); //à préciser
 		create hogares from: hog_com_gen {
