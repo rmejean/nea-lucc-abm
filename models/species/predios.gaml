@@ -26,8 +26,8 @@ species predios {
 	int area_total -> length(cells_inside);
 	int area_deforest -> length(cells_deforest);
 	int area_forest -> length(cells_forest);
-	float def_rate -> (area_deforest / area_total) * 100;
-	float forest_rate -> (area_forest / area_total) * 100;
+	float def_rate;
+	float forest_rate;
 	float dist_via_auca <- distance_to(self, vias where (each.orden = 1) closest_to self); //distance to via Auca (main road on the study area, original settlement and and location of oil companies)
 	float prox_via_auca <- 20000 - (self.dist_via_auca);
 	int indigena; //indigenous index
@@ -50,15 +50,15 @@ species predios {
 	//list<cell> cells_urban -> cells_inside where (each.grid_value = 4);
 	list<int> rankings_LS_EMC <- ([]);
 
-//	action deforestation_rate_calc {
-//		if area_total > 0 {
-//			//def_rate <- (area_deforest / area_total) * 100;
-//			forest_rate <- (area_forest / area_total) * 100;
-//		} else {
-//			def_rate <- 0.0;
-//		}
-//
-//	}
+	action deforestation_rate_calc {
+		if area_total > 0 {
+			//def_rate <- (area_deforest / area_total) * 100;
+			forest_rate <- (area_forest / area_total) * 100;
+		} else {
+			def_rate <- 0.0;
+		}
+
+	}
 
 	action identify_house {
 		ask (cells_deforest closest_to (vias closest_to self)) {

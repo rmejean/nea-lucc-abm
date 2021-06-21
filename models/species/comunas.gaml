@@ -26,25 +26,25 @@ species comunas {
 	float com_available_workers;
 	float com_occupied_workers;
 	float com_labor_force;
-	float def_rate -> (area_deforest / area_total) * 100;
+	float def_rate ;
 	float income_crops_annual;
 	float comuna_subcrops_needs;
 	int comuna_subcrops_amount;
-	float forest_rate -> (area_forest / area_total) * 100;
+	float forest_rate ;
 	bool hunger_alert;
 	bool money_alert;
 	bool needs_alert;
 	list<personas> membres_comuna;
 	//
-//	action deforestation_rate_calc {
-//		if area_total > 0 {
-//			def_rate <- (area_deforest / area_total) * 100;
-//			forest_rate <- (area_forest / area_total) * 100;
-//		} else {
-//			def_rate <- 0.0;
-//		}
-//
-//	}
+	action deforestation_rate_calc {
+		if area_total > 0 {
+			def_rate <- (area_deforest / area_total) * 100;
+			forest_rate <- (area_forest / area_total) * 100;
+		} else {
+			def_rate <- 0.0;
+		}
+
+	}
 
 	action assess_income_needs {
 		income_crops_annual <- (sum(cells_inside where (each.landuse = "SC2") collect each.rev) * 12);
