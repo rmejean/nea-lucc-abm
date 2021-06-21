@@ -48,7 +48,7 @@ global {
 	//-----------------------------
 	bool init_end <- false;
 	string save_landscape <- ("../includes/initGENfiles/agricultural_landscape.shp");
-	string save_simplified_classif <- ("../includes/initGENfiles/simplified_classif.tif");
+	string save_simplified_classif <- ("../includes/initGENfiles/simplified_classif.asc");
 	string save_landuse_classif <- ("../includes/initGENfiles/landuse_classif.asc");
 	string save_vias <- ("../includes/initGENfiles/vias.shp");
 	string save_empresas <- ("../includes/initGENfiles/empresas.shp");
@@ -59,7 +59,7 @@ global {
 	//
 	bool step_end <- false;
 	string export_landscape <- ("../exports/agricultural_landscape.shp");
-	string export_simplified_classif <- ("../exports/simplified_classif.tif");
+	string export_simplified_classif <- ("../exports/simplified_classif.asc");
 	string export_landuse_classif <- ("../exports/landuse_classif.asc");
 	string export_vias <- ("../exports/vias.shp");
 	string export_empresas <- ("../exports/empresas.shp");
@@ -82,7 +82,9 @@ experiment save_init type: gui until: stop_simulation = true {
 	user_command "Save all files" category: "Saving init" when: init_end = true color: #darkred {
 	//save cell to: save_landscape type: "shp" attributes:
 	//["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
-		save cell to: save_simplified_classif type: "geotiff"; //Export a simplified classification
+		save cell to: save_simplified_classif type: "asc"; //save a simplified classification
+		ask cell {do format_landuse;}
+		save cell to: save_landuse_classif type: "asc";//save a landuse classification
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: save_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUB_C"::subcrops_amount, "CELSE1.1"::nb_cells_SE1_1, "CELSE1.2"::nb_cells_SE1_2, "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];
@@ -147,7 +149,7 @@ experiment run_model type: gui until: stop_simulation = true {
 	user_command "Save all files" category: "Export data" when: step_end = true color: #darkred {
 	//save cell to: export_landscape type: "shp" attributes:
 	//["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
-		save cell to: export_simplified_classif type: "geotiff"; //Export a simplified classification
+		save cell to: export_simplified_classif type: "asc"; //Export a simplified classification
 		save vias to: export_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: export_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUB_C"::subcrops_amount, "CELSE1.1"::nb_cells_SE1_1, "CELSE1.2"::nb_cells_SE1_2, "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];

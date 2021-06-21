@@ -171,9 +171,9 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	
 	action format_landuse {
 		switch landuse {
-			match 'wip' { //work in progress
-				grid_value <- 5.0;
-			}
+//			match 'wip' { //work in progress
+//				grid_value <- 5.0;
+//			}
 
 			match 'SC1.1' {
 				grid_value <- 6.0;
