@@ -80,6 +80,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	string landuse2;
 	string landuse3;
 	string future_landuse;
+	string hist;
 	int wip;
 	int wip_division;
 	float wip_laborforce <- 0.0;
@@ -402,7 +403,10 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	//***************************************************************
 	//***************************************************************
+	//***************************CROP CYCLE*************************
 	//***************************************************************
+	//***************************************************************
+	
 	action crop_cycle {
 		if landuse != 'wip' {
 			nb_months <- nb_months + 1;
@@ -420,6 +424,7 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 			grid_value <- 2.0;
 			landuse <- nil;
 			nb_months <- nil;
+			hist <- "forest";
 		}
 
 	}
