@@ -203,11 +203,14 @@ global { //Time aspects
 	
 	reflex when: every(12 #cycles) and save_years {
 		save cell to: ("../exports/LC_simu_month" + cycle + ".asc") type: "asc";
-		write "EXPORT CLASSIF LAND COVER";
+		write "EXPORTED CLASSIF LAND COVER";
+		write "CONVERT TO LAND USE...";
 		ask cell {do format_landuse;}
+		write "CONVERTED";
 		save cell to: ("../exports/LU_simu_month" + cycle + ".asc") type: "asc";//save a landuse classification
+		write "EXPORTED CLASSIF LAND USE";
+		write "CONVERT TO LAND COVER...";
 		ask cell {do format_landcover;}
-		write "EXPORT CLASSIF LAND USE";
 	}
 
 }

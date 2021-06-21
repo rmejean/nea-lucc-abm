@@ -168,13 +168,12 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 		//		}
 
 	}
-	
+
 	action format_landuse {
 		switch landuse {
-//			match 'wip' { //work in progress
-//				grid_value <- 5.0;
-//			}
-
+		//			match 'wip' { //work in progress
+		//				grid_value <- 5.0;
+		//			}
 			match 'SC1.1' {
 				grid_value <- 6.0;
 			}
@@ -233,14 +232,13 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	action format_landcover {
 		switch grid_value {
-			match_between [5.0, 18.0] {
+			match_between [5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0] {
 				grid_value <- 3.0;
 			}
 
 		}
 
 	}
-
 
 	action update_yields {
 		if landuse = 'SC1.1' {

@@ -203,7 +203,7 @@ global { //Lists
 				landuse <- 'house';
 				grid_value <- 4.0;
 				is_free <- false;
-				is_deforest <- nil;
+				is_deforest <- true;
 			}
 
 		}
@@ -263,7 +263,6 @@ global { //Lists
 		ask comunas {
 			com_labor_force <- (sum(membres_comuna collect each.labor_force));
 			com_available_workers <- com_labor_force;
-			com_occupied_workers <- com_labor_force - com_available_workers;
 		}
 
 	}

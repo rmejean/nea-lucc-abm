@@ -52,21 +52,15 @@ species hogares {
 	float my1px_labor_cost_SE1_2 -> length(my_predio.cells_SE1_2) * laborcost_SE1_2 / 15; //idem
 	//
 	action init_values {
-		switch type {
-			match "predio" {
-				labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
-				available_workers <- labor_force;
-				subcrops_needs <- (sum(membres_hogar collect each.food_needs));
-			}
+		labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
+		available_workers <- labor_force;
+		subcrops_needs <- (sum(membres_hogar collect each.food_needs));
 
-			match "comuna" {
-				labor_force <- (sum(membres_hogar collect each.labor_value) * 30);
-				available_workers <- labor_force;
-				my_comuna.comuna_subcrops_needs <- (sum(my_comuna.membres_comuna collect each.food_needs));
-			}
-
-		}
-
+		//			match "comuna" {
+		//				my_comuna.com_labor_force <- my_comuna.com_labor_force + (sum(membres_hogar collect each.labor_value) * 30);
+		//				my_comuna.com_available_workers <- labor_force;
+		//				my_comuna.comuna_subcrops_needs <- (sum(my_comuna.membres_comuna collect each.food_needs));
+		//			}
 	}
 
 	action head_and_ethnicity {
@@ -650,26 +644,26 @@ species hogares {
 							nb_months <- 0;
 						}
 
-					} 
-//					else {
-//						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
-//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
-//								is_deforest <- true;
-//								landuse <- 'wip';
-//								future_landuse <- 'SC1.1';
-//								my_hogar.last_decision <- 'SC1.1';
-//								wip <- 1; //meaning: we will finish planting next month
-//								starting_wip <- true; //we just started planting
-//								wip_division <- 2;
-//								wip_laborforce <- wip_laborforce + laborcost_install_SC1;
-//								write "deforestation in progress for PROFIT at " + location;
-//								myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1 / wip_division));
-//								nb_months <- 0;
-//							}
-//
-//						}
-//
-//					}
+					}
+					//					else {
+					//						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
+					//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+					//								is_deforest <- true;
+					//								landuse <- 'wip';
+					//								future_landuse <- 'SC1.1';
+					//								my_hogar.last_decision <- 'SC1.1';
+					//								wip <- 1; //meaning: we will finish planting next month
+					//								starting_wip <- true; //we just started planting
+					//								wip_division <- 2;
+					//								wip_laborforce <- wip_laborforce + laborcost_install_SC1;
+					//								write "deforestation in progress for PROFIT at " + location;
+					//								myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1 / wip_division));
+					//								nb_months <- 0;
+					//							}
+					//
+					//						}
+					//
+					//					}
 
 				}
 
@@ -686,26 +680,26 @@ species hogares {
 							nb_months <- 0;
 						}
 
-					} 
-//					else {
-//						if (available_workers > (laborcost_SC1_2 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
-//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
-//								is_deforest <- true;
-//								landuse <- 'wip';
-//								future_landuse <- 'SC1.2';
-//								my_hogar.last_decision <- 'SC1.2';
-//								wip <- 1; //meaning: we will finish planting next month
-//								starting_wip <- true; //we just started planting
-//								wip_division <- 2;
-//								wip_laborforce <- wip_laborforce + laborcost_install_SC1;
-//								write "deforestation in progress for PROFIT at " + location;
-//								myself.available_workers <- (myself.available_workers - (laborcost_SC1_2 + laborcost_install_SC1 / wip_division));
-//								nb_months <- 0;
-//							}
-//
-//						}
-//
-//					}
+					}
+					//					else {
+					//						if (available_workers > (laborcost_SC1_2 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
+					//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+					//								is_deforest <- true;
+					//								landuse <- 'wip';
+					//								future_landuse <- 'SC1.2';
+					//								my_hogar.last_decision <- 'SC1.2';
+					//								wip <- 1; //meaning: we will finish planting next month
+					//								starting_wip <- true; //we just started planting
+					//								wip_division <- 2;
+					//								wip_laborforce <- wip_laborforce + laborcost_install_SC1;
+					//								write "deforestation in progress for PROFIT at " + location;
+					//								myself.available_workers <- (myself.available_workers - (laborcost_SC1_2 + laborcost_install_SC1 / wip_division));
+					//								nb_months <- 0;
+					//							}
+					//
+					//						}
+					//
+					//					}
 
 				}
 
@@ -722,26 +716,26 @@ species hogares {
 							nb_months <- 0;
 						}
 
-					} 
-//					else {
-//						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and length(my_predio.cells_deforest) > 0 {
-//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
-//								is_deforest <- true;
-//								landuse <- 'wip';
-//								future_landuse <- 'SC2';
-//								my_hogar.last_decision <- 'SC2';
-//								wip <- 1; //meaning: we will finish planting next month
-//								starting_wip <- true; //we just started planting
-//								wip_division <- 2;
-//								wip_laborforce <- wip_laborforce + laborcost_install_SC2;
-//								write "deforestation in progress for PROFIT at " + location;
-//								myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2 / wip_division));
-//								nb_months <- 0;
-//							}
-//
-//						}
-//
-//					}
+					}
+					//					else {
+					//						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and length(my_predio.cells_deforest) > 0 {
+					//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+					//								is_deforest <- true;
+					//								landuse <- 'wip';
+					//								future_landuse <- 'SC2';
+					//								my_hogar.last_decision <- 'SC2';
+					//								wip <- 1; //meaning: we will finish planting next month
+					//								starting_wip <- true; //we just started planting
+					//								wip_division <- 2;
+					//								wip_laborforce <- wip_laborforce + laborcost_install_SC2;
+					//								write "deforestation in progress for PROFIT at " + location;
+					//								myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2 / wip_division));
+					//								nb_months <- 0;
+					//							}
+					//
+					//						}
+					//
+					//					}
 
 				}
 
@@ -761,26 +755,26 @@ species hogares {
 							nb_months <- 0;
 						}
 
-					} 
-//					else {
-//						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
-//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
-//								is_deforest <- true;
-//								landuse <- 'wip';
-//								future_landuse <- 'SC1.2';
-//								my_hogar.last_decision <- 'SC1.2';
-//								wip <- 1; //meaning: we will finish planting next month
-//								starting_wip <- true; //we just started planting
-//								wip_division <- 2;
-//								wip_laborforce <- wip_laborforce + laborcost_install_SC1;
-//								write "deforestation in progress for PROFIT at " + location;
-//								myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1 / wip_division));
-//								nb_months <- 0;
-//							}
-//
-//						}
-//
-//					}
+					}
+					//					else {
+					//						if (available_workers > (laborcost_SC1_1 + (laborcost_install_SC1 / 2))) and length(my_predio.cells_deforest) > 0 {
+					//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+					//								is_deforest <- true;
+					//								landuse <- 'wip';
+					//								future_landuse <- 'SC1.2';
+					//								my_hogar.last_decision <- 'SC1.2';
+					//								wip <- 1; //meaning: we will finish planting next month
+					//								starting_wip <- true; //we just started planting
+					//								wip_division <- 2;
+					//								wip_laborforce <- wip_laborforce + laborcost_install_SC1;
+					//								write "deforestation in progress for PROFIT at " + location;
+					//								myself.available_workers <- (myself.available_workers - (laborcost_SC1_1 + laborcost_install_SC1 / wip_division));
+					//								nb_months <- 0;
+					//							}
+					//
+					//						}
+					//
+					//					}
 
 				}
 
@@ -797,26 +791,26 @@ species hogares {
 							nb_months <- 0;
 						}
 
-					} 
-//					else {
-//						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and length(my_predio.cells_deforest) > 0 {
-//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
-//								is_deforest <- true;
-//								landuse <- 'wip';
-//								future_landuse <- 'SC2';
-//								my_hogar.last_decision <- 'SC2';
-//								wip <- 1; //meaning: we will finish planting next month
-//								starting_wip <- true; //we just started planting
-//								wip_division <- 2;
-//								wip_laborforce <- wip_laborforce + laborcost_install_SC2;
-//								write "deforestation in progress for PROFIT at " + location;
-//								myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2 / wip_division));
-//								nb_months <- 0;
-//							}
-//
-//						}
-//
-//					}
+					}
+					//					else {
+					//						if (available_workers > (laborcost_SC2 + (laborcost_install_SC2 / 2))) and length(my_predio.cells_deforest) > 0 {
+					//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+					//								is_deforest <- true;
+					//								landuse <- 'wip';
+					//								future_landuse <- 'SC2';
+					//								my_hogar.last_decision <- 'SC2';
+					//								wip <- 1; //meaning: we will finish planting next month
+					//								starting_wip <- true; //we just started planting
+					//								wip_division <- 2;
+					//								wip_laborforce <- wip_laborforce + laborcost_install_SC2;
+					//								write "deforestation in progress for PROFIT at " + location;
+					//								myself.available_workers <- (myself.available_workers - (laborcost_SC2 + laborcost_install_SC2 / wip_division));
+					//								nb_months <- 0;
+					//							}
+					//
+					//						}
+					//
+					//					}
 
 				}
 
@@ -833,26 +827,26 @@ species hogares {
 							nb_months <- 0;
 						}
 
-					} 
-//					else {
-//						if (available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2))) and length(my_predio.cells_deforest) > 0 {
-//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
-//								is_deforest <- true;
-//								landuse <- 'wip';
-//								future_landuse <- 'SE1.2';
-//								my_hogar.last_decision <- 'SE1.2';
-//								wip <- 1; //meaning: we will finish planting next month
-//								starting_wip <- true; //we just started planting
-//								wip_division <- 2;
-//								wip_laborforce <- wip_laborforce + laborcost_install_SE1;
-//								write "deforestation in progress for PROFIT at " + location;
-//								myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1 / wip_division));
-//								nb_months <- 0;
-//							}
-//
-//						}
-//
-//					}
+					}
+					//					else {
+					//						if (available_workers > (laborcost_SE1_2 + (laborcost_install_SE1 / 2))) and length(my_predio.cells_deforest) > 0 {
+					//							ask closest_to(my_predio.cells_forest, one_of(my_predio.cells_deforest), 1) {
+					//								is_deforest <- true;
+					//								landuse <- 'wip';
+					//								future_landuse <- 'SE1.2';
+					//								my_hogar.last_decision <- 'SE1.2';
+					//								wip <- 1; //meaning: we will finish planting next month
+					//								starting_wip <- true; //we just started planting
+					//								wip_division <- 2;
+					//								wip_laborforce <- wip_laborforce + laborcost_install_SE1;
+					//								write "deforestation in progress for PROFIT at " + location;
+					//								myself.available_workers <- (myself.available_workers - (laborcost_SE1_2 + laborcost_install_SE1 / wip_division));
+					//								nb_months <- 0;
+					//							}
+					//
+					//						}
+					//
+					//					}
 
 				}
 
