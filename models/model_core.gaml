@@ -178,11 +178,11 @@ global { //Time aspects
 		}
 
 		write "--START address work in progress";
-		ask cell {
+		//ask cell {
 		//do update_yields;
 			//do address_wip;
-			do color_activities;
-		}
+			//do color_activities;
+		//}
 
 		write "--END address work in progress";
 		write "END OF TURN/MONTH " + months_between(starting_date, current_date);

@@ -261,7 +261,7 @@ global { //Lists
 		}
 
 		ask comunas {
-			com_labor_force <- (sum(membres_comuna collect each.labor_force));
+			com_labor_force <- (sum(membres_comuna collect each.labor_value));
 			com_available_workers <- com_labor_force;
 		}
 

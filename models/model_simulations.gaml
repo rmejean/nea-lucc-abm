@@ -49,7 +49,7 @@ global {
 	bool init_end <- false;
 	string save_landscape <- ("../includes/initGENfiles/agricultural_landscape.shp");
 	string save_simplified_classif <- ("../includes/initGENfiles/simplified_classif.asc");
-	string save_landuse_classif <- ("../includes/initGENfiles/landuse_classif.asc");
+	string save_landuse_classif <- ("../includes/initGENfiles/landuse_classif.tif");
 	string save_vias <- ("../includes/initGENfiles/vias.shp");
 	string save_empresas <- ("../includes/initGENfiles/empresas.shp");
 	string save_predios <- ("../includes/initGENfiles/predios.shp");
@@ -84,12 +84,12 @@ experiment save_init type: gui until: stop_simulation = true {
 	//["NAME"::name, "DEF"::is_deforest, "landuse"::landuse, "landuse2"::landuse2, "landuse3"::landuse3, "PREDIO"::predio, "HOUSEHOLD"::my_hogar];
 		save cell to: save_simplified_classif type: "asc"; //save a simplified classification
 		ask cell {do format_landuse;}
-		save cell to: save_landuse_classif type: "asc";//save a landuse classification
+		save cell to: save_landuse_classif type: "geotiff";//save a landuse classification
 		save vias to: save_vias type: "shp" attributes: ["NAME"::name, "ORDEN"::orden];
 		save predios to: save_predios type: "shp" attributes:
 		["NAME"::name, "CLAVE"::clave_cata, "free"::is_free, "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "D_VIAAUCA"::dist_via_auca, "PROX_VIAA"::prox_via_auca, "INDIGENA"::indigena, "LS"::LS, "HOUSEHOLD"::my_hogar, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUB_C"::subcrops_amount, "CELSE1.1"::nb_cells_SE1_1, "CELSE1.2"::nb_cells_SE1_2, "idLS1_1"::id_EMC_LS1_1, "idLS1_2"::id_EMC_LS1_2, "idLS1_3"::id_EMC_LS1_3, "idLS2"::id_EMC_LS2, "idLS3"::id_EMC_LS3];
 		save comunas to: save_comunas type: "shp" attributes:
-		["CLAVE"::clave_cata, "laborforce"::com_labor_force, "availableW"::com_available_workers, "occupied_W"::com_occupied_workers, "nb_members"::length(membres_comuna), "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUBCROPS_INC"::income_crops_annual, "SUB_NEEDS"::comuna_subcrops_needs, "SUB_AMOUNT"::comuna_subcrops_amount];
+		["CLAVE"::clave_cata, "laborforce"::com_labor_force, "availableW"::com_available_workers, "occupied_W"::com_occupied_workers, "nb_members"::length(membres_comuna), "AREA_TOTAL"::area_total, "AREA_DEF"::area_deforest, "AREA_F"::area_forest, "DEF_RATE"::def_rate, "FOREST_R"::forest_rate, "CELLS_IN"::cells_inside, "CELLS_DEF"::cells_deforest, "CELLS_F"::cells_forest, "SUBCROPS_I"::income_crops_annual, "SUB_NEEDS"::comuna_subcrops_needs, "SUB_AMOUNT"::comuna_subcrops_amount];
 		save hogares to: save_hogares type: "shp" attributes:
 		["NAME"::name, "type"::type, "comuna"::my_comuna, "SEC_ID"::sec_id, "HOG_ID"::hog_id, "TOTAL_P"::Total_Personas, "TOTAL_M"::Total_Hombres, "TOTAL_F"::Total_Mujeres, "PLOT"::my_predio, "HOUSE"::my_house, "HOG_MEMBER"::membres_hogar, "HEAD"::chef_hogar, "HEAD_AUTOI"::chef_auto_id, "LABOR_F"::labor_force, "BRUT_INC"::gross_monthly_inc, "INC"::income, "LS"::livelihood_strategy, "SUB_NEED"::subcrops_needs, "NEEDS_W"::needs_alert, "HUNGER_W"::hunger_alert, "MONEY_W"::money_alert, "MOF_O"::occupied_workers, "MOF_A"::available_workers, "MOF_E"::employees_workers, "MOF_W"::labor_alert, "NB_OIL_W"::oil_workers, "ESTIM_ANINC"::estimated_annual_inc];
 		save personas to: save_personas type: "shp" attributes:
