@@ -21,6 +21,7 @@ global { //Time aspects
 	float step <- 1 #month update: step + 1;
 	//Other variables
 	float $_ANFP <- 3900.0; //AMOUNT NEEDED TO FEED A PERSON
+	list<cell> cells_wip -> cell where (each.starting_wip = true);
 	//
 	//INIT
 	//
@@ -38,7 +39,11 @@ global { //Time aspects
 			do init_ALG;
 			do init_farm_jobs;
 			do init_oil_jobs;
-//			ask hogares {
+//			ask hogares where (each.type = "predio") {
+//				do assess_income_needs;
+//				do setting_alerts;
+//			}
+//			ask comunas {
 //				do assess_income_needs;
 //				do setting_alerts;
 //			}
@@ -124,12 +129,12 @@ global { //Time aspects
 		//
 		write "---NEW JOBS GENERATED";
 		//
-		if one_matches(cell, each.starting_wip = true) {
-			ask cell where (each.starting_wip = true) {
-				starting_wip <- false;
-			}
-
-		}
+//		if length(cells_wip) != 0 {
+//			ask cells_wip {
+//				starting_wip <- false;
+//			}
+//
+//		}
 
 		ask cell where (each.grid_value = 3.0) {
 			do crop_cycle;
@@ -201,9 +206,12 @@ global { //Time aspects
 	/////Outputs//////
 	//////////////////
 	
-	reflex when: every(5 #cycles) and save_years {
-		save cell to: ("../exports/simu_month" + cycle + ".asc") type: "asc";
-		write "EXPORT CLASSIF";
+	reflex when: every(12 #cycles) and save_years {
+		save cell to: ("../exports/simu_LC_month" + cycle + ".asc") type: "asc";
+		write "EXPORT LANDCOVER CLASSIF";
+		ask cell {do format_landuse;}
+		save cell ("../exports/simu_LU_month" + cycle + ".asc") type: "asc";
+		ask cell {do format_landcover;}
 	}
 
 }

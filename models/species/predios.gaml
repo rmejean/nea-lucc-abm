@@ -52,7 +52,7 @@ species predios {
 
 	action deforestation_rate_calc {
 		if area_total > 0 {
-			def_rate <- (area_deforest / area_total) * 100;
+			//def_rate <- (area_deforest / area_total) * 100;
 			forest_rate <- (area_forest / area_total) * 100;
 		} else {
 			def_rate <- 0.0;

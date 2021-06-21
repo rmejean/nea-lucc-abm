@@ -169,6 +169,78 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 
 	}
 
+	action format_landuse {
+		switch landuse {
+			match 'wip' { //work in progress
+				grid_value <- 5.0;
+			}
+
+			match 'SC1.1' {
+				grid_value <- 6.0;
+			}
+
+			match 'SC1.2' {
+				grid_value <- 7.0;
+			}
+
+			match 'SC2' {
+				grid_value <- 8.0;
+			}
+
+			match 'SC3.1' {
+				grid_value <- 9.0;
+			}
+
+			match 'SC4.1' {
+				grid_value <- 10.0;
+			}
+
+			match 'SC4.2' {
+				grid_value <- 11.0;
+			}
+
+			match 'SE1.1' {
+				grid_value <- 12.0;
+			}
+
+			match 'SE1.2' {
+				grid_value <- 13.0;
+			}
+
+			match 'SE2.1' {
+				grid_value <- 14.0;
+			}
+
+			match 'SE2.2' {
+				grid_value <- 15.0;
+			}
+
+			match 'SE2.3' {
+				grid_value <- 16.0;
+			}
+
+			match 'SE3' {
+				grid_value <- 17.0;
+			}
+
+			match 'fallow' {
+				grid_value <- 18.0;
+			}
+
+		}
+
+	}
+
+	action format_landcover {
+		switch grid_value {
+			match_between [5.0, 18.0] {
+				grid_value <- 3.0;
+			}
+
+		}
+
+	}
+
 	action update_yields {
 		if landuse = 'SC1.1' {
 			do calc_yld_SC1_1;
