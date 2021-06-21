@@ -180,7 +180,7 @@ global { //Time aspects
 		write "--START address work in progress";
 		ask cell {
 		//do update_yields;
-			do address_wip;
+			//do address_wip;
 			do color_activities;
 		}
 
