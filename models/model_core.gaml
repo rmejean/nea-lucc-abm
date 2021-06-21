@@ -124,12 +124,12 @@ global { //Time aspects
 		//
 		write "---NEW JOBS GENERATED";
 		//
-		if one_matches(cell, each.starting_wip = true) {
-			ask cell where (each.starting_wip = true) {
-				starting_wip <- false;
-			}
-
-		}
+//		if one_matches(cell, each.starting_wip = true) {
+//			ask cell where (each.starting_wip = true) {
+//				starting_wip <- false;
+//			}
+//
+//		}
 
 		ask cell where (each.grid_value = 3.0) {
 			do crop_cycle;
@@ -180,7 +180,7 @@ global { //Time aspects
 		write "--START address work in progress";
 		ask cell {
 		//do update_yields;
-			do address_wip;
+			//do address_wip;
 			do color_activities;
 		}
 
@@ -201,7 +201,7 @@ global { //Time aspects
 	/////Outputs//////
 	//////////////////
 	
-	reflex when: every(5 #cycles) and save_years {
+	reflex when: every(12 #cycles) and save_years {
 		save cell to: ("../exports/simu_month" + cycle + ".asc") type: "asc";
 		write "EXPORT CLASSIF";
 	}

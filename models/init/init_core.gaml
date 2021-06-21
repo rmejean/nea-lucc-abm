@@ -197,7 +197,7 @@ global { //Lists
 			type <- "comuna";
 			livelihood_strategy <- "SP1.1";
 			my_comuna <- first(comunas overlapping self);
-			my_house <- first(my_comuna.cells_deforest);
+			my_house <- one_of(my_comuna.cells_deforest);
 			location <- my_house.location;
 			ask my_house {
 				landuse <- 'house';
