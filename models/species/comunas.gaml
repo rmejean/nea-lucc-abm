@@ -26,11 +26,11 @@ species comunas {
 	float com_available_workers;
 	float com_occupied_workers;
 	float com_labor_force;
-	float def_rate ;
+	float def_rate;
 	float income_crops_annual;
 	float comuna_subcrops_needs;
 	int comuna_subcrops_amount;
-	float forest_rate ;
+	float forest_rate;
 	bool hunger_alert;
 	bool money_alert;
 	bool needs_alert;

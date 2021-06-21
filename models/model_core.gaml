@@ -206,9 +206,12 @@ global { //Time aspects
 	/////Outputs//////
 	//////////////////
 	
-	reflex when: every(5 #cycles) and save_years {
-		save cell to: ("../exports/simu_month" + cycle + ".asc") type: "asc";
-		write "EXPORT CLASSIF";
+	reflex when: every(12 #cycles) and save_years {
+		save cell to: ("../exports/simu_LC_month" + cycle + ".asc") type: "asc";
+		write "EXPORT LANDCOVER CLASSIF";
+		ask cell {do format_landuse;}
+		save cell ("../exports/simu_LU_month" + cycle + ".asc") type: "asc";
+		ask cell {do format_landcover;}
 	}
 
 }
