@@ -21,6 +21,7 @@ global { //Time aspects
 	float step <- 1 #month update: step + 1;
 	//Other variables
 	float $_ANFP <- 3900.0; //AMOUNT NEEDED TO FEED A PERSON
+	list<cell> cells_wip -> cell where (each.starting_wip = true);
 	//
 	//INIT
 	//
@@ -38,17 +39,21 @@ global { //Time aspects
 			do init_ALG;
 			do init_farm_jobs;
 			do init_oil_jobs;
-//			ask hogares {
+//			ask hogares where (each.type = "predio") {
+//				do assess_income_needs;
+//				do setting_alerts;
+//			}
+//			ask comunas {
 //				do assess_income_needs;
 //				do setting_alerts;
 //			}
 
-			ask predios {
-				do deforestation_rate_calc;
-				}
-			ask comunas {
-				do deforestation_rate_calc;
-			}
+//			ask predios {
+//				do deforestation_rate_calc;
+//				}
+//			ask comunas {
+//				do deforestation_rate_calc;
+//			}
 			do init_control;
 			init_end <- true;
 			write "END OF INITIALIZATION";
@@ -73,13 +78,13 @@ global { //Time aspects
 				do setting_alerts;
 			}
 
-			ask predios {
-				do deforestation_rate_calc;
-				//do map_deforestation_rate;
-			}
-			ask comunas {
-				do deforestation_rate_calc;
-			}
+//			ask predios {
+//				do deforestation_rate_calc;
+//				//do map_deforestation_rate;
+//			}
+//			ask comunas {
+//				do deforestation_rate_calc;
+//			}
 			do init_control;
 			init_end <- true;
 			write "END OF INITIALIZATION";
@@ -124,12 +129,12 @@ global { //Time aspects
 		//
 		write "---NEW JOBS GENERATED";
 		//
-		if one_matches(cell, each.starting_wip = true) {
-			ask cell where (each.starting_wip = true) {
-				starting_wip <- false;
-			}
-
-		}
+//		if length(cells_wip) != 0 {
+//			ask cells_wip {
+//				starting_wip <- false;
+//			}
+//
+//		}
 
 		ask cell where (each.grid_value = 3.0) {
 			do crop_cycle;
@@ -180,7 +185,7 @@ global { //Time aspects
 		write "--START address work in progress";
 		ask cell {
 		//do update_yields;
-			do address_wip;
+			//do address_wip;
 			do color_activities;
 		}
 
