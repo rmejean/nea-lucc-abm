@@ -1,0 +1,66 @@
+classDiagram
+    hogares <|-- personas
+
+    hogares : +int Total_Personas
+    hogares : +float labor_force
+    hogares : +float occupied_workers
+    hogares : +float available_workers
+    hogares : +float subcrops_needs
+    hogares : +float gross_monthly_inc
+    hogares : +float income
+    hogares : +float estimated_annual_inc
+    hogares : +string livelihood_strategy
+
+    hogares : + assess_income_needs()
+    hogares : + update_needs()
+    hogares : + setting_alerts()
+    hogares : + subsistence_LUC()
+    hogares : + profit_LUC()
+
+    predios <|-- cell
+    predios : + area_total
+    predios : + area_deforest
+    predios :  + area_forest
+
+    predios :  + crops_calc()
+    predios :  + map(variables)
+
+    comunas <|-- cell
+
+    
+    class personas{
+      +string Sexo
+      +int Age
+      +float labor_value
+      +float food_needs
+      +float inc
+    }
+
+    class cell {
+    +int time_to_prod
+    +int market_prices
+    +int expenses
+    +int agricultural_yields
+
+    +string landuse
+    +string landuse2
+    +string landuse3
+    +float rev
+    +float yld
+
+    +format_landuse()
+    +format_landcover()
+    +update_yields()
+    +crop_cycle()
+
+    }
+
+    class empresas {
+
+    }
+
+    class comunas {
+        
+    }
+    
+            

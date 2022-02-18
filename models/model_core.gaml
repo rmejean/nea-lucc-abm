@@ -201,7 +201,7 @@ global { //Time aspects
 	/////Outputs//////
 	//////////////////
 	
-	reflex when: every(12 #cycles) and save_years {
+	reflex when: stop_simulation and save_years {
 		save cell to: ("../exports/LC_simu_month" + cycle + ".asc") type: "asc";
 		write "EXPORTED CLASSIF LAND COVER";
 		write "CONVERT TO LAND USE...";
