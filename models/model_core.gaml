@@ -201,7 +201,7 @@ global { //Time aspects
 	/////Outputs//////
 	//////////////////
 	
-	reflex when: stop_simulation and save_years {
+	reflex when: every (5 #cycles) and save_years {
 		save cell to: ("../exports/LC_simu_month" + cycle + ".asc") type: "asc";
 		write "EXPORTED CLASSIF LAND COVER";
 		write "CONVERT TO LAND USE...";
@@ -211,6 +211,8 @@ global { //Time aspects
 		write "EXPORTED CLASSIF LAND USE";
 		write "CONVERT TO LAND COVER...";
 		ask cell {do format_landcover;}
+		
+		save [cycle, length(hogares where (each.needs_alert = true)), deforestation] to: "../exports/result.txt" type: "csv";
 	}
 
 }

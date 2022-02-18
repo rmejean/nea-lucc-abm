@@ -16,7 +16,7 @@ model cells_def
 import "../species_def.gaml"
 
 global {
-	float soil_depletion_proba <- 0.2;
+	float soil_depletion_proba <- 0.5;
 	//Time to production start up
 	int timeprod_maniocmais <- 6;
 	int timeprod_fruits <- 3;
