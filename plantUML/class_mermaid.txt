@@ -1,5 +1,5 @@
 classDiagram
-    hogares <|-- personas
+    hogares "1" <|-- "1 .. *"  personas
 
     hogares : +int Total_Personas
     hogares : +float labor_force
@@ -9,15 +9,17 @@ classDiagram
     hogares : +float gross_monthly_inc
     hogares : +float income
     hogares : +float estimated_annual_inc
+    hogares : +bool needs_alert
     hogares : +string livelihood_strategy
 
     hogares : + assess_income_needs()
     hogares : + update_needs()
     hogares : + setting_alerts()
+    hogares : looking_for_job()
     hogares : + subsistence_LUC()
     hogares : + profit_LUC()
 
-    predios <|-- cell
+    predios o-- "*" cell
     predios : + area_total
     predios : + area_deforest
     predios :  + area_forest
@@ -25,7 +27,20 @@ classDiagram
     predios :  + crops_calc()
     predios :  + map(variables)
 
-    comunas <|-- cell
+    comunas o-- "*" cell
+    comunas : +int Total_Personas
+    comunas : +float labor_force
+    comunas : +float occupied_workers
+    comunas : +float available_workers
+    comunas : +float subcrops_needs
+    comunas : +float income_crops_annual
+    comunas : +float income_crops_annual
+    comunas : +bool neeeds_alert
+
+    comunas : +assess_income_needs()
+    comunas : +crops_calc()
+    comunas : +setting_alerts()
+    comunas : +subsistence_LUC()
 
     
     class personas{
@@ -34,6 +49,9 @@ classDiagram
       +float labor_value
       +float food_needs
       +float inc
+
+      +update()
+      +labour_value_and_needs()
     }
 
     class cell {
@@ -55,12 +73,15 @@ classDiagram
 
     }
 
+    empresas "1 .. n" .. "1" personas
+    hogares "1" --> "1" predios
+    hogares "1" --> "1" comunas
+
     class empresas {
+    +int nb_jobs
+    +int nb_free_jobs
 
+    +generate_jobs()
     }
 
-    class comunas {
-        
-    }
-    
             
