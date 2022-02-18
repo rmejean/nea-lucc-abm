@@ -232,8 +232,59 @@ grid cell file: MAE_2008 use_regular_agents: false use_individual_shapes: false 
 	}
 
 	action format_landcover {
-		switch grid_value {
-			match_between [5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0] {
+		switch landuse {
+		//			match 'wip' { //work in progress
+		//				grid_value <- 5.0;
+		//			}
+			match 'SC1.1' {
+				grid_value <- 3.0;
+			}
+
+			match 'SC1.2' {
+				grid_value <- 3.0;
+			}
+
+			match 'SC2' {
+				grid_value <- 3.0;
+			}
+
+			match 'SC3.1' {
+				grid_value <- 3.0;
+			}
+
+			match 'SC4.1' {
+				grid_value <- 3.0;
+			}
+
+			match 'SC4.2' {
+				grid_value <- 3.0;
+			}
+
+			match 'SE1.1' {
+				grid_value <- 3.0;
+			}
+
+			match 'SE1.2' {
+				grid_value <- 3.0;
+			}
+
+			match 'SE2.1' {
+				grid_value <- 3.0;
+			}
+
+			match 'SE2.2' {
+				grid_value <- 3.0;
+			}
+
+			match 'SE2.3' {
+				grid_value <- 3.0;
+			}
+
+			match 'SE3' {
+				grid_value <- 3.0;
+			}
+
+			match 'fallow' {
 				grid_value <- 3.0;
 			}
 

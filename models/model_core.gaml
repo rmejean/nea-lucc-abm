@@ -100,7 +100,7 @@ global { //Time aspects
 		write "time since the beginning of the simulation: " + total_duration;
 		write "labor mean for step is: " + labor_mean;
 		write "area deforest mean for is: " + area_deforest_mean;
-		if current_date > date("2016-01-01") {
+		if current_date > date("2017-01-01") {
 			stop_simulation <- true;
 			do pause;
 			write "END OF SIMULATION";
